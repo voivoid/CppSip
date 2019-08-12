@@ -3,20 +3,25 @@
 
 #include <stdexcept>
 
-namespace CppSip { namespace Parsers {
-  namespace
-  {
-    bsx3::symbols<Method> get_method_parser()
-    {
-      namespace x3 = boost::spirit::x3;
+namespace CppSip
+{
+namespace Parsers
+{
+namespace
+{
+bsx3::symbols<Method> get_method_parser()
+{
+  namespace x3 = boost::spirit::x3;
 
-      x3::symbols<Method> method_symbols;
-      method_symbols.add("ACK", Method::Ack)("BYE", Method::Bye)("CANCEL", Method::Cancel)("INVITE", Method::Invite)("OPTIONS", Method::Options)("REGISTER", Method::Register);
+  x3::symbols<Method> method_symbols;
+  method_symbols.add( "ACK", Method::Ack )( "BYE", Method::Bye )( "CANCEL", Method::Cancel )( "INVITE", Method::Invite )(
+      "OPTIONS", Method::Options )( "REGISTER", Method::Register );
 
-      return method_symbols;
-    }
-  }
+  return method_symbols;
+}
+}  // namespace
 
-  const bsx3::symbols<Method> method = get_method_parser();
+const bsx3::symbols<Method> method = get_method_parser();
 
-} }
+}  // namespace Parsers
+}  // namespace CppSip

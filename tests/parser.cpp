@@ -7,25 +7,25 @@
 
 namespace
 {
-  template <typename Attr, typename Parser>
-  Attr parse(Parser parser, const std::string_view input)
+template <typename Attr, typename Parser>
+Attr parse( Parser parser, const std::string_view input )
+{
+  Attr attr;
+
+  const bool parsed = boost::spirit::x3::parse( input.begin(), input.end(), parser, attr );
+  if ( !parsed )
   {
-    Attr attr;
-
-    const bool parsed = boost::spirit::x3::parse(input.begin(), input.end(), parser, attr);
-    if (!parsed)
-    {
-      throw std::runtime_error("failed to parse");
-    }
-
-    return attr;
+    throw std::runtime_error( "failed to parse" );
   }
 
-  CppSip::Method parse_method(const std::string_view input)
-  {
-    return parse<CppSip::Method>(CppSip::Parsers::method, input);
-  }
+  return attr;
 }
+
+CppSip::Method parse_method( const std::string_view input )
+{
+  return parse<CppSip::Method>( CppSip::Parsers::method, input );
+}
+}  // namespace
 
 BOOST_AUTO_TEST_SUITE( parser )
 
@@ -36,12 +36,12 @@ BOOST_AUTO_TEST_CASE( parse_sip_method )
   BOOST_CHECK( CppSip::Method::Cancel == parse_method( "CANCEL" ) );
   BOOST_CHECK( CppSip::Method::Invite == parse_method( "INVITE" ) );
   BOOST_CHECK( CppSip::Method::Options == parse_method( "OPTIONS" ) );
-  BOOST_CHECK( CppSip::Method::Register == parse_method( "REGISTER" ) );   
+  BOOST_CHECK( CppSip::Method::Register == parse_method( "REGISTER" ) );
 }
 
-BOOST_AUTO_TEST_CASE(parse_sip_method_error_cases)
+BOOST_AUTO_TEST_CASE( parse_sip_method_error_cases )
 {
-  BOOST_CHECK_THROW(parse_method("UNKNOWN"), std::runtime_error);
+  BOOST_CHECK_THROW( parse_method( "UNKNOWN" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

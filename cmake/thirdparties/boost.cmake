@@ -1,5 +1,3 @@
-find_package(Patch REQUIRED)
-
 include(ExternalProject)
 
 set(BoostVersion "1.71.0.rc1")
@@ -69,7 +67,6 @@ ExternalProject_Add(
   PREFIX thirdparties
   URL "https://dl.bintray.com/boostorg/release/${BoostVersion}/source/boost_${BoostVersionUnderscored}.tar.gz"
   URL_HASH SHA256=${BoostSHA256}
-  PATCH_COMMAND ${Patch_EXECUTABLE} -s -p0 < ${CMAKE_CURRENT_LIST_DIR}/boost.patch # https://github.com/boostorg/safe_numerics/issues/71
   CONFIGURE_COMMAND ${BoostBootstrapCmd} ${BoostBootstrapToolset}
   BUILD_COMMAND ${BoostB2} ${BoostB2Toolset} link=static threading=multi runtime-link=shared ${BoostLayout} ${BoostAddressModel} ${BoostBuildVariant} ${BoostLibsCmdLine} ${BoostAsmFlags} -j 4
   BUILD_IN_SOURCE TRUE

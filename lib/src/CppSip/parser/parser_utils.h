@@ -25,7 +25,6 @@ void fill_attrs( boost::fusion::vector<Attrs...>& vector, Attrs&... attrs, std::
 }
 }  // namespace Details
 
-
 template <typename Iter, typename Parser, typename Skipper, typename Attr>
 bool phrase_parse( Iter begin, Iter end, const Parser& parser, const Skipper& skipper, Attr& attr )
 {
@@ -45,8 +44,6 @@ bool phrase_parse( const std::string& line, const Parser& parser, const Skipper&
 {
   return phrase_parse( line.cbegin(), line.cend(), parser, skipper, attr );
 }
-
-
 
 template <typename Iter, typename Parser, typename Skipper>
 bool phrase_parse( Iter begin, Iter end, const Parser& parser, const Skipper& skipper )
@@ -68,30 +65,25 @@ bool phrase_parse( const std::string& line, const Parser& parser, const Skipper&
   return phrase_parse( line.cbegin(), line.cend(), parser, skipper );
 }
 
-
-
 template <typename Iter, typename Parser, typename Attr>
-bool parse(Iter begin, Iter end, const Parser& parser, Attr& attr)
+bool parse( Iter begin, Iter end, const Parser& parser, Attr& attr )
 {
-  const bool parsed = boost::spirit::x3::parse(begin, end, parser, attr);
-  return parsed && (begin == end);
+  const bool parsed = boost::spirit::x3::parse( begin, end, parser, attr );
+  return parsed && ( begin == end );
 }
 
 template <typename Parser, typename Attr>
-bool parse(std::istream& input, const Parser& parser, Attr& attr)
+bool parse( std::istream& input, const Parser& parser, Attr& attr )
 {
   input >> std::noskipws;
-  return parse(boost::spirit::istream_iterator(input), {}, parser, attr);
+  return parse( boost::spirit::istream_iterator( input ), {}, parser, attr );
 }
 
 template <typename Parser, typename Attr>
-bool parse(const std::string& line, const Parser& parser, Attr& attr)
+bool parse( const std::string& line, const Parser& parser, Attr& attr )
 {
-  return parse(line.cbegin(), line.cend(), parser, attr);
+  return parse( line.cbegin(), line.cend(), parser, attr );
 }
-
-
-
 
 template <typename Input, typename Parser, typename Skipper, typename... Attrs>
 bool phrase_parse_emplace( Input&& input, const Parser& parser, const Skipper& skipper, Attrs&... attrs )
@@ -107,4 +99,4 @@ bool phrase_parse_emplace( Input&& input, const Parser& parser, const Skipper& s
   return true;
 }
 
-}
+}  // namespace CppSip
