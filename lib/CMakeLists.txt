@@ -1,0 +1,11 @@
+set(CppSipLibPublicIncludeDir ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+set(CppSipLibPrivateIncludeDir ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+add_subdirectory(src/CppSip/parser)
+
+add_library(CppSipLib STATIC inc/CppSip/message.h src/CppSip/lib.cpp)
+add_library(CppSip::Lib ALIAS CppSipLib)
+
+target_link_libraries(CppSipLib PRIVATE CppSip::Parser)
+
+target_include_directories(CppSipLib PUBLIC inc PRIVATE src)
