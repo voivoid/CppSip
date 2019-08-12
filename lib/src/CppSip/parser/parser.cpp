@@ -1,36 +1,22 @@
 #include "CppSip/parser/parser.h"
+#include "CppSip/parser/parser_utils.h"
 
 #include <stdexcept>
 
-namespace CppSip
-{
-  Method parse_method( const std::string_view method)
+namespace CppSip { namespace Parsers {
+  namespace
   {
-    if (method == "ACK")
+    bsx3::symbols<Method> get_method_parser()
     {
-      return Method::Ack;
-    }
-    else if (method == "BYE")
-    {
-      return Method::Bye;
-    }
-    else if (method == "CANCEL")
-    {
-      return Method::Cancel;
-    }
-    else if (method == "INVITE")
-    {
-      return Method::Invite;
-    }
-    else if ( method == "OPTIONS" )
-    {
-      return Method::Options;
-    }
-    else if (method == "REGISTER")
-    {
-      return Method::Register;
-    }
+      namespace x3 = boost::spirit::x3;
 
-    throw std::invalid_argument("unknown SIP method");
+      x3::symbols<Method> method_symbols;
+      method_symbols.add("ACK", Method::Ack)("BYE", Method::Bye)("CANCEL", Method::Cancel)("INVITE", Method::Invite)("OPTIONS", Method::Options)("REGISTER", Method::Register);
+
+      return method_symbols;
+    }
   }
-}
+
+  const bsx3::symbols<Method> method = get_method_parser();
+
+} }

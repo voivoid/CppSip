@@ -1,10 +1,12 @@
 #pragma once
 
-#include <string>
-
 #include "CppSip/message.h"
 
-namespace CppSip
-{
-  Method parse_method( std::string_view method );
-}
+#include "boost/spirit/home/x3/string/symbols.hpp"
+
+namespace CppSip { namespace Parsers {
+
+  namespace bsx3 = boost::spirit::x3;
+
+  extern const bsx3::symbols<Method> method;
+} }
