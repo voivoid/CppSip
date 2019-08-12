@@ -1,2 +1,2 @@
-#define CATCH_CONFIG_MAIN
-#include "catch2/catch.hpp"
+#define BOOST_TEST_MODULE CppSipTests
+#include "boost/test/unit_test.hpp"

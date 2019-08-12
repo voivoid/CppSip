@@ -6,5 +6,5 @@
 
 namespace CppSip
 {
-  Method parse_method( const std::string& );
+  Method parse_method( std::string_view method );
 }
