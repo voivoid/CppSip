@@ -1,4 +1,4 @@
-#include "CppSip/message.h"
+#include "CppSip/message/method.h"
 
 #include <iosfwd>
 
