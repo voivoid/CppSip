@@ -2,4 +2,4 @@
 
 #include <iosfwd>
 
-std::ostream& operator<<( std::ostream& s, CppSip::Method m );
+std::ostream &operator<<(std::ostream &s, CppSip::Method m);

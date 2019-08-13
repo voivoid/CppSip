@@ -1,4 +1,6 @@
-add_library(CppSipLibParser parser.cpp parser.h parser_utils.h)
+add_library(CppSipLibParser message_parser.h
+                            parser_utils.cpp
+                            parser_utils.h)
 add_library(CppSip::Parser ALIAS CppSipLibParser)
 
 target_include_directories(CppSipLibParser PUBLIC ${CppSipLibPublicIncludeDir} ${CppSipLibPrivateIncludeDir})
