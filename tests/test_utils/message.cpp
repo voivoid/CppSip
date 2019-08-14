@@ -2,7 +2,9 @@
 
 #include <iostream>
 
-std::ostream &operator<<(std::ostream &s, CppSip::Method m) {
+namespace CppSip {
+
+std::ostream &operator<<(std::ostream &s, Method m) {
   switch (m) {
   case CppSip::Method::Ack:
     s << "ACK";
@@ -26,3 +28,5 @@ std::ostream &operator<<(std::ostream &s, CppSip::Method m) {
 
   return s;
 }
+
+} // namespace CppSip

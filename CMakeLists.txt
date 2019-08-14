@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(cmake/thirdparties/boost.cmake)
 
-add_subdirectory(lib)
+add_subdirectory(libs)
 
 
 option(CPPSIP_BUILD_APPS "Build applications" ON)
@@ -31,7 +31,7 @@ endif()
 
 find_program(ClangFormat clang-format)
 if(ClangFormat)
-  set(Targets CppSipLib CppSipLibParser CppSipTests)
+  set(Targets CppSipCommon CppSipParser CppSipTests)
   foreach(Target ${Targets})
     get_target_property(TargetSources ${Target} SOURCES)
     get_target_property(TargetDir ${Target} SOURCE_DIR)
