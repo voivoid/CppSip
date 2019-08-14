@@ -35,14 +35,13 @@ inline const auto alphanum = get_alphanum_parser();
 
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
 auto get_domainlabel_parser() {
-  return bsx3::repeat(1)[alphanum] |
-         (alphanum >> *(alphanum | '-') >> alphanum);
+  return alphanum >> *(alphanum | ( '-' >> alphanum ) );
 }
 inline const auto domainlabel = get_domainlabel_parser();
 
 // toplabel = ALPHA / ALPHA *( alphanum / "-" ) alphanum
 auto get_toplabel_parser() {
-  return ALPHA | (ALPHA >> *(alphanum | '-') >> alphanum);
+  return ALPHA >> *(alphanum | ( '-' >> alphanum ) );
 }
 inline const auto toplabel = get_toplabel_parser();
 

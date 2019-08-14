@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(test_alphanum_parser) {
 
 BOOST_AUTO_TEST_CASE(test_domainlabel_parser) {
   BOOST_CHECK_EQUAL("X", parse_domainlabel("X"));
-  //  BOOST_CHECK_EQUAL("domain", parse_domainlabel("domain"));
+  BOOST_CHECK_EQUAL("domain", parse_domainlabel("domain"));
 }
 
 BOOST_AUTO_TEST_CASE(test_Method_parser) {
