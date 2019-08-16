@@ -31,6 +31,8 @@ define_parser(ALPHA, char)
 define_parser(DIGIT, char)
 define_parser(alphanum, char)
 define_parser(domainlabel, std::string)
+define_parser(toplabel, std::string)
+define_parser(hostname, std::string)
 define_parser(Method, CppSip::Method)
 define_parser(SIP_Version, CppSip::SipVersion)
 // clang-format on
@@ -77,6 +79,15 @@ BOOST_AUTO_TEST_CASE(test_alphanum_parser) {
 BOOST_AUTO_TEST_CASE(test_domainlabel_parser) {
   BOOST_CHECK_EQUAL("X", parse_domainlabel("X"));
   BOOST_CHECK_EQUAL("domain", parse_domainlabel("domain"));
+}
+
+BOOST_AUTO_TEST_CASE(test_toplabel_parser) {
+  BOOST_CHECK_EQUAL("com", parse_toplabel("com"));
+  BOOST_CHECK_EQUAL("ru", parse_toplabel("ru"));
+}
+
+BOOST_AUTO_TEST_CASE(test_hostname_parser) {
+  BOOST_CHECK_EQUAL("google.com", parse_hostname("google.com"));
 }
 
 BOOST_AUTO_TEST_CASE(test_Method_parser) {

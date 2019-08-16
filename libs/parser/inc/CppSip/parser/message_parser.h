@@ -35,18 +35,19 @@ inline const auto alphanum = get_alphanum_parser();
 
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
 auto get_domainlabel_parser() {
-  return alphanum >> *(alphanum | ( '-' >> alphanum ) );
+  return alphanum >> *(alphanum | ('-' >> alphanum));
 }
 inline const auto domainlabel = get_domainlabel_parser();
 
 // toplabel = ALPHA / ALPHA *( alphanum / "-" ) alphanum
-auto get_toplabel_parser() {
-  return ALPHA >> *(alphanum | ( '-' >> alphanum ) );
-}
+auto get_toplabel_parser() { return ALPHA >> *(alphanum | ('-' >> alphanum)); }
 inline const auto toplabel = get_toplabel_parser();
 
 // hostname = *( domainlabel "." ) toplabel [ "." ] (!!!)
-auto get_hostname_parser() {}
+auto get_hostname_parser() {
+  return *(domainlabel >> bsx3::char_('.')) > toplabel;
+}
+inline const auto hostname = get_hostname_parser();
 
 // host = hostname / IPv4address / IPv6reference (!!!)
 auto get_host_parser() { return get_hostname_parser(); }
