@@ -2,6 +2,7 @@
 
 #include "CppSip/message/method.h"
 #include "CppSip/message/sip_version.h"
+#include "CppSip/parser/abnf_core_parsers.h"
 
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
@@ -15,42 +16,20 @@ namespace Parsers {
 
 namespace bsx3 = boost::spirit::x3;
 
-// ABNF rules
-
-// ALPHA = %x41-5A / %x61-7A ; A-Z / a-z
-auto get_ALPHA_parser() {
-  return bsx3::char_('A', 'Z') | bsx3::char_('a', 'z');
-}
-inline const auto ALPHA = get_ALPHA_parser();
-
-// DIGIT = %x30-39 ; 0-9
-auto get_DIGIT_parser() { return bsx3::char_('0', '9'); }
-inline const auto DIGIT = get_DIGIT_parser();
-
-// SIP rules
-
 // alphanum = ALPHA / DIGIT
-auto get_alphanum_parser() { return ALPHA | DIGIT; }
-inline const auto alphanum = get_alphanum_parser();
+inline const auto alphanum = ALPHA | DIGIT;
 
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
-auto get_domainlabel_parser() {
-  return alphanum >> *(alphanum | ('-' >> alphanum));
-}
-inline const auto domainlabel = get_domainlabel_parser();
+inline const auto domainlabel = alphanum >> *(alphanum | ('-' >> alphanum));
 
 // toplabel = ALPHA / ALPHA *( alphanum / "-" ) alphanum
-auto get_toplabel_parser() { return ALPHA >> *(alphanum | ('-' >> alphanum)); }
-inline const auto toplabel = get_toplabel_parser();
+inline const auto toplabel = ALPHA >> *(alphanum | ('-' >> alphanum));
 
 // hostname = *( domainlabel "." ) toplabel [ "." ] (!!!)
-auto get_hostname_parser() {
-  return *(domainlabel >> bsx3::char_('.')) > toplabel;
-}
-inline const auto hostname = get_hostname_parser();
+inline const auto hostname = *(domainlabel >> bsx3::char_('.')) > toplabel;
 
 // host = hostname / IPv4address / IPv6reference (!!!)
-auto get_host_parser() { return get_hostname_parser(); }
+auto get_host_parser() { return hostname; }
 
 // hostport = host [ ":" port ] (!!!)
 auto get_hostport_parser() { return get_host_parser(); }

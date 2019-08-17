@@ -1,4 +1,5 @@
-add_library(CppSipParser inc/CppSip/parser/message_parser.h
+add_library(CppSipParser inc/CppSip/parser/abnf_core_parsers.h
+                         inc/CppSip/parser/message_parser.h
                          src/CppSip/parser_utils.cpp
                          src/CppSip/parser_utils.h)
 add_library(CppSip::Parser ALIAS CppSipParser)
