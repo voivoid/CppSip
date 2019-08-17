@@ -5,8 +5,8 @@
 namespace CppSip {
 
 struct SipVersion {
-  size_t major;
-  size_t minor;
+  unsigned int major;
+  unsigned int minor;
 };
 
 } // namespace CppSip

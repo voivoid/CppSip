@@ -29,9 +29,11 @@ Attr parse(Parser parser, const std::string_view input) {
 // clang-format off
 define_parser(ALPHA, char)
 define_parser(DIGIT, char)
+define_parser(HEXDIG, char)
 define_parser(alphanum, char)
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
+define_parser(port, unsigned int)
 define_parser(hostname, std::string)
 define_parser(Method, CppSip::Method)
 define_parser(SIP_Version, CppSip::SipVersion)
@@ -49,8 +51,10 @@ BOOST_AUTO_TEST_CASE(test_ALPHA_parser) {
   BOOST_CHECK_EQUAL('S', parse_ALPHA("S"));
   BOOST_CHECK_EQUAL('Z', parse_ALPHA("Z"));
 
-  BOOST_CHECK_THROW(parse_ALPHA("1"), std::runtime_error);
-  BOOST_CHECK_THROW(parse_ALPHA("*"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_ALPHA("@"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_ALPHA("["), std::runtime_error);
+  BOOST_CHECK_THROW(parse_ALPHA("`"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_ALPHA("{"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_DIGIT_parser) {
@@ -58,8 +62,19 @@ BOOST_AUTO_TEST_CASE(test_DIGIT_parser) {
   BOOST_CHECK_EQUAL('5', parse_DIGIT("5"));
   BOOST_CHECK_EQUAL('9', parse_DIGIT("9"));
 
-  BOOST_CHECK_THROW(parse_DIGIT("a"), std::runtime_error);
-  BOOST_CHECK_THROW(parse_DIGIT("+"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_DIGIT("x"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_DIGIT("/"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_DIGIT(":"), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(test_HEXDIG_parser) {
+  BOOST_CHECK_EQUAL('0', parse_HEXDIG("0"));
+  BOOST_CHECK_EQUAL('3', parse_HEXDIG("3"));
+  BOOST_CHECK_EQUAL('9', parse_HEXDIG("9"));
+  BOOST_CHECK_EQUAL('A', parse_HEXDIG("A"));
+  BOOST_CHECK_EQUAL('F', parse_HEXDIG("F"));
+
+  BOOST_CHECK_THROW(parse_HEXDIG("G"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_alphanum_parser) {
@@ -88,6 +103,14 @@ BOOST_AUTO_TEST_CASE(test_toplabel_parser) {
 
 BOOST_AUTO_TEST_CASE(test_hostname_parser) {
   BOOST_CHECK_EQUAL("google.com", parse_hostname("google.com"));
+}
+
+BOOST_AUTO_TEST_CASE(test_port_parser) {
+  BOOST_CHECK_EQUAL(0, parse_port("0"));
+  BOOST_CHECK_EQUAL(5060, parse_port("5060"));
+  BOOST_CHECK_EQUAL(65535, parse_port("65535"));
+
+  BOOST_CHECK_THROW(parse_port("port"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_Method_parser) {
