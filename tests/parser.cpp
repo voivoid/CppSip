@@ -12,9 +12,12 @@ template <typename Attr, typename Parser>
 Attr parse(Parser parser, const std::string_view input) {
   Attr attr;
 
+  auto begin = input.begin();
+  auto end = input.end();
+
   const bool parsed =
-      boost::spirit::x3::parse(input.begin(), input.end(), parser, attr);
-  if (!parsed) {
+    boost::spirit::x3::parse(begin, end, parser, attr);
+  if (!parsed || begin != end) {
     throw std::runtime_error("failed to parse");
   }
 
@@ -93,16 +96,52 @@ BOOST_AUTO_TEST_CASE(test_alphanum_parser) {
 
 BOOST_AUTO_TEST_CASE(test_domainlabel_parser) {
   BOOST_CHECK_EQUAL("X", parse_domainlabel("X"));
+  BOOST_CHECK_EQUAL("XX", parse_domainlabel("XX"));
   BOOST_CHECK_EQUAL("domain", parse_domainlabel("domain"));
+  BOOST_CHECK_EQUAL("123", parse_domainlabel("123"));
+  BOOST_CHECK_EQUAL("X-X", parse_domainlabel("X-X"));
+  BOOST_CHECK_EQUAL("XX-X", parse_domainlabel("XX-X"));
+  BOOST_CHECK_EQUAL("X-XX", parse_domainlabel("X-XX"));
+  BOOST_CHECK_EQUAL("XX-XX", parse_domainlabel("XX-XX"));
+  BOOST_CHECK_EQUAL("X-X-X", parse_domainlabel("X-X-X"));
+  BOOST_CHECK_EQUAL("X---X", parse_domainlabel("X---X"));
+  
+
+  BOOST_CHECK_THROW(parse_domainlabel("!"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_domainlabel("-"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_domainlabel("X-"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_domainlabel("X-X-"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_toplabel_parser) {
-  BOOST_CHECK_EQUAL("com", parse_toplabel("com"));
+  BOOST_CHECK_EQUAL("d", parse_toplabel("d"));
   BOOST_CHECK_EQUAL("ru", parse_toplabel("ru"));
+  BOOST_CHECK_EQUAL("com", parse_toplabel("com"));
+  BOOST_CHECK_EQUAL("co2", parse_toplabel("co2"));
+
+  BOOST_CHECK_EQUAL("X-X", parse_toplabel("X-X"));
+  BOOST_CHECK_EQUAL("XX-X", parse_toplabel("XX-X"));
+  BOOST_CHECK_EQUAL("X-XX", parse_toplabel("X-XX"));
+  BOOST_CHECK_EQUAL("XX-XX", parse_toplabel("XX-XX"));
+  BOOST_CHECK_EQUAL("X-X-X", parse_toplabel("X-X-X"));
+  BOOST_CHECK_EQUAL("X---X", parse_toplabel("X---X"));
+
+  BOOST_CHECK_THROW(parse_toplabel("22"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_toplabel("@"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_toplabel("-"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_toplabel("X-"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_hostname_parser) {
+  BOOST_CHECK_EQUAL("a.b", parse_hostname("a.b"));
+  BOOST_CHECK_EQUAL("5.b", parse_hostname("5.b"));
   BOOST_CHECK_EQUAL("google.com", parse_hostname("google.com"));
+  BOOST_CHECK_EQUAL("google.com.", parse_hostname("google.com."));
+  BOOST_CHECK_EQUAL("goo--gle.com.", parse_hostname("goo--gle.com."));
+  
+  BOOST_CHECK_THROW(parse_hostname("go#gle.com"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_hostname("google.5"), std::runtime_error);
+  BOOST_CHECK_THROW(parse_hostname("google.co-"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(test_port_parser) {

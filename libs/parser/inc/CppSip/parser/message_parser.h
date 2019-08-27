@@ -20,13 +20,14 @@ namespace bsx3 = boost::spirit::x3;
 inline const auto alphanum = ALPHA | DIGIT;
 
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
-inline const auto domainlabel = alphanum >> *(alphanum | ('-' >> alphanum));
+inline const auto domainchar = alphanum | bsx3::char_('-');
+inline const auto domainlabel = alphanum > -(*( domainchar >> &domainchar ) >> alphanum);
 
 // toplabel = ALPHA / ALPHA *( alphanum / "-" ) alphanum
-inline const auto toplabel = ALPHA >> *(alphanum | ('-' >> alphanum));
+inline const auto toplabel = ALPHA > -(*(domainchar >> &domainchar) >> alphanum);
 
-// hostname = *( domainlabel "." ) toplabel [ "." ] (!!!)
-inline const auto hostname = *(domainlabel >> bsx3::char_('.')) > toplabel;
+// hostname = *( domainlabel "." ) toplabel [ "." ]
+inline const auto hostname = *(domainlabel >> bsx3::char_('.') >> &alphanum) > toplabel > -bsx3::char_('.');
 
 // port = 1*DIGIT
 inline const auto port = bsx3::uint_;
