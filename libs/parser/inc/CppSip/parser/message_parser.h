@@ -36,14 +36,7 @@ inline const auto hostname = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum )
 inline const auto port = bsx3::uint16;
 
 // h16 = 1*4HEXDIG
-inline const auto h16 = bsx3::hex[ ( []( auto& ctx ) {
-  auto& attr = _attr( ctx );
-
-  if ( attr > 65535 )
-    _pass( ctx ) = false;
-  else
-    _val( ctx ) = attr;
-} ) ];
+inline const auto h16 = bsx3::uint_parser<std::uint16_t, 16, 1, 4>{};
 
 // dec-octet = DIGIT               ; 0-9
 //             / %x31-39 DIGIT     ; 10-99
