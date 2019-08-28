@@ -22,7 +22,7 @@ std::ostream& operator<<( std::ostream& s, Method m )
 
 std::ostream& operator<<( std::ostream& s, const IPaddress& ip )
 {
-  s << ip.a << '.' << ip.b << '.' << ip.c << '.' << ip.d;
+  s << unsigned( ip.a ) << '.' << unsigned( ip.b ) << '.' << unsigned( ip.c ) << '.' << unsigned( ip.d );
   return s;
 }
 
