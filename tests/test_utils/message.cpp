@@ -20,4 +20,10 @@ std::ostream& operator<<( std::ostream& s, Method m )
   return s;
 }
 
+std::ostream& operator<<( std::ostream& s, const IPaddress& ip )
+{
+  s << ip.a << '.' << ip.b << '.' << ip.c << '.' << ip.d;
+  return s;
+}
+
 }  // namespace CppSip

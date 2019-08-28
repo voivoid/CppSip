@@ -39,8 +39,10 @@ define_parser(HEXDIG, char)
 define_parser(alphanum, char)
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
-define_parser(port, unsigned int)
 define_parser(hostname, std::string)
+define_parser(port, unsigned int)
+define_parser(hex4, unsigned)
+define_parser(IPv4address, CppSip::IPaddress)
 define_parser(Method, CppSip::Method)
 define_parser(SIP_Version, CppSip::SipVersion)
 // clang-format on
@@ -162,6 +164,29 @@ BOOST_AUTO_TEST_CASE( test_port_parser )
   BOOST_CHECK_THROW( parse_port( "port" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "-1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "65536" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_hex4_parser )
+{
+  BOOST_CHECK_EQUAL( 0, parse_hex4( "0" ) );
+  BOOST_CHECK_EQUAL( 17, parse_hex4( "11" ) );
+  BOOST_CHECK_EQUAL( 3822, parse_hex4( "EEE" ) );
+  BOOST_CHECK_EQUAL( 65535, parse_hex4( "FFFF" ) );
+  BOOST_CHECK_EQUAL( 43981, parse_hex4( "ABCD" ) );
+
+  BOOST_CHECK_THROW( parse_hex4( "" ), std::runtime_error );
+  //BOOST_CHECK_THROW( parse_hex4( "ABCDE" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
+{
+  BOOST_CHECK_EQUAL( ( CppSip::IPaddress{ 127, 0, 0, 1 } ), parse_IPv4address( "127.0.0.1" ) );
+  BOOST_CHECK_EQUAL( ( CppSip::IPaddress{ 0, 0, 0, 0 } ), parse_IPv4address( "0.0.0.0" ) );
+  BOOST_CHECK_EQUAL( ( CppSip::IPaddress{ 255, 255, 255, 255 } ), parse_IPv4address( "255.255.255.255" ) );
+
+  BOOST_CHECK_THROW( parse_IPv4address( "1" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_IPv4address( "1.2" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_IPv4address( "1.2.3" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )

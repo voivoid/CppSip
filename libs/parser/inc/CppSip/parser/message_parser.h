@@ -10,6 +10,7 @@
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::SipVersion, major, minor )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::HostPort, host, port )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::IPaddress, a, b, c, d )
 
 namespace CppSip
 {
@@ -41,11 +42,27 @@ inline const auto port = bsx3::uint_[ ( []( auto& ctx ) {
     _val( ctx ) = attr;
 } ) ];
 
+// hex4 = 1*4HEXDIG
+inline const auto hex4 = bsx3::hex;
+
+// hexseq = hex4 *( ":" hex4)
+inline const auto hexseq = hex4 >> *( ':' > hex4 );
+
+// hexpart = hexseq / hexseq "::" [ hexseq ] / "::" [ hexseq ]
+inline const auto hexpart = hexseq | ( hexseq > "::" > -hexseq ) | ( "::" > -hexseq );
+
+// IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
+inline const auto IPv4address = bsx3::uint8 > '.' > bsx3::uint8 > '.' > bsx3::uint8 > '.' > bsx3::uint8;
+
+// IPv6address = hexpart [ ":" IPv4address ]
+
+// IPv6reference = "[" IPv6address "]" (!!!) UPDATE ACCORDING TO RFC 5954
+
 // host = hostname / IPv4address / IPv6reference (!!!)
-inline const auto host = hostname;
+inline const auto host = hostname | IPv4address;
 
 // hostport = host [ ":" port ]
-inline const auto hostport = host - ( bsx3::lit( ':' ) > port );
+inline const auto hostport = host >> port;
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::lit( "sip:" );
