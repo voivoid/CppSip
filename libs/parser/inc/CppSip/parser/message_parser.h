@@ -56,7 +56,7 @@ inline const auto dec_octet = bsx3::uint8;
 inline const auto IPv4address = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
 
 // ls32 = ( h16 ":" h16 ) / IPv4address
-inline const auto ls32 = ( h16 > ':' > h16 ) | IPv4address;
+inline const auto ls32 = ( h16 >> ':' > h16 ) | IPv4address;
 
 // According to RFC5954:
 //
@@ -69,9 +69,15 @@ inline const auto ls32 = ( h16 > ':' > h16 ) | IPv4address;
 //               / [ *4( h16 ":" ) h16 ] "::" ls32
 //               / [ *5( h16 ":" ) h16 ] "::" h16
 //               / [ *6( h16 ":" ) h16 ] "::"            (!!!)
-inline const auto IPv6address =               ( bsx3::repeat(6)[ h16 > ':' ] > ls32 ) |
-                                       "::" > ( bsx3::repeat(5)[ h16 > ':' ] > ls32 ) |
-                                -h16 > "::" > ( bsx3::repeat(4)[ h16 > ':' ] > ls32 );
+// clang-format off
+inline const auto IPv6address = (                            bsx3::repeat(6)[ h16 > ':' ] >  ls32 |
+                                                     "::" >> bsx3::repeat(5)[ h16 > ':' ] >> ls32 |
+                                           -h16   >> "::" >> bsx3::repeat(4)[ h16 > ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 3 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(1)[ h16 > ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 2 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(2)[ h16 > ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 1 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(3)[ h16 > ':' ] >> ls32
+        );
+// clang-format on
 
 // host = hostname / IPv4address / IPv6reference (!!!)
 inline const auto host = hostname | IPv4address;

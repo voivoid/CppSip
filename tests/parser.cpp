@@ -33,6 +33,12 @@ Attr parse( Parser parser, const std::string_view input )
     return parse<type>( CppSip::Parsers::parser, input );                                                                                  \
   }
 
+#define define_raw_parser( parser )                                                                                                        \
+  bool parse_##parser( const std::string_view input )                                                                                      \
+  {                                                                                                                                        \
+    return input == parse<std::string>( boost::spirit::x3::raw[ CppSip::Parsers::parser ], input );                                        \
+  }
+
 // clang-format off
 define_parser(ALPHA, char)
 define_parser(DIGIT, char)
@@ -43,6 +49,8 @@ define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
 define_parser(port, unsigned int)
 define_parser(h16, unsigned)
+define_raw_parser(ls32)
+define_raw_parser(IPv6address)
 define_parser(IPv4address, CppSip::IPaddress)
 define_parser(Method, CppSip::Method)
 define_parser(SIP_Version, CppSip::SipVersion)
@@ -180,6 +188,12 @@ BOOST_AUTO_TEST_CASE( test_hex4_parser )
   BOOST_CHECK_THROW( parse_h16( "ABCDE" ), std::runtime_error );
 }
 
+BOOST_AUTO_TEST_CASE( test_ls32_parser )
+{
+  BOOST_CHECK( parse_ls32( "ABCD:1234" ) );
+  BOOST_CHECK( parse_ls32( "A:BBBB" ) );
+  BOOST_CHECK( parse_ls32( "AAAA:B" ) );
+}
 
 BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
 {
@@ -190,6 +204,17 @@ BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
   BOOST_CHECK_THROW( parse_IPv4address( "1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_IPv4address( "1.2" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_IPv4address( "1.2.3" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_IPv6address_parser )
+{
+  BOOST_CHECK( parse_IPv6address( "0000:1111:2222:3333:4444:5555:AAAA:BBBB" ) ); //                            6( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "::1111:2222:3333:4444:5555:AAAA:BBBB" ) );    //                       "::" 5( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "::2222:3333:4444:5555:AAAA:BBBB" ) );         //                       "::" 4( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "FFFF::2222:3333:4444:5555:AAAA:BBBB" ) );     //                 h16   "::" 4( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "FFFF:FFFF::3333:4444:5555:AAAA:BBBB" ) );     // [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "FFFF:FFFF:FFFF::4444:5555:AAAA:BBBB" ) );     // [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+  BOOST_CHECK( parse_IPv6address( "FFFF:FFFF:FFFF:FFFF::5555:AAAA:BBBB" ) );     // [ *3( h16 ":" ) h16 ] "::" 1( h16 ":" ) ls32
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
