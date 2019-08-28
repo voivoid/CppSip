@@ -7,7 +7,7 @@ namespace CppSip
 {
 
 using Host = std::string;
-using Port = unsigned int;
+using Port = std::uint16_t;
 
 struct HostPort
 {

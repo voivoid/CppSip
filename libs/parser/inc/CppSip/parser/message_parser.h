@@ -33,7 +33,10 @@ inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphan
 inline const auto hostname = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) > toplabel > -bsx3::char_( '.' );
 
 // port = 1*DIGIT
-inline const auto port = bsx3::uint_[ ( []( auto& ctx ) {
+inline const auto port = bsx3::uint16;
+
+// h16 = 1*4HEXDIG
+inline const auto h16 = bsx3::hex[ ( []( auto& ctx ) {
   auto& attr = _attr( ctx );
 
   if ( attr > 65535 )
@@ -42,21 +45,33 @@ inline const auto port = bsx3::uint_[ ( []( auto& ctx ) {
     _val( ctx ) = attr;
 } ) ];
 
-// hex4 = 1*4HEXDIG
-inline const auto hex4 = bsx3::hex;
-
-// hexseq = hex4 *( ":" hex4)
-inline const auto hexseq = hex4 >> *( ':' > hex4 );
-
-// hexpart = hexseq / hexseq "::" [ hexseq ] / "::" [ hexseq ]
-inline const auto hexpart = hexseq | ( hexseq > "::" > -hexseq ) | ( "::" > -hexseq );
+// dec-octet = DIGIT               ; 0-9
+//             / %x31-39 DIGIT     ; 10-99
+//             / "1" 2DIGIT        ; 100-199
+//             / "2" %x30-34 DIGIT ; 200-249
+//             / "25" %x30-35      ; 250-255
+inline const auto dec_octet = bsx3::uint8;
 
 // IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
-inline const auto IPv4address = bsx3::uint8 > '.' > bsx3::uint8 > '.' > bsx3::uint8 > '.' > bsx3::uint8;
+inline const auto IPv4address = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
 
-// IPv6address = hexpart [ ":" IPv4address ]
+// ls32 = ( h16 ":" h16 ) / IPv4address
+inline const auto ls32 = ( h16 > ':' > h16 ) | IPv4address;
 
-// IPv6reference = "[" IPv6address "]" (!!!) UPDATE ACCORDING TO RFC 5954
+// According to RFC5954:
+//
+// IPv6address =                              6( h16 ":" ) ls32
+//               /                       "::" 5( h16 ":" ) ls32
+//               / [               h16 ] "::" 4( h16 ":" ) ls32
+//               / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+//               / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+//               / [ *3( h16 ":" ) h16 ] "::" h16 ":" ls32
+//               / [ *4( h16 ":" ) h16 ] "::" ls32
+//               / [ *5( h16 ":" ) h16 ] "::" h16
+//               / [ *6( h16 ":" ) h16 ] "::"            (!!!)
+inline const auto IPv6address =               ( bsx3::repeat(6)[ h16 > ':' ] > ls32 ) |
+                                       "::" > ( bsx3::repeat(5)[ h16 > ':' ] > ls32 ) |
+                                -h16 > "::" > ( bsx3::repeat(4)[ h16 > ':' ] > ls32 );
 
 // host = hostname / IPv4address / IPv6reference (!!!)
 inline const auto host = hostname | IPv4address;

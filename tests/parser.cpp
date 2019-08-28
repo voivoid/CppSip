@@ -5,6 +5,7 @@
 
 #include "boost/spirit/home/x3.hpp"
 
+#include <limits>
 #include <string>
 
 namespace
@@ -41,7 +42,7 @@ define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
 define_parser(port, unsigned int)
-define_parser(hex4, unsigned)
+define_parser(h16, unsigned)
 define_parser(IPv4address, CppSip::IPaddress)
 define_parser(Method, CppSip::Method)
 define_parser(SIP_Version, CppSip::SipVersion)
@@ -164,19 +165,21 @@ BOOST_AUTO_TEST_CASE( test_port_parser )
   BOOST_CHECK_THROW( parse_port( "port" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "-1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "65536" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_port( "4294967296" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_hex4_parser )
 {
-  BOOST_CHECK_EQUAL( 0, parse_hex4( "0" ) );
-  BOOST_CHECK_EQUAL( 17, parse_hex4( "11" ) );
-  BOOST_CHECK_EQUAL( 3822, parse_hex4( "EEE" ) );
-  BOOST_CHECK_EQUAL( 65535, parse_hex4( "FFFF" ) );
-  BOOST_CHECK_EQUAL( 43981, parse_hex4( "ABCD" ) );
+  BOOST_CHECK_EQUAL( 0, parse_h16( "0" ) );
+  BOOST_CHECK_EQUAL( 17, parse_h16( "11" ) );
+  BOOST_CHECK_EQUAL( 3822, parse_h16( "EEE" ) );
+  BOOST_CHECK_EQUAL( 65535, parse_h16( "FFFF" ) );
+  BOOST_CHECK_EQUAL( 43981, parse_h16( "ABCD" ) );
 
-  BOOST_CHECK_THROW( parse_hex4( "" ), std::runtime_error );
-  //BOOST_CHECK_THROW( parse_hex4( "ABCDE" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_h16( "" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_h16( "ABCDE" ), std::runtime_error );
 }
+
 
 BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
 {
