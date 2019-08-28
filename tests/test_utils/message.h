@@ -2,8 +2,9 @@
 
 #include <iosfwd>
 
-namespace CppSip {
+namespace CppSip
+{
 
-std::ostream &operator<<(std::ostream &s, Method m);
+std::ostream& operator<<( std::ostream& s, Method m );
 
 }

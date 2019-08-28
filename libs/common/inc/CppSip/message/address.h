@@ -1,16 +1,18 @@
 #pragma once
 
-#include <string>
 #include <optional>
+#include <string>
 
-namespace CppSip {
+namespace CppSip
+{
 
 using Host = std::string;
 using Port = unsigned int;
 
-struct HostPort {
+struct HostPort
+{
   Host host;
   std::optional<Port> port;
 };
 
-}
+}  // namespace CppSip

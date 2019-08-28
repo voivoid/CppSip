@@ -2,11 +2,13 @@
 
 #include <cstddef>
 
-namespace CppSip {
+namespace CppSip
+{
 
-struct SipVersion {
+struct SipVersion
+{
   unsigned int major;
   unsigned int minor;
 };
 
-} // namespace CppSip
+}  // namespace CppSip
