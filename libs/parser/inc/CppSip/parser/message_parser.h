@@ -10,7 +10,7 @@
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::SipVersion, major, minor )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::HostPort, host, port )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::IPaddress, a, b, c, d )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::IPv4Address, a, b, c, d )
 
 namespace CppSip
 {
@@ -49,7 +49,7 @@ inline const auto dec_octet = bsx3::uint8;
 inline const auto IPv4address = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
 
 // ls32 = ( h16 ":" h16 ) / IPv4address
-inline const auto ls32 = ( h16 >> ':' > h16 ) | IPv4address;
+inline const auto ls32 = ( h16 >> ':' >> h16 ) | IPv4address;
 
 // According to RFC5954:
 //
@@ -63,20 +63,23 @@ inline const auto ls32 = ( h16 >> ':' > h16 ) | IPv4address;
 //               / [ *5( h16 ":" ) h16 ] "::" h16
 //               / [ *6( h16 ":" ) h16 ] "::"            (!!!)
 // clang-format off
-inline const auto IPv6address = (                            bsx3::repeat(6)[ h16 > ':' ] >  ls32 |
-                                                     "::" >> bsx3::repeat(5)[ h16 > ':' ] >> ls32 |
-                                           -h16   >> "::" >> bsx3::repeat(4)[ h16 > ':' ] >> ls32 |
-   -( bsx3::repeat( 0, 3 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(1)[ h16 > ':' ] >> ls32 |
-   -( bsx3::repeat( 0, 2 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(2)[ h16 > ':' ] >> ls32 |
-   -( bsx3::repeat( 0, 1 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(3)[ h16 > ':' ] >> ls32
-        );
+inline const auto IPv6address = (                            bsx3::repeat(6)[ h16 >> ':' ] >> ls32 |
+                                                     "::" >> bsx3::repeat(5)[ h16 >> ':' ] >> ls32 |
+                                           -h16   >> "::" >> bsx3::repeat(4)[ h16 >> ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 1 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(3)[ h16 >> ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 2 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(2)[ h16 >> ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 3 )[ h16 >> ':' ] >> h16 ) >> "::" >> bsx3::repeat(1)[ h16 >> ':' ] >> ls32 |
+   -( bsx3::repeat( 0, 4 )[ h16 >> ':' ] >> h16 ) >> "::" >> ls32                                  |
+   -( bsx3::repeat( 0, 5 )[ h16 >> ':' ] >> h16 ) >> "::" >> h16                                   |
+   -( bsx3::repeat( 0, 6 )[ h16 >> ':' ] >> h16 ) >> "::"
+);
 // clang-format on
 
-// host = hostname / IPv4address / IPv6reference (!!!)
-inline const auto host = hostname | IPv4address;
+// host = hostname / IPv4address / IPv6address
+inline const auto host = hostname | IPv4address | IPv6address;
 
 // hostport = host [ ":" port ]
-inline const auto hostport = host >> port;
+inline const auto hostport = host >> -( ':' >> port );
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::lit( "sip:" );
@@ -101,6 +104,9 @@ bsx3::symbols<CppSip::Method> get_Method_parser()
   return method_symbols;
 }
 inline const auto Method = get_Method_parser();
+
+// Request-Line = Method SP Request-URI SP SIP-Version CRLF
+inline const auto Request_Line = Method > SP > Request_URI > SP > SIP_Version > CRLF;
 
 }  // namespace Parsers
 }  // namespace CppSip

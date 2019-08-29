@@ -15,7 +15,7 @@ struct HostPort
   std::optional<Port> port;
 };
 
-struct IPaddress
+struct IPv4Address
 {
   std::uint8_t a;
   std::uint8_t b;
@@ -26,7 +26,7 @@ struct IPaddress
 private:
 };
 
-bool operator==( const IPaddress& ip1, const IPaddress& ip2 );
-bool operator<( const IPaddress& ip1, const IPaddress& ip2 );
+bool operator==( const IPv4Address& ip1, const IPv4Address& ip2 );
+bool operator<( const IPv4Address& ip1, const IPv4Address& ip2 );
 
 }  // namespace CppSip
