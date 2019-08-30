@@ -43,10 +43,15 @@ Attr parse( Parser parser, const std::string_view input )
 define_parser(ALPHA, char)
 define_parser(DIGIT, char)
 define_parser(HEXDIG, char)
+define_parser(SP, char)
+define_parser(CR, char)
+define_parser(LF, char)
 define_parser(alphanum, char)
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
+define_parser(host, CppSip::Host)
+define_parser(hostport, CppSip::HostPort)
 define_parser(port, unsigned int)
 define_parser(h16, unsigned)
 define_raw_parser(ls32)
@@ -103,6 +108,10 @@ BOOST_AUTO_TEST_CASE( test_DIGIT_parser )
   BOOST_CHECK_THROW( parse_DIGIT( "x" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_DIGIT( "/" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_DIGIT( ":" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_SP_parser )
+{
 }
 
 BOOST_AUTO_TEST_CASE( test_HEXDIG_parser )
@@ -244,6 +253,19 @@ BOOST_AUTO_TEST_CASE( test_IPv6address_parser )
   BOOST_CHECK( parse_IPv6address( "::BBBB" ) );                                   //                       "::" h16
   BOOST_CHECK( parse_IPv6address( "FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF::" ) );     // [ *6( h16 ":" ) h16 ] "::"
   BOOST_CHECK( parse_IPv6address( "::" ) );                                       //                       "::"
+}
+
+BOOST_AUTO_TEST_CASE( test_host_parser )
+{
+    parse_host("google.com");
+    parse_host("127.0.0.1");
+}
+
+BOOST_AUTO_TEST_CASE( test_hostport_parser )
+{
+    parse_hostport("google.com");
+    parse_hostport("google.com:5060");
+    parse_hostport("192.168.0.1:5060");
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )

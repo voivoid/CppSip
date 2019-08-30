@@ -30,7 +30,7 @@ inline const auto domainlabel = alphanum > -( *( domainchar >> &domainchar ) >> 
 inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphanum );
 
 // hostname = *( domainlabel "." ) toplabel [ "." ]
-inline const auto hostname = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) > toplabel > -bsx3::char_( '.' );
+inline const auto hostname = bsx3::rule<struct _hostname, std::string>{} = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) >> toplabel >> -bsx3::char_( '.' );
 
 // port = 1*DIGIT
 inline const auto port = bsx3::uint16;
@@ -46,7 +46,7 @@ inline const auto h16 = bsx3::uint_parser<std::uint16_t, 16, 1, 4>{};
 inline const auto dec_octet = bsx3::uint8;
 
 // IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
-inline const auto IPv4address = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
+inline const auto IPv4address = bsx3::rule<struct _ipv4address, CppSip::IPv4Address>{} = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
 
 // ls32 = ( h16 ":" h16 ) / IPv4address
 inline const auto ls32 = ( h16 >> ':' >> h16 ) | IPv4address;
@@ -75,17 +75,17 @@ inline const auto IPv6address = (                            bsx3::repeat(6)[ h1
 );
 // clang-format on
 
-// host = hostname / IPv4address / IPv6address
-inline const auto host = hostname | IPv4address | IPv6address;
+// host = hostname / IPv4address / IPv6address (!!!)
+inline const auto host = bsx3::rule<struct _host, CppSip::Host>{} = hostname | IPv4address;
 
 // hostport = host [ ":" port ]
-inline const auto hostport = host >> -( ':' >> port );
+inline const auto hostport = bsx3::rule<struct _hostport, CppSip::HostPort>{} = host >> -( ':' >> port );
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIP_URI = bsx3::lit( "sip:" );
+inline const auto SIP_URI = bsx3::lit( "sip:" ) > hostport;
 
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIPS_URI = bsx3::lit( "sips:" );
+inline const auto SIPS_URI = bsx3::lit( "sips:" ) > hostport;
 
 // Request-URI = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto Request_URI = SIP_URI | SIPS_URI;
