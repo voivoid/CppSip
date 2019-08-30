@@ -19,13 +19,19 @@ inline const auto DIGIT = bsx3::char_( '0', '9' );
 inline const auto HEXDIG = DIGIT | bsx3::char_( 'A', 'F' );
 
 // SP = %x20 ; space
-inline const auto SP = bsx3::char_( ' ' );
+inline const auto SP = bsx3::lit( ' ' );
 
 // CR = %x0D ; carriage return
-inline const auto CR = bsx3::char_( 0x0D );
+inline const auto CR = bsx3::lit( char( 0x0D ) );
 
 // LF = %x0A ; linefeed
-inline const auto LF = bsx3::char_( 0x0A );
+inline const auto LF = bsx3::lit( char( 0x0A ) );
+
+// HTAB = % x09; horizontal tab
+inline const auto HTAB = bsx3::lit( char( 0x09 ) );
+
+// WSP = SP / HTAB; white space
+inline const auto WSP = SP | HTAB;
 
 // CRLF = CR LF ; Internet standard newline
 inline const auto CRLF = CR >> LF;

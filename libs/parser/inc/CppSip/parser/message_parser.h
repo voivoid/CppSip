@@ -22,6 +22,16 @@ namespace bsx3 = boost::spirit::x3;
 // alphanum = ALPHA / DIGIT
 inline const auto alphanum = ALPHA | DIGIT;
 
+// LWS  =  [*WSP CRLF] 1*WSP ; linear whitespace
+inline const auto LWS = -( *WSP >> CRLF ) >> +WSP;
+
+// SWS  =  [LWS] ; sep whitespace
+inline const auto SWS = -LWS;
+
+// HCOLON = *( SP / HTAB ) ":" SWS
+inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
+
+
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
 inline const auto domainchar  = alphanum | bsx3::char_( '-' );
 inline const auto domainlabel = alphanum > -( *( domainchar >> &domainchar ) >> alphanum );
@@ -107,6 +117,9 @@ inline const auto Method = get_Method_parser();
 
 // Request-Line = Method SP Request-URI SP SIP-Version CRLF
 inline const auto Request_Line = Method > SP > Request_URI > SP > SIP_Version > CRLF;
+
+// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+inline const auto CSEQ = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
 
 }  // namespace Parsers
 }  // namespace CppSip
