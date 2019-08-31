@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstddef>
+#include <string>
 
 namespace CppSip
 {
 
 struct SipVersion
 {
-  unsigned int major;
-  unsigned int minor;
+  std::string major;
+  std::string minor;
 };
 
 }  // namespace CppSip

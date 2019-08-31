@@ -18,7 +18,7 @@ struct IPv4Address
 using HostName = std::string;
 
 using Host = std::variant<HostName, IPv4Address>;
-using Port = std::uint16_t;
+using Port = std::string;
 
 struct HostPort
 {

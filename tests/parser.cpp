@@ -77,7 +77,7 @@ define_noattr_parser(HCOLON)
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
-define_parser(port, unsigned int)
+define_parser(port, std::string)
 define_parser(h16, unsigned)
 define_parser(IPv4address, CppSip::IPv4Address)
 define_raw_parser(ls32)
@@ -307,14 +307,12 @@ BOOST_AUTO_TEST_CASE( test_hostname_parser )
 
 BOOST_AUTO_TEST_CASE( test_port_parser )
 {
-  BOOST_CHECK_EQUAL( 0, parse_port( "0" ) );
-  BOOST_CHECK_EQUAL( 5060, parse_port( "5060" ) );
-  BOOST_CHECK_EQUAL( 65535, parse_port( "65535" ) );
+  BOOST_CHECK_EQUAL( "0", parse_port( "0" ) );
+  BOOST_CHECK_EQUAL( "5060", parse_port( "5060" ) );
+  BOOST_CHECK_EQUAL( "65535", parse_port( "65535" ) );
 
   BOOST_CHECK_THROW( parse_port( "port" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "-1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_port( "65536" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_port( "4294967296" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_h16_parser )
@@ -397,14 +395,14 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
 {
   {
     const auto [ major, minor ] = parse_SIP_Version( "SIP/1.0" );
-    BOOST_CHECK_EQUAL( major, 1 );
-    BOOST_CHECK_EQUAL( minor, 0 );
+    BOOST_CHECK_EQUAL( "1", major );
+    BOOST_CHECK_EQUAL( "0", minor );
   }
 
   {
     const auto [ major, minor ] = parse_SIP_Version( "SIP/2.1" );
-    BOOST_CHECK_EQUAL( major, 2 );
-    BOOST_CHECK_EQUAL( minor, 1 );
+    BOOST_CHECK_EQUAL( "2", major );
+    BOOST_CHECK_EQUAL( "1", minor);
   }
 
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );

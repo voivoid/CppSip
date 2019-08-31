@@ -43,7 +43,7 @@ inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphan
 inline const auto hostname = bsx3::rule<struct _hostname, std::string>{} = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) >> toplabel >> -bsx3::char_( '.' );
 
 // port = 1*DIGIT
-inline const auto port = bsx3::uint16;
+inline const auto port = bsx3::rule<struct _port, std::string>{} = + bsx3::digit;
 
 // h16 = 1*4HEXDIG
 inline const auto h16 = bsx3::uint_parser<std::uint16_t, 16, 1, 4>{};
@@ -101,7 +101,7 @@ inline const auto SIPS_URI = bsx3::lit( "sips:" ) > hostport;
 inline const auto Request_URI = SIP_URI | SIPS_URI;
 
 // SIP-Version = "SIP" "/" 1*DIGIT "." 1*DIGIT
-inline const auto SIP_Version = bsx3::lit( "SIP/" ) >> bsx3::uint_ >> bsx3::lit( '.' ) >> bsx3::uint_;
+inline const auto SIP_Version = bsx3::lit( "SIP/" ) >> +bsx3::digit >> bsx3::lit( '.' ) >> +bsx3::digit;
 
 // Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
 // extension-method (!!!)
