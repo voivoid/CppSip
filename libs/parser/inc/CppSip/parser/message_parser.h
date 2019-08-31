@@ -8,9 +8,10 @@
 
 #include <stdexcept>
 
-BOOST_FUSION_ADAPT_STRUCT( CppSip::SipVersion, major, minor )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::HostPort, host, port )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::IPv4Address, a, b, c, d )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipVersion, major, minor )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::HostPort, host, port )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Header::CSeq, id, method )
 
 namespace CppSip
 {
@@ -56,7 +57,8 @@ inline const auto h16 = bsx3::uint_parser<std::uint16_t, 16, 1, 4>{};
 inline const auto dec_octet = bsx3::uint8;
 
 // IPv4address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
-inline const auto IPv4address = bsx3::rule<struct _ipv4address, CppSip::IPv4Address>{} = dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
+inline const auto IPv4address = bsx3::rule<struct _ipv4address, CppSip::Message::IPv4Address>{} =
+    dec_octet > '.' > dec_octet > '.' > dec_octet > '.' > dec_octet;
 
 // ls32 = ( h16 ":" h16 ) / IPv4address
 inline const auto ls32 = ( h16 >> ':' >> h16 ) | IPv4address;
@@ -86,10 +88,10 @@ inline const auto IPv6address = (                            bsx3::repeat(6)[ h1
 // clang-format on
 
 // host = hostname / IPv4address / IPv6address (!!!)
-inline const auto host = bsx3::rule<struct _host, CppSip::Host>{} = hostname | IPv4address;
+inline const auto host = bsx3::rule<struct _host, CppSip::Message::Host>{} = hostname | IPv4address;
 
 // hostport = host [ ":" port ]
-inline const auto hostport = bsx3::rule<struct _hostport, CppSip::HostPort>{} = host >> -( ':' >> port );
+inline const auto hostport = bsx3::rule<struct _hostport, CppSip::Message::HostPort>{} = host >> -( ':' >> port );
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::lit( "sip:" ) > hostport;
@@ -105,11 +107,11 @@ inline const auto SIP_Version = bsx3::lit( "SIP/" ) >> +bsx3::digit >> bsx3::lit
 
 // Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
 // extension-method (!!!)
-bsx3::symbols<CppSip::Method> get_Method_parser()
+bsx3::symbols<CppSip::Message::Method> get_Method_parser()
 {
-  bsx3::symbols<CppSip::Method> method_symbols;
-  method_symbols.add( "ACK", Method::Ack )( "BYE", Method::Bye )( "CANCEL", Method::Cancel )( "INVITE", Method::Invite )(
-      "OPTIONS", Method::Options )( "REGISTER", Method::Register );
+  bsx3::symbols<CppSip::Message::Method> method_symbols;
+  method_symbols.add( "ACK", Message::Method::Ack )( "BYE", Message::Method::Bye )( "CANCEL", Message::Method::Cancel )(
+      "INVITE", Message::Method::Invite )( "OPTIONS", Message::Method::Options )( "REGISTER", Message::Method::Register );
 
   return method_symbols;
 }

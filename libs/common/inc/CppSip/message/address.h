@@ -7,6 +7,9 @@
 namespace CppSip
 {
 
+namespace Message
+{
+
 struct IPv4Address
 {
   std::uint8_t a;
@@ -28,5 +31,7 @@ struct HostPort
 
 bool operator==( const IPv4Address& ip1, const IPv4Address& ip2 );
 bool operator<( const IPv4Address& ip1, const IPv4Address& ip2 );
+
+}  // namespace Message
 
 }  // namespace CppSip

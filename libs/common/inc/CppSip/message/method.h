@@ -3,6 +3,10 @@
 namespace CppSip
 {
 
+namespace Message
+{
+
+
 enum class Method
 {
   Ack,
@@ -12,5 +16,7 @@ enum class Method
   Options,
   Register
 };
+
+}
 
 }  // namespace CppSip

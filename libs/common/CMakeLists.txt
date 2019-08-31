@@ -1,4 +1,5 @@
-add_library(CppSipCommon STATIC inc/CppSip/message/address.h
+add_library(CppSipCommon STATIC inc/CppSip/message/header/cseq.h
+                                inc/CppSip/message/address.h
                                 inc/CppSip/message/message.h
                                 inc/CppSip/message/method.h
                                 inc/CppSip/message/sip_version.h

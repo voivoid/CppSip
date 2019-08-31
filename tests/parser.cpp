@@ -79,13 +79,14 @@ define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
 define_parser(port, std::string)
 define_parser(h16, unsigned)
-define_parser(IPv4address, CppSip::IPv4Address)
+define_parser(IPv4address, CppSip::Message::IPv4Address)
 define_raw_parser(ls32)
 define_raw_parser(IPv6address)
-define_parser(host, CppSip::Host)
-define_parser(hostport, CppSip::HostPort)
-define_parser(Method, CppSip::Method)
-define_parser(SIP_Version, CppSip::SipVersion)
+define_parser(host, CppSip::Message::Host)
+define_parser(hostport, CppSip::Message::HostPort)
+define_parser(Method, CppSip::Message::Method)
+define_parser(SIP_Version, CppSip::Message::SipVersion)
+define_parser(CSEQ, CppSip::Message::Header::CSeq)
 // clang-format on
 
 }  // namespace
@@ -329,9 +330,9 @@ BOOST_AUTO_TEST_CASE( test_h16_parser )
 
 BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
 {
-  BOOST_CHECK_EQUAL( ( CppSip::IPv4Address{ 127, 0, 0, 1 } ), parse_IPv4address( "127.0.0.1" ) );
-  BOOST_CHECK_EQUAL( ( CppSip::IPv4Address{ 0, 0, 0, 0 } ), parse_IPv4address( "0.0.0.0" ) );
-  BOOST_CHECK_EQUAL( ( CppSip::IPv4Address{ 255, 255, 255, 255 } ), parse_IPv4address( "255.255.255.255" ) );
+  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 127, 0, 0, 1 } ), parse_IPv4address( "127.0.0.1" ) );
+  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 0, 0, 0, 0 } ), parse_IPv4address( "0.0.0.0" ) );
+  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 255, 255, 255, 255 } ), parse_IPv4address( "255.255.255.255" ) );
 
   BOOST_CHECK_THROW( parse_IPv4address( "1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_IPv4address( "1.2" ), std::runtime_error );
@@ -381,12 +382,12 @@ BOOST_AUTO_TEST_CASE( test_hostport_parser )
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
 {
-  BOOST_CHECK_EQUAL( CppSip::Method::Ack, parse_Method( "ACK" ) );
-  BOOST_CHECK_EQUAL( CppSip::Method::Bye, parse_Method( "BYE" ) );
-  BOOST_CHECK_EQUAL( CppSip::Method::Cancel, parse_Method( "CANCEL" ) );
-  BOOST_CHECK_EQUAL( CppSip::Method::Invite, parse_Method( "INVITE" ) );
-  BOOST_CHECK_EQUAL( CppSip::Method::Options, parse_Method( "OPTIONS" ) );
-  BOOST_CHECK_EQUAL( CppSip::Method::Register, parse_Method( "REGISTER" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Ack, parse_Method( "ACK" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Bye, parse_Method( "BYE" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Cancel, parse_Method( "CANCEL" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Invite, parse_Method( "INVITE" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Options, parse_Method( "OPTIONS" ) );
+  BOOST_CHECK_EQUAL( CppSip::Message::Method::Register, parse_Method( "REGISTER" ) );
 
   BOOST_CHECK_THROW( parse_Method( "UNKNOWN" ), std::runtime_error );
 }

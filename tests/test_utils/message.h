@@ -5,8 +5,13 @@
 
 namespace CppSip
 {
+namespace Message
+{
+
 
 std::ostream& operator<<( std::ostream& s, Method m );
 std::ostream& operator<<( std::ostream& s, const IPv4Address& ip );
+
+}
 
 }  // namespace CppSip
