@@ -403,7 +403,7 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
   {
     const auto [ major, minor ] = parse_SIP_Version( "SIP/2.1" );
     BOOST_CHECK_EQUAL( "2", major );
-    BOOST_CHECK_EQUAL( "1", minor);
+    BOOST_CHECK_EQUAL( "1", minor );
   }
 
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );
@@ -414,6 +414,15 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
 BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
 {
   // INVITE sip:bob@biloxi.com SIP/2.0
+}
+
+BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
+{
+  {
+    const auto [ id, method ] = parse_CSEQ( "CSeq: 12345 INVITE" );
+    BOOST_CHECK_EQUAL( "12345", id );
+    BOOST_CHECK_EQUAL( CppSip::Message::Method::Invite, method );
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
