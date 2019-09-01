@@ -13,7 +13,7 @@ auto tie_ipaddr( const CppSip::Message::IPv4Address& ip )
 namespace CppSip
 {
 
-  namespace Message
+namespace Message
 {
 
 

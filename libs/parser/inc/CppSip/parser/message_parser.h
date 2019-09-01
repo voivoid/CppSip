@@ -32,7 +32,6 @@ inline const auto SWS = -LWS;
 // HCOLON = *( SP / HTAB ) ":" SWS
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
 
-
 // domainlabel = alphanum / alphanum *( alphanum / "-" ) alphanum
 inline const auto domainchar  = alphanum | bsx3::char_( '-' );
 inline const auto domainlabel = alphanum > -( *( domainchar >> &domainchar ) >> alphanum );
@@ -41,10 +40,11 @@ inline const auto domainlabel = alphanum > -( *( domainchar >> &domainchar ) >> 
 inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphanum );
 
 // hostname = *( domainlabel "." ) toplabel [ "." ]
-inline const auto hostname = bsx3::rule<struct _hostname, std::string>{} = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) >> toplabel >> -bsx3::char_( '.' );
+inline const auto hostname = bsx3::rule<struct _hostname, std::string>{} = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) >>
+                                                                           toplabel >> -bsx3::char_( '.' );
 
 // port = 1*DIGIT
-inline const auto port = bsx3::rule<struct _port, std::string>{} = + bsx3::digit;
+inline const auto port = bsx3::rule<struct _port, std::string>{} = +bsx3::digit;
 
 // h16 = 1*4HEXDIG
 inline const auto h16 = bsx3::uint_parser<std::uint16_t, 16, 1, 4>{};

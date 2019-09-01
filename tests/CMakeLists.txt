@@ -1,4 +1,9 @@
-add_executable(CppSipTests main.cpp parser.cpp test_utils/message.h test_utils/message.cpp)
+add_executable(CppSipTests main.cpp
+                           parser.cpp
+                           test_utils/message.h
+                           test_utils/message.cpp
+                           test_utils/variant.h)
+
 target_include_directories(CppSipTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CppSipTests PRIVATE Boost::boost Boost::unit_test_framework CppSip::Common CppSip::Parser)
 #target_compile_definitions(CppSipTests PRIVATE BOOST_SPIRIT_X3_DEBUG)

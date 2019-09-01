@@ -1,12 +1,18 @@
+#include "boost/test/data/monomorphic/generators/xrange.hpp"
+#include "boost/test/data/test_case.hpp"
 #include "boost/test/unit_test.hpp"
 
 #include "CppSip/parser/message_parser.h"
 #include "test_utils/message.h"
+#include "test_utils/variant.h"
 
 #include "boost/spirit/home/x3.hpp"
 
 #include <limits>
 #include <string>
+
+namespace CppSipMsg     = CppSip::Message;
+namespace BoostTestData = boost::unit_test::data;
 
 namespace
 {
@@ -79,14 +85,14 @@ define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
 define_parser(port, std::string)
 define_parser(h16, unsigned)
-define_parser(IPv4address, CppSip::Message::IPv4Address)
+define_parser(IPv4address, CppSipMsg::IPv4Address)
 define_raw_parser(ls32)
 define_raw_parser(IPv6address)
-define_parser(host, CppSip::Message::Host)
-define_parser(hostport, CppSip::Message::HostPort)
-define_parser(Method, CppSip::Message::Method)
-define_parser(SIP_Version, CppSip::Message::SipVersion)
-define_parser(CSEQ, CppSip::Message::Header::CSeq)
+define_parser(host, CppSipMsg::Host)
+define_parser(hostport, CppSipMsg::HostPort)
+define_parser(Method, CppSipMsg::Method)
+define_parser(SIP_Version, CppSipMsg::SipVersion)
+define_parser(CSEQ, CppSipMsg::Header::CSeq)
 // clang-format on
 
 }  // namespace
@@ -112,40 +118,40 @@ BOOST_AUTO_TEST_SUITE( parser )
 //  //BOOST_CHECK_EQUAL( result, "ab" );
 //}
 
-BOOST_AUTO_TEST_CASE( test_ALPHA_parser )
+BOOST_DATA_TEST_CASE( test_ALPHA_parser, BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' ) )
 {
-  BOOST_CHECK_EQUAL( 'a', parse_ALPHA( "a" ) );
-  BOOST_CHECK_EQUAL( 's', parse_ALPHA( "s" ) );
-  BOOST_CHECK_EQUAL( 'z', parse_ALPHA( "z" ) );
-  BOOST_CHECK_EQUAL( 'A', parse_ALPHA( "A" ) );
-  BOOST_CHECK_EQUAL( 'S', parse_ALPHA( "S" ) );
-  BOOST_CHECK_EQUAL( 'Z', parse_ALPHA( "Z" ) );
+  BOOST_CHECK_EQUAL( sample, parse_ALPHA( std::string_view( &sample, 1 ) ) );
+}
 
+BOOST_AUTO_TEST_CASE( test_ALPHA_parser_failures )
+{
   BOOST_CHECK_THROW( parse_ALPHA( "@" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_ALPHA( "[" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_ALPHA( "`" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_ALPHA( "{" ), std::runtime_error );
 }
 
-BOOST_AUTO_TEST_CASE( test_DIGIT_parser )
+BOOST_DATA_TEST_CASE( test_DIGIT_parser, BoostTestData::xrange( '1', '9' ) )
 {
-  BOOST_CHECK_EQUAL( '0', parse_DIGIT( "0" ) );
-  BOOST_CHECK_EQUAL( '5', parse_DIGIT( "5" ) );
-  BOOST_CHECK_EQUAL( '9', parse_DIGIT( "9" ) );
+  BOOST_CHECK_EQUAL( sample, parse_DIGIT( std::string_view( &sample, 1 ) ) );
+}
 
+BOOST_AUTO_TEST_CASE( test_DIGIT_parser_failures )
+{
   BOOST_CHECK_THROW( parse_DIGIT( "x" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_DIGIT( "/" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_DIGIT( ":" ), std::runtime_error );
 }
 
-BOOST_AUTO_TEST_CASE( test_HEXDIG_parser )
+BOOST_DATA_TEST_CASE( test_HEXDIG_parser, BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'A', 'F' ) )
 {
-  BOOST_CHECK_EQUAL( '0', parse_HEXDIG( "0" ) );
-  BOOST_CHECK_EQUAL( '3', parse_HEXDIG( "3" ) );
-  BOOST_CHECK_EQUAL( '9', parse_HEXDIG( "9" ) );
-  BOOST_CHECK_EQUAL( 'A', parse_HEXDIG( "A" ) );
-  BOOST_CHECK_EQUAL( 'F', parse_HEXDIG( "F" ) );
+  BOOST_CHECK_EQUAL( sample, parse_HEXDIG( std::string_view( &sample, 1 ) ) );
+}
 
+BOOST_AUTO_TEST_CASE( test_HEXDIG_parser_failures )
+{
+  BOOST_CHECK_THROW( parse_HEXDIG( "-" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_HEXDIG( "a" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_HEXDIG( "G" ), std::runtime_error );
 }
 
@@ -204,6 +210,8 @@ BOOST_AUTO_TEST_CASE( test_CRLF_parser )
   BOOST_CHECK_THROW( parse_CRLF( "\x0A\x0D" ), std::runtime_error );
 }
 
+
+
 BOOST_AUTO_TEST_CASE( test_alphanum_parser )
 {
   BOOST_CHECK_EQUAL( 'a', parse_alphanum( "a" ) );
@@ -215,7 +223,10 @@ BOOST_AUTO_TEST_CASE( test_alphanum_parser )
   BOOST_CHECK_EQUAL( '0', parse_alphanum( "0" ) );
   BOOST_CHECK_EQUAL( '5', parse_alphanum( "5" ) );
   BOOST_CHECK_EQUAL( '9', parse_alphanum( "9" ) );
+}
 
+BOOST_AUTO_TEST_CASE( test_alphanum_parser_failures )
+{
   BOOST_CHECK_THROW( parse_alphanum( "*" ), std::runtime_error );
 }
 
@@ -252,7 +263,6 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
 
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
 }
-
 
 BOOST_AUTO_TEST_CASE( test_domainlabel_parser )
 {
@@ -330,9 +340,9 @@ BOOST_AUTO_TEST_CASE( test_h16_parser )
 
 BOOST_AUTO_TEST_CASE( test_IPv4address_parser )
 {
-  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 127, 0, 0, 1 } ), parse_IPv4address( "127.0.0.1" ) );
-  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 0, 0, 0, 0 } ), parse_IPv4address( "0.0.0.0" ) );
-  BOOST_CHECK_EQUAL( ( CppSip::Message::IPv4Address{ 255, 255, 255, 255 } ), parse_IPv4address( "255.255.255.255" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::IPv4Address{ 127, 0, 0, 1 } ), parse_IPv4address( "127.0.0.1" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::IPv4Address{ 0, 0, 0, 0 } ), parse_IPv4address( "0.0.0.0" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::IPv4Address{ 255, 255, 255, 255 } ), parse_IPv4address( "255.255.255.255" ) );
 
   BOOST_CHECK_THROW( parse_IPv4address( "1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_IPv4address( "1.2" ), std::runtime_error );
@@ -369,8 +379,8 @@ BOOST_AUTO_TEST_CASE( test_IPv6address_parser )
 
 BOOST_AUTO_TEST_CASE( test_host_parser )
 {
-  parse_host( "google.com" );
-  parse_host( "127.0.0.1" );
+  BOOST_CHECK( check_variant_is( parse_host( "google.com" ), CppSipMsg::HostName( "google.com" ) ) );
+  BOOST_CHECK( check_variant_is( parse_host( "127.0.0.1" ), ( CppSipMsg::IPv4Address{ 127, 0, 0, 1 } ) ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_hostport_parser )
@@ -382,12 +392,12 @@ BOOST_AUTO_TEST_CASE( test_hostport_parser )
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
 {
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Ack, parse_Method( "ACK" ) );
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Bye, parse_Method( "BYE" ) );
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Cancel, parse_Method( "CANCEL" ) );
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Invite, parse_Method( "INVITE" ) );
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Options, parse_Method( "OPTIONS" ) );
-  BOOST_CHECK_EQUAL( CppSip::Message::Method::Register, parse_Method( "REGISTER" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Ack, parse_Method( "ACK" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Bye, parse_Method( "BYE" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Cancel, parse_Method( "CANCEL" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, parse_Method( "INVITE" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Options, parse_Method( "OPTIONS" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Register, parse_Method( "REGISTER" ) );
 
   BOOST_CHECK_THROW( parse_Method( "UNKNOWN" ), std::runtime_error );
 }
@@ -421,7 +431,7 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
   {
     const auto [ id, method ] = parse_CSEQ( "CSeq: 12345 INVITE" );
     BOOST_CHECK_EQUAL( "12345", id );
-    BOOST_CHECK_EQUAL( CppSip::Message::Method::Invite, method );
+    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
   }
 }
 
