@@ -132,5 +132,14 @@ inline const auto CSEQ = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
 // Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
 inline const auto Max_Forwards = bsx3::lit( "Max-Forwards" ) > HCOLON > +DIGIT;
 
+// word = 1*( alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "‘" / "’" / "˜" / "(" / ")" / "<" / ">" / ":" / "\" / DQUOTE / "/" / "[" / "]" / "?" / "{" / "}" )
+inline const auto word = +( alphanum | bsx3::char_( "-.!%*_+‘’~()<>:\\\"/[]?{}" ) );
+
+// callid = word[ "@" word ]
+inline const auto callid = word >> -( bsx3::char_( '@' ) > word );
+
+// Call-ID = ( "Call-ID" / "i" ) HCOLON callid
+inline const auto Call_ID = (bsx3::lit("Call-ID") | bsx3::lit('i')) > HCOLON > callid;
+
 }  // namespace Parsers
 }  // namespace CppSip

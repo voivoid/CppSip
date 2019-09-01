@@ -7,3 +7,5 @@
 #include "CppSip/message/request_uri.h"
 #include "CppSip/message/sip_uri.h"
 #include "CppSip/message/sip_version.h"
+#include "CppSip/message/header/callid.h"
+#include "CppSip/message/header/cseq.h"

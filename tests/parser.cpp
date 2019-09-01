@@ -98,6 +98,9 @@ define_parser(SIP_Version, CppSipMsg::SipVersion)
 define_parser(Request_Line, CppSipMsg::RequestLine)
 define_parser(CSEQ, CppSipMsg::Header::CSeq)
 define_parser(Max_Forwards, std::string)
+define_parser(word, std::string)
+define_parser(callid, std::string)
+define_parser(Call_ID, std::string)
 // clang-format on
 
 }  // namespace
@@ -464,6 +467,21 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
   BOOST_CHECK_EQUAL( "1024", parse_Max_Forwards( "Max-Forwards:1024" ) );
 
   BOOST_CHECK_THROW( parse_Max_Forwards( "Max-Forwards:-1" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_word_parser )
+{
+
+}
+
+BOOST_AUTO_TEST_CASE( test_callid_parser )
+{
+
+}
+
+BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
+{
+  // "Call-ID: 1234567890abcdefg@domain.com";
 }
 
 BOOST_AUTO_TEST_SUITE_END()
