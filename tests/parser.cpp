@@ -97,6 +97,7 @@ define_parser(Method, CppSipMsg::Method)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
 define_parser(Request_Line, CppSipMsg::RequestLine)
 define_parser(CSEQ, CppSipMsg::Header::CSeq)
+define_parser(Max_Forwards, std::string)
 // clang-format on
 
 }  // namespace
@@ -391,23 +392,24 @@ BOOST_AUTO_TEST_CASE( test_host_parser )
 BOOST_AUTO_TEST_CASE( test_hostport_parser )
 {
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), parse_hostport( "domain.com" ) );
-  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { "5060"} } ), parse_hostport( "domain.com:5060" ) );
-  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { "5060" } } ), parse_hostport( "192.168.0.1:5060" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { "5060" } } ), parse_hostport( "domain.com:5060" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { "5060" } } ),
+                     parse_hostport( "192.168.0.1:5060" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
 {
-  parse_SIP_URI("sip:domain.com");
+  parse_SIP_URI( "sip:domain.com" );
 }
 
 BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 {
-  parse_SIPS_URI("sips:domain.com");
+  parse_SIPS_URI( "sips:domain.com" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
 {
-  parse_Request_URI("sip:domain.com");
+  parse_Request_URI( "sip:domain.com" );
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
@@ -453,6 +455,15 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
     BOOST_CHECK_EQUAL( "12345", id );
     BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
   }
+}
+
+BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
+{
+  BOOST_CHECK_EQUAL( "0", parse_Max_Forwards( "Max-Forwards:0" ) );
+  BOOST_CHECK_EQUAL( "1", parse_Max_Forwards( "Max-Forwards:1" ) );
+  BOOST_CHECK_EQUAL( "1024", parse_Max_Forwards( "Max-Forwards:1024" ) );
+
+  BOOST_CHECK_THROW( parse_Max_Forwards( "Max-Forwards:-1" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

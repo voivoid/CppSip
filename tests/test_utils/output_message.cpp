@@ -35,7 +35,7 @@ std::ostream& operator<<( std::ostream& s, const HostPort& hp )
 {
   s << hp.host;
 
-  if( hp.port )
+  if ( hp.port )
   {
     s << ':' << *hp.port;
   }

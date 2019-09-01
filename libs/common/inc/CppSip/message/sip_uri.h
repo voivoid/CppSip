@@ -14,6 +14,6 @@ struct SipUri
   HostPort host_port;
 };
 
-}
+}  // namespace Message
 
-}
+}  // namespace CppSip

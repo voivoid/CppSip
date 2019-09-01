@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <variant>
 #include <optional>
+#include <variant>
 
 namespace std
 {
@@ -19,7 +19,7 @@ std::ostream& operator<<( std::ostream& s, const std::variant<Args...>& v )
 template <typename T>
 std::ostream& operator<<( std::ostream& s, const std::optional<T>& o )
 {
-  if( o )
+  if ( o )
   {
     s << *o;
   }

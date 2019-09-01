@@ -13,7 +13,6 @@ struct RequestUri
   SipUri sip_uri;
 };
 
-}
+}  // namespace Message
 
-}
-
+}  // namespace CppSip

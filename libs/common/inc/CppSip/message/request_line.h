@@ -17,7 +17,6 @@ struct RequestLine
   SipVersion sip_version;
 };
 
-}
+}  // namespace Message
 
-}
-
+}  // namespace CppSip
