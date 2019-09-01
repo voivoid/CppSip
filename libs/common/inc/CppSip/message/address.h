@@ -32,6 +32,8 @@ struct HostPort
 bool operator==( const IPv4Address& ip1, const IPv4Address& ip2 );
 bool operator<( const IPv4Address& ip1, const IPv4Address& ip2 );
 
+bool operator==( const HostPort& ip1, const HostPort& ip2 );
+
 }  // namespace Message
 
 }  // namespace CppSip

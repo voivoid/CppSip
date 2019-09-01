@@ -1,4 +1,5 @@
-#include "test_utils/message.h"
+#include "test_utils/output_message.h"
+#include "test_utils/output_std.h"
 
 #include <iostream>
 
@@ -27,6 +28,18 @@ std::ostream& operator<<( std::ostream& s, Method m )
 std::ostream& operator<<( std::ostream& s, const IPv4Address& ip )
 {
   s << unsigned( ip.a ) << '.' << unsigned( ip.b ) << '.' << unsigned( ip.c ) << '.' << unsigned( ip.d );
+  return s;
+}
+
+std::ostream& operator<<( std::ostream& s, const HostPort& hp )
+{
+  s << hp.host;
+
+  if( hp.port )
+  {
+    s << ':' << *hp.port;
+  }
+
   return s;
 }
 
