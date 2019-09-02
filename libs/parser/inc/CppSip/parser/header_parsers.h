@@ -13,13 +13,6 @@ namespace CppSip
 namespace Parsers
 {
 
-// word = 1*( alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" / "(" / ")" / "<" / ">" / ":" / "\" / DQUOTE / "/" / "["
-// / "]" / "?" / "{" / "}" )
-inline const auto word = +( alphanum | bsx3::char_( "-.!%*_+`'~()<>:\\\"/[]?{}" ) );
-
-// callid = word[ "@" word ]
-inline const auto callid = word >> -( bsx3::char_( '@' ) > word );
-
 // Call-ID = ( "Call-ID" / "i" ) HCOLON callid
 inline const auto Call_ID = ( bsx3::lit( "Call-ID" ) | bsx3::lit( 'i' ) ) > HCOLON > callid;
 

@@ -12,8 +12,6 @@ namespace
 {
 // clang-format off
 
-define_parser(word, std::string)
-define_parser(callid, std::string)
 define_parser(Call_ID, std::string)
 define_parser(CSEQ, CppSipMsg::Header::CSeq)
 define_parser(Max_Forwards, std::string)
@@ -22,18 +20,6 @@ define_parser(Max_Forwards, std::string)
 }  // namespace
 
 BOOST_AUTO_TEST_SUITE( header_parsers )
-
-BOOST_AUTO_TEST_CASE( test_word_parser )
-{
-  const std::string input = "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}";
-  BOOST_CHECK_EQUAL( input, parse_word( "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_callid_parser )
-{
-  BOOST_CHECK_EQUAL( "abc123!", parse_callid( "abc123!" ) );
-  BOOST_CHECK_EQUAL( "abc123!@ABC123", parse_callid( "abc123!@ABC123" ) );
-}
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
 {

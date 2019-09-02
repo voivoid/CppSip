@@ -15,6 +15,9 @@ define_parser(alphanum, char)
 define_noattr_parser(LWS)
 define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
+define_parser(word, std::string)
+define_parser(callid, std::string)
+
 
 define_parser(Method, CppSipMsg::Method)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
@@ -106,5 +109,18 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP2.1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_SIP_Version( "2.1" ), std::runtime_error );
 }
+
+BOOST_AUTO_TEST_CASE( test_word_parser )
+{
+  const std::string input = "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}";
+  BOOST_CHECK_EQUAL( input, parse_word( "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}" ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_callid_parser )
+{
+  BOOST_CHECK_EQUAL( "abc123!", parse_callid( "abc123!" ) );
+  BOOST_CHECK_EQUAL( "abc123!@ABC123", parse_callid( "abc123!@ABC123" ) );
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

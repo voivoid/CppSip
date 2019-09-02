@@ -45,5 +45,12 @@ inline const auto Method = get_Method_parser();
 inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message::SipVersion>{} = bsx3::lit( "SIP/" ) >> +bsx3::digit >>
                                                                                                  bsx3::lit( '.' ) >> +bsx3::digit;
 
+// word = 1*( alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" / "(" / ")" / "<" / ">" / ":" / "\" / DQUOTE / "/" / "["
+// / "]" / "?" / "{" / "}" )
+inline const auto word = +( alphanum | bsx3::char_( "-.!%*_+`'~()<>:\\\"/[]?{}" ) );
+
+// callid = word[ "@" word ]
+inline const auto callid = word >> -( bsx3::char_( '@' ) > word );
+
 }  // namespace Parsers
 }  // namespace CppSip
