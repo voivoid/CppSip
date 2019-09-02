@@ -14,5 +14,23 @@ namespace Parsers
 
 namespace bsx3 = boost::spirit::x3;
 
+// Reason-Phrase = *(reserved / unreserved / escaped / UTF8-NONASCII / UTF8-CONT / SP / HTAB)
+
+// extension-code = 3DIGIT
+
+// Informational =   "100" ; Trying
+//                 / "180" ; Ringing
+//                 / "181" ; Call Is Being Forwarded
+//                 / "182" ; Queued
+//                 / "183" ; Session Progress
+
+// Success = "200" ; OK
+
+// Status-Code = Informational / Redirection / Success / Client-Error / Server-Error / Global-Failure / extension-code
+
+// Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
+
+// Response = Status-Line *( message-header ) CRLF [ message-body ]
+
 }  // namespace Parsers
 }  // namespace CppSip

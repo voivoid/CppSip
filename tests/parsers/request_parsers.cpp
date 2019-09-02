@@ -27,7 +27,6 @@ define_parser(hostport, CppSipMsg::HostPort)
 define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
-define_parser(SIP_Version, CppSipMsg::SipVersion)
 define_parser(Request_Line, CppSipMsg::RequestLine)
 define_parser(Max_Forwards, std::string)
 define_parser(word, std::string)
@@ -199,25 +198,6 @@ BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
     BOOST_CHECK( !sips );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
   }
-}
-
-BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
-{
-  {
-    const auto [ major, minor ] = parse_SIP_Version( "SIP/1.0" );
-    BOOST_CHECK_EQUAL( "1", major );
-    BOOST_CHECK_EQUAL( "0", minor );
-  }
-
-  {
-    const auto [ major, minor ] = parse_SIP_Version( "SIP/2.1" );
-    BOOST_CHECK_EQUAL( "2", major );
-    BOOST_CHECK_EQUAL( "1", minor );
-  }
-
-  BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SIP_Version( "SIP2.1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SIP_Version( "2.1" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_Request_Line_parser )

@@ -18,6 +18,7 @@ define_noattr_parser(HCOLON)
 
 define_parser(Method, CppSipMsg::Method)
 define_parser(CSEQ, CppSipMsg::Header::CSeq)
+define_parser(SIP_Version, CppSipMsg::SipVersion)
 // clang-format on
 }  // namespace
 
@@ -95,6 +96,25 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
     BOOST_CHECK_EQUAL( "12345", id );
     BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
   }
+}
+
+BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
+{
+  {
+    const auto [ major, minor ] = parse_SIP_Version( "SIP/1.0" );
+    BOOST_CHECK_EQUAL( "1", major );
+    BOOST_CHECK_EQUAL( "0", minor );
+  }
+
+  {
+    const auto [ major, minor ] = parse_SIP_Version( "SIP/2.1" );
+    BOOST_CHECK_EQUAL( "2", major );
+    BOOST_CHECK_EQUAL( "1", minor );
+  }
+
+  BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_SIP_Version( "SIP2.1" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_SIP_Version( "2.1" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
