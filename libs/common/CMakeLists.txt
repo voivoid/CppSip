@@ -1,5 +1,6 @@
 add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/headers/cseq.h
+                                inc/CppSip/message/headers/headers.h
                                 inc/CppSip/message/address.h
                                 src/CppSip/message/address.cpp
                                 inc/CppSip/message/method.h

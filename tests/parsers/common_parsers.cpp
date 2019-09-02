@@ -17,7 +17,6 @@ define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
 
 define_parser(Method, CppSipMsg::Method)
-define_parser(CSEQ, CppSipMsg::Header::CSeq)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
 // clang-format on
 }  // namespace
@@ -87,15 +86,6 @@ BOOST_AUTO_TEST_CASE( test_Method_parser )
   BOOST_CHECK_EQUAL( CppSipMsg::Method::Register, parse_Method( "REGISTER" ) );
 
   BOOST_CHECK_THROW( parse_Method( "UNKNOWN" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
-{
-  {
-    const auto [ id, method ] = parse_CSEQ( "CSeq: 12345 INVITE" );
-    BOOST_CHECK_EQUAL( "12345", id );
-    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
-  }
 }
 
 BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )

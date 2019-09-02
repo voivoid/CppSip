@@ -1,6 +1,7 @@
 add_executable(CppSipTests main.cpp
                            parsers/abnf_core_parsers.cpp
                            parsers/common_parsers.cpp
+                           parsers/header_parsers.cpp
                            parsers/message_parser.cpp
                            parsers/request_parsers.cpp
                            parsers/response_parsers.cpp

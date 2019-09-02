@@ -5,11 +5,9 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
-#include "CppSip/message/headers/cseq.h"
 #include "CppSip/message/method.h"
 #include "CppSip/message/sip_version.h"
 
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Header::CSeq, id, method )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipVersion, major, minor )
 
 namespace CppSip
@@ -42,9 +40,6 @@ inline bsx3::symbols<CppSip::Message::Method> get_Method_parser()
   return method_symbols;
 }
 inline const auto Method = get_Method_parser();
-
-// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
-inline const auto CSEQ = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
 
 // SIP-Version = "SIP" "/" 1*DIGIT "." 1*DIGIT
 inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message::SipVersion>{} = bsx3::lit( "SIP/" ) >> +bsx3::digit >>

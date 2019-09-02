@@ -1,5 +1,6 @@
 add_library(CppSipParser inc/CppSip/parser/abnf_core_parsers.h
                          inc/CppSip/parser/common_parsers.h
+                         inc/CppSip/parser/header_parsers.h
                          inc/CppSip/parser/message_parser.h
                          inc/CppSip/parser/request_parsers.h
                          inc/CppSip/parser/response_parsers.h
