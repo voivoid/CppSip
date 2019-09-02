@@ -1,85 +1,19 @@
-#include "boost/test/data/monomorphic/generators/xrange.hpp"
-#include "boost/test/data/test_case.hpp"
 #include "boost/test/unit_test.hpp"
 
 #include "CppSip/parser/message_parser.h"
-#include "test_utils/output_message.h"
-#include "test_utils/output_std.h"
 
-#include "boost/spirit/home/x3.hpp"
+#include "output/sip_message.h"
+#include "output/std.h"
+#include "parsers/utils.h"
 
 #include <limits>
-#include <string>
 
-namespace CppSipMsg     = CppSip::Message;
-namespace BoostTestData = boost::unit_test::data;
+namespace CppSipMsg = CppSip::Message;
 
 namespace
 {
-template <typename Attr, typename Parser>
-Attr parse( Parser parser, const std::string_view input )
-{
-  Attr attr;
-
-  auto begin = input.begin();
-  auto end   = input.end();
-
-  const bool parsed = boost::spirit::x3::parse( begin, end, parser, attr );
-  if ( !parsed || begin != end )
-  {
-    throw std::runtime_error( "failed to parse" );
-  }
-
-  return attr;
-}
-
-template <typename Parser>
-void parse_noattr( Parser parser, const std::string_view input )
-{
-  auto begin = input.begin();
-  auto end   = input.end();
-
-  const bool parsed = boost::spirit::x3::parse( begin, end, parser );
-  if ( !parsed || begin != end )
-  {
-    throw std::runtime_error( "failed to parse" );
-  }
-}
-
-#define define_parser( parser, type )                                                                                                      \
-  type parse_##parser( const std::string_view input )                                                                                      \
-  {                                                                                                                                        \
-    return parse<type>( CppSip::Parsers::parser, input );                                                                                  \
-  }
-
-#define define_raw_parser( parser )                                                                                                        \
-  bool parse_##parser( const std::string_view input )                                                                                      \
-  {                                                                                                                                        \
-    return input == parse<std::string>( boost::spirit::x3::raw[ CppSip::Parsers::parser ], input );                                        \
-  }
-
-#define define_noattr_parser( parser )                                                                                                     \
-  void parse_##parser( const std::string_view input )                                                                                      \
-  {                                                                                                                                        \
-    parse_noattr( CppSip::Parsers::parser, input );                                                                                        \
-  }
 
 // clang-format off
-define_parser(ALPHA, char)
-define_parser(DIGIT, char)
-define_parser(HEXDIG, char)
-define_noattr_parser(SP)
-define_noattr_parser(CR)
-define_noattr_parser(LF)
-define_noattr_parser(HTAB)
-define_noattr_parser(WSP)
-define_noattr_parser(CRLF)
-
-
-define_parser(alphanum, char)
-define_noattr_parser(LWS)
-define_noattr_parser(SWS)
-define_noattr_parser(HCOLON)
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
 define_parser(hostname, std::string)
@@ -105,173 +39,9 @@ define_parser(Call_ID, std::string)
 
 }  // namespace
 
-BOOST_AUTO_TEST_SUITE( parser )
-
-// BOOST_AUTO_TEST_CASE( test_XXX_parser )
-//{
-//  namespace x3 = boost::spirit::x3;
-
-//  std::string input = "a ab";
-//  std::string result;
-
-//  auto parser = x3::lexeme[ x3::char_('a') >> !x3::char_ | ( x3::char_('a') >> x3::char_('b') ) ];
-
-//  auto b = input.begin();
-//  auto e = input.end();
-
-//  auto is_parsed = x3::phrase_parse( b, e, ( parser > parser ), x3::space );
-
-//  BOOST_CHECK( is_parsed );
-//  BOOST_CHECK( b == e );
-//  //BOOST_CHECK_EQUAL( result, "ab" );
-//}
-
-BOOST_DATA_TEST_CASE( test_ALPHA_parser, BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' ) )
-{
-  BOOST_CHECK_EQUAL( sample, parse_ALPHA( std::string_view( &sample, 1 ) ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_ALPHA_parser_failures )
-{
-  BOOST_CHECK_THROW( parse_ALPHA( "@" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_ALPHA( "[" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_ALPHA( "`" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_ALPHA( "{" ), std::runtime_error );
-}
-
-BOOST_DATA_TEST_CASE( test_DIGIT_parser, BoostTestData::xrange( '1', '9' ) )
-{
-  BOOST_CHECK_EQUAL( sample, parse_DIGIT( std::string_view( &sample, 1 ) ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_DIGIT_parser_failures )
-{
-  BOOST_CHECK_THROW( parse_DIGIT( "x" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_DIGIT( "/" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_DIGIT( ":" ), std::runtime_error );
-}
-
-BOOST_DATA_TEST_CASE( test_HEXDIG_parser, BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'A', 'F' ) )
-{
-  BOOST_CHECK_EQUAL( sample, parse_HEXDIG( std::string_view( &sample, 1 ) ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_HEXDIG_parser_failures )
-{
-  BOOST_CHECK_THROW( parse_HEXDIG( "-" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_HEXDIG( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_HEXDIG( "G" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_SP_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_SP( " " ) );
-
-  BOOST_CHECK_THROW( parse_SP( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SP( "1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SP( "!" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_CR_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_CR( "\r" ) );
-
-  BOOST_CHECK_THROW( parse_SP( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SP( "1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_SP( "!" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_LF_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_LF( "\n" ) );
-
-  BOOST_CHECK_THROW( parse_LF( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_LF( "1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_LF( "!" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_HTAB_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_HTAB( "\t" ) );
-
-  BOOST_CHECK_THROW( parse_HTAB( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_HTAB( "1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_HTAB( "!" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_WSP_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_WSP( " " ) );
-  BOOST_CHECK_NO_THROW( parse_WSP( "\t" ) );
-
-  BOOST_CHECK_THROW( parse_WSP( "a" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_WSP( "1" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_WSP( "!" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_CRLF_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_CRLF( "\r\n" ) );
-
-  BOOST_CHECK_THROW( parse_CRLF( "\r" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_CRLF( "\n" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_CRLF( "\n\r" ), std::runtime_error );
-}
+BOOST_AUTO_TEST_SUITE( message_parsers )
 
 
-
-BOOST_DATA_TEST_CASE( test_alphanum_parser,
-                      BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' ) )
-{
-  BOOST_CHECK_EQUAL( 'a', parse_alphanum( "a" ) );
-  BOOST_CHECK_EQUAL( 's', parse_alphanum( "s" ) );
-  BOOST_CHECK_EQUAL( 'z', parse_alphanum( "z" ) );
-  BOOST_CHECK_EQUAL( 'A', parse_alphanum( "A" ) );
-  BOOST_CHECK_EQUAL( 'S', parse_alphanum( "S" ) );
-  BOOST_CHECK_EQUAL( 'Z', parse_alphanum( "Z" ) );
-  BOOST_CHECK_EQUAL( '0', parse_alphanum( "0" ) );
-  BOOST_CHECK_EQUAL( '5', parse_alphanum( "5" ) );
-  BOOST_CHECK_EQUAL( '9', parse_alphanum( "9" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_alphanum_parser_failures )
-{
-  BOOST_CHECK_THROW( parse_alphanum( "*" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_LWS_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_LWS( " " ) );
-  BOOST_CHECK_NO_THROW( parse_LWS( "  " ) );
-  BOOST_CHECK_NO_THROW( parse_LWS( " \t " ) );
-
-  BOOST_CHECK_NO_THROW( parse_LWS( "  \r\n   " ) );
-
-  BOOST_CHECK_THROW( parse_LWS( "" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_LWS( "x" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_SWS_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_SWS( "" ) );
-  BOOST_CHECK_NO_THROW( parse_SWS( " " ) );
-  BOOST_CHECK_NO_THROW( parse_SWS( "  " ) );
-
-  BOOST_CHECK_THROW( parse_SWS( "x" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
-{
-  BOOST_CHECK_NO_THROW( parse_HCOLON( ":" ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( ": " ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( ":  " ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( ": \t" ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( " : " ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( "  : " ) );
-  BOOST_CHECK_NO_THROW( parse_HCOLON( " \t: " ) );
-
-  BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
-}
 
 BOOST_AUTO_TEST_CASE( test_domainlabel_parser )
 {
@@ -471,12 +241,10 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
 
 BOOST_AUTO_TEST_CASE( test_word_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_CASE( test_callid_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
