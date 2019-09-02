@@ -2,7 +2,13 @@
 
 #include "CppSip/parser/abnf_core_parsers.h"
 
+#include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
+
+#include "CppSip/message/method.h"
+#include "CppSip/message/headers/cseq.h"
+
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Header::CSeq, id, method )
 
 namespace CppSip
 {
@@ -22,6 +28,21 @@ inline const auto SWS = -LWS;
 
 // HCOLON = *( SP / HTAB ) ":" SWS
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
+
+// Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
+// extension-method (!!!)
+inline bsx3::symbols<CppSip::Message::Method> get_Method_parser()
+{
+  bsx3::symbols<CppSip::Message::Method> method_symbols;
+  method_symbols.add( "ACK", Message::Method::Ack )( "BYE", Message::Method::Bye )( "CANCEL", Message::Method::Cancel )(
+      "INVITE", Message::Method::Invite )( "OPTIONS", Message::Method::Options )( "REGISTER", Message::Method::Register );
+
+  return method_symbols;
+}
+inline const auto Method = get_Method_parser();
+
+// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+inline const auto CSEQ = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
 
 }  // namespace Parsers
 }  // namespace CppSip

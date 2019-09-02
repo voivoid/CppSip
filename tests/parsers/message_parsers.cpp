@@ -27,10 +27,8 @@ define_parser(hostport, CppSipMsg::HostPort)
 define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
-define_parser(Method, CppSipMsg::Method)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
 define_parser(Request_Line, CppSipMsg::RequestLine)
-define_parser(CSEQ, CppSipMsg::Header::CSeq)
 define_parser(Max_Forwards, std::string)
 define_parser(word, std::string)
 define_parser(callid, std::string)
@@ -203,18 +201,6 @@ BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
   }
 }
 
-BOOST_AUTO_TEST_CASE( test_Method_parser )
-{
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Ack, parse_Method( "ACK" ) );
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Bye, parse_Method( "BYE" ) );
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Cancel, parse_Method( "CANCEL" ) );
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, parse_Method( "INVITE" ) );
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Options, parse_Method( "OPTIONS" ) );
-  BOOST_CHECK_EQUAL( CppSipMsg::Method::Register, parse_Method( "REGISTER" ) );
-
-  BOOST_CHECK_THROW( parse_Method( "UNKNOWN" ), std::runtime_error );
-}
-
 BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
 {
   {
@@ -247,15 +233,6 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
     BOOST_CHECK_EQUAL( "2", major );
     BOOST_CHECK_EQUAL( "0", minor );
-  }
-}
-
-BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
-{
-  {
-    const auto [ id, method ] = parse_CSEQ( "CSeq: 12345 INVITE" );
-    BOOST_CHECK_EQUAL( "12345", id );
-    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
   }
 }
 

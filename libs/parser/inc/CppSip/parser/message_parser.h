@@ -7,8 +7,6 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Header::CSeq, id, method )
-
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::HostPort, host, port )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
@@ -97,24 +95,9 @@ inline const auto Request_URI = bsx3::rule<struct _request_uri, CppSip::Message:
 inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message::SipVersion>{} = bsx3::lit( "SIP/" ) >> +bsx3::digit >>
                                                                                                  bsx3::lit( '.' ) >> +bsx3::digit;
 
-// Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
-// extension-method (!!!)
-bsx3::symbols<CppSip::Message::Method> get_Method_parser()
-{
-  bsx3::symbols<CppSip::Message::Method> method_symbols;
-  method_symbols.add( "ACK", Message::Method::Ack )( "BYE", Message::Method::Bye )( "CANCEL", Message::Method::Cancel )(
-      "INVITE", Message::Method::Invite )( "OPTIONS", Message::Method::Options )( "REGISTER", Message::Method::Register );
-
-  return method_symbols;
-}
-inline const auto Method = get_Method_parser();
-
 // Request-Line = Method SP Request-URI SP SIP-Version CRLF
 inline const auto Request_Line = bsx3::rule<struct _request_line, CppSip::Message::RequestLine>{} =
     Method > SP > Request_URI > SP > SIP_Version > CRLF;
-
-// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
-inline const auto CSEQ = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
 
 // Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
 inline const auto Max_Forwards = bsx3::lit( "Max-Forwards" ) > HCOLON > +DIGIT;

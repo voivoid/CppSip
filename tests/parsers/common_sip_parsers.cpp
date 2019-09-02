@@ -2,7 +2,11 @@
 
 #include "CppSip/parser/common_sip_parsers.h"
 
+#include "output/sip_message.h"
+#include "output/std.h"
 #include "parsers/utils.h"
+
+namespace CppSipMsg = CppSip::Message;
 
 namespace
 {
@@ -11,6 +15,9 @@ define_parser(alphanum, char)
 define_noattr_parser(LWS)
 define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
+
+define_parser(Method, CppSipMsg::Method)
+define_parser(CSEQ, CppSipMsg::Header::CSeq)
 // clang-format on
 }  // namespace
 
@@ -67,6 +74,27 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_NO_THROW( parse_HCOLON( " \t: " ) );
 
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_Method_parser )
+{
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Ack, parse_Method( "ACK" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Bye, parse_Method( "BYE" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Cancel, parse_Method( "CANCEL" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, parse_Method( "INVITE" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Options, parse_Method( "OPTIONS" ) );
+  BOOST_CHECK_EQUAL( CppSipMsg::Method::Register, parse_Method( "REGISTER" ) );
+
+  BOOST_CHECK_THROW( parse_Method( "UNKNOWN" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
+{
+  {
+    const auto [ id, method ] = parse_CSEQ( "CSeq: 12345 INVITE" );
+    BOOST_CHECK_EQUAL( "12345", id );
+    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
