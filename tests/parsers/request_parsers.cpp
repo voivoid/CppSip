@@ -186,8 +186,7 @@ BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
 {
   {
-    const auto [ request_uri ]     = parse_Request_URI( "sip:domain.com" );
-    const auto& [ sips, hostport ] = request_uri;
+    const auto [ sips, hostport ] = parse_Request_URI("sip:domain.com").sip_uri;
 
     BOOST_CHECK( !sips );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
@@ -198,8 +197,7 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
 {
   {
     const auto [ method, request_uri, sip_version ] = parse_Request_Line( "INVITE sip:domain.com SIP/2.0\r\n" );
-    const auto& [ sip_uri ]                         = request_uri;
-    const auto& [ sips, hostport ]                  = sip_uri;
+    const auto& [ sips, hostport ]                  = request_uri.sip_uri;
     const auto& [ major, minor ]                    = sip_version;
 
     BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );

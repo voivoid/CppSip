@@ -8,7 +8,7 @@ namespace CppSip
 {
 namespace Message
 {
-namespace Header
+namespace Headers
 {
 struct CSeq
 {

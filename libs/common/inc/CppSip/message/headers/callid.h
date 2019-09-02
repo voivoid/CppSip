@@ -6,9 +6,12 @@ namespace CppSip
 {
 namespace Message
 {
-namespace Header
+namespace Headers
 {
-using CallId = std::string;
+  struct CallId
+  {
+    std::string id;
+  };
 
 }  // namespace Header
 }  // namespace Message
