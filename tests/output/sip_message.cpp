@@ -43,6 +43,13 @@ std::ostream& operator<<( std::ostream& s, const HostPort& hp )
   return s;
 }
 
+std::ostream& operator<<( std::ostream& s, const SipUri& sip_uri )
+{
+  s << ( sip_uri.sips ? "sips" : "sip" ) << ':' << sip_uri.host_port;
+
+  return s;
+}
+
 }  // namespace Message
 
 }  // namespace CppSip

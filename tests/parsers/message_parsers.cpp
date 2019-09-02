@@ -172,17 +172,35 @@ BOOST_AUTO_TEST_CASE( test_hostport_parser )
 
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
 {
-  parse_SIP_URI( "sip:domain.com" );
+  {
+    const auto [ sips, hostport ] = parse_SIP_URI( "sip:domain.com" );
+    BOOST_CHECK( !sips );
+    BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
+  }
+
+  BOOST_CHECK_THROW( parse_SIP_URI( "sips:domain.com" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 {
-  parse_SIPS_URI( "sips:domain.com" );
+  {
+    const auto [ sips, hostport ] = parse_SIPS_URI( "sips:domain.com" );
+    BOOST_CHECK( sips );
+    BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
+  }
+
+  BOOST_CHECK_THROW( parse_SIPS_URI( "sip:domain.com" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
 {
-  parse_Request_URI( "sip:domain.com" );
+  {
+    const auto [ request_uri ]     = parse_Request_URI( "sip:domain.com" );
+    const auto& [ sips, hostport ] = request_uri;
+
+    BOOST_CHECK( !sips );
+    BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
@@ -218,7 +236,18 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
 
 BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
 {
-  parse_Request_Line( "INVITE sip:domain.com SIP/2.0\r\n" );
+  {
+    const auto [ method, request_uri, sip_version ] = parse_Request_Line( "INVITE sip:domain.com SIP/2.0\r\n" );
+    const auto& [ sip_uri ]                         = request_uri;
+    const auto& [ sips, hostport ]                  = sip_uri;
+    const auto& [ major, minor ]                    = sip_version;
+
+    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
+    BOOST_CHECK( !sips );
+    BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
+    BOOST_CHECK_EQUAL( "2", major );
+    BOOST_CHECK_EQUAL( "0", minor );
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
@@ -241,15 +270,19 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
 
 BOOST_AUTO_TEST_CASE( test_word_parser )
 {
+  const std::string input = "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}";
+  BOOST_CHECK_EQUAL( input, parse_word( "aAzZ09-.!%*_+`'~()<>:\\\"/[]?{}" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_callid_parser )
 {
+  BOOST_CHECK_EQUAL( "abc123!", parse_callid( "abc123!" ) );
+  BOOST_CHECK_EQUAL( "abc123!@ABC123", parse_callid( "abc123!@ABC123" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
 {
-  // "Call-ID: 1234567890abcdefg@domain.com";
+  BOOST_CHECK_EQUAL( "1234567890abcdefg@domain.com", parse_Call_ID( "Call-ID: 1234567890abcdefg@domain.com" ) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
