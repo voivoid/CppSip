@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CppSip/message/method.h"
+#include "CppSip/message/request/method.h"
 
 #include <string>
 

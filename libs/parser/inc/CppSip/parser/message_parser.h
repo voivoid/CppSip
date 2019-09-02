@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CppSip/message/message.h"
+#include "CppSip/message/request/request.h"
 #include "CppSip/parser/abnf_core_parsers.h"
 #include "CppSip/parser/common_sip_parsers.h"
 
