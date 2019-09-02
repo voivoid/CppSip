@@ -5,8 +5,8 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
-#include "CppSip/message/method.h"
 #include "CppSip/message/headers/cseq.h"
+#include "CppSip/message/method.h"
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Header::CSeq, id, method )
 
