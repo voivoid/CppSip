@@ -18,7 +18,7 @@ define_noattr_parser(HCOLON)
 define_parser(mark, char)
 define_parser(unreserved, char)
 define_parser(reserved, char)
-//define_parser(escaped, char)
+define_parser(escaped, char)
 define_parser(word, std::string)
 define_parser(callid, std::string)
 define_parser(Method, CppSipMsg::Method)
@@ -91,10 +91,15 @@ BOOST_DATA_TEST_CASE( test_reserved_parser, reserved_test_data )
   BOOST_CHECK_EQUAL( sample, parse_reserved( std::string_view( &sample, 1 ) ) );
 }
 
-// BOOST_AUTO_TEST_CASE( test_escaped_parser )
-//{
-//    BOOST_CHECK_EQUAL( '0', parse_escaped( "%30" ) );
-//}
+BOOST_AUTO_TEST_CASE( test_escaped_parser )
+{
+    BOOST_CHECK_EQUAL( '0', parse_escaped( "%30" ) );
+    BOOST_CHECK_EQUAL( 'A', parse_escaped( "%41" ) );
+    BOOST_CHECK_EQUAL( '\x00', parse_escaped( "%00" ) );
+    BOOST_CHECK_EQUAL( '\xff', parse_escaped( "%FF" ) );
+
+    BOOST_CHECK_THROW(parse_escaped("%F"), std::runtime_error);
+}
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
 {
