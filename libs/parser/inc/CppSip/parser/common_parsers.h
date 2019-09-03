@@ -39,7 +39,7 @@ inline const auto unreserved = alphanum | mark;
 inline const auto reserved = bsx3::char_( ";/?:@&=+$," );
 
 // escaped = "%" HEXDIG HEXDIG
-inline const auto escaped = bsx3::char_( '%' ) > HEXDIG > HEXDIG;
+inline const auto escaped = bsx3::lit( '%' ) > HEXDIG > HEXDIG;
 
 // Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
 // extension-method (!!!)

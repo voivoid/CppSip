@@ -18,30 +18,23 @@ define_noattr_parser(HCOLON)
 define_parser(mark, char)
 define_parser(unreserved, char)
 define_parser(reserved, char)
-define_parser(escaped, std::string)
+//define_parser(escaped, char)
 define_parser(word, std::string)
 define_parser(callid, std::string)
-
-
 define_parser(Method, CppSipMsg::Method)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
+
+const auto alphanum_test_data = BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' );
+const auto mark_test_data     = BoostTestData::make( '-', '_', '.', '!', '~', '*', '\'', '(', ')' );
+const auto reserved_test_data = BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' );
 // clang-format on
 }  // namespace
 
 BOOST_AUTO_TEST_SUITE( common_sip_parsers )
 
-BOOST_DATA_TEST_CASE( test_alphanum_parser,
-                      BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' ) )
+BOOST_DATA_TEST_CASE( test_alphanum_parser, alphanum_test_data )
 {
-  BOOST_CHECK_EQUAL( 'a', parse_alphanum( "a" ) );
-  BOOST_CHECK_EQUAL( 's', parse_alphanum( "s" ) );
-  BOOST_CHECK_EQUAL( 'z', parse_alphanum( "z" ) );
-  BOOST_CHECK_EQUAL( 'A', parse_alphanum( "A" ) );
-  BOOST_CHECK_EQUAL( 'S', parse_alphanum( "S" ) );
-  BOOST_CHECK_EQUAL( 'Z', parse_alphanum( "Z" ) );
-  BOOST_CHECK_EQUAL( '0', parse_alphanum( "0" ) );
-  BOOST_CHECK_EQUAL( '5', parse_alphanum( "5" ) );
-  BOOST_CHECK_EQUAL( '9', parse_alphanum( "9" ) );
+  BOOST_CHECK_EQUAL( sample, parse_alphanum( std::string_view( &sample, 1 ) ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_alphanum_parser_failures )
@@ -83,23 +76,25 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
 }
 
-BOOST_DATA_TEST_CASE( test_mark_parser, BoostTestData::make( '-', '_', '.', '!', '~', '*', '\'', '(', ')' ) )
+BOOST_DATA_TEST_CASE( test_mark_parser, mark_test_data )
 {
   BOOST_CHECK_EQUAL( sample, parse_mark( std::string_view( &sample, 1 ) ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_unreserved_parser )
+BOOST_DATA_TEST_CASE( test_unreserved_parser, alphanum_test_data + mark_test_data )
 {
+  BOOST_CHECK_EQUAL( sample, parse_unreserved( std::string_view( &sample, 1 ) ) );
 }
 
-BOOST_DATA_TEST_CASE( test_reserved_parser , BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' ) )
+BOOST_DATA_TEST_CASE( test_reserved_parser, reserved_test_data )
 {
   BOOST_CHECK_EQUAL( sample, parse_reserved( std::string_view( &sample, 1 ) ) );
 }
 
-BOOST_AUTO_TEST_CASE( test_escaped_parser )
-{
-}
+// BOOST_AUTO_TEST_CASE( test_escaped_parser )
+//{
+//    BOOST_CHECK_EQUAL( '0', parse_escaped( "%30" ) );
+//}
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )
 {
