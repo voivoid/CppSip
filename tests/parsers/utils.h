@@ -2,13 +2,13 @@
 
 #include "boost/spirit/home/x3.hpp"
 
-#include "boost/test/data/monomorphic/generators/xrange.hpp"
-#include "boost/test/data/test_case.hpp"
+#include "parsers/datasets.h"
+
+#include "output/sip_message.h"
+#include "output/std.h"
 
 #include <stdexcept>
 #include <string>
-
-namespace BoostTestData = boost::unit_test::data;
 
 template <typename Attr, typename Parser>
 Attr parse( Parser parser, const std::string_view input )

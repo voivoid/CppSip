@@ -2,8 +2,6 @@
 
 #include "CppSip/parser/request_parsers.h"
 
-#include "output/sip_message.h"
-#include "output/std.h"
 #include "parsers/utils.h"
 
 #include <limits>
@@ -24,6 +22,10 @@ define_raw_parser(ls32)
 define_raw_parser(IPv6address)
 define_parser(host, CppSipMsg::Host)
 define_parser(hostport, CppSipMsg::HostPort)
+define_parser(password, std::string);
+define_parser(user_unreserved, char);
+define_parser(user, std::string);
+define_parser(userinfo, CppSipMsg::UserInfo);
 define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
@@ -160,6 +162,35 @@ BOOST_AUTO_TEST_CASE( test_hostport_parser )
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { "5060" } } ), parse_hostport( "domain.com:5060" ) );
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { "5060" } } ),
                      parse_hostport( "192.168.0.1:5060" ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_password_parser )
+{
+  BOOST_CHECK_EQUAL( "password!!!", parse_password( "password!!!" ) );
+}
+
+BOOST_DATA_TEST_CASE( test_user_unreserved_parser, TestDatasets::user_unreserved )
+{
+  BOOST_CHECK_EQUAL( sample, parse_user_unreserved( std::string_view( &sample, 1 ) ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_user_parser )
+{
+  BOOST_CHECK_EQUAL( "user???", parse_user( "user???" ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_userinfo_parser )
+{
+  {
+    auto [ user, password ] = parse_userinfo( "user" );
+    BOOST_CHECK_EQUAL( "user", user );
+    BOOST_CHECK( password.empty() );
+  }
+  {
+    auto [ user, password ] = parse_userinfo( "user:password" );
+    BOOST_CHECK_EQUAL( "user", user );
+    BOOST_CHECK_EQUAL( "password", password );
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )

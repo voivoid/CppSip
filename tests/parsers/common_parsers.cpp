@@ -2,8 +2,6 @@
 
 #include "CppSip/parser/common_parsers.h"
 
-#include "output/sip_message.h"
-#include "output/std.h"
 #include "parsers/utils.h"
 
 namespace CppSipMsg = CppSip::Message;
@@ -23,16 +21,12 @@ define_parser(word, std::string)
 define_parser(callid, std::string)
 define_parser(Method, CppSipMsg::Method)
 define_parser(SIP_Version, CppSipMsg::SipVersion)
-
-const auto alphanum_test_data = BoostTestData::xrange( '0', '9' ) + BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' );
-const auto mark_test_data     = BoostTestData::make( '-', '_', '.', '!', '~', '*', '\'', '(', ')' );
-const auto reserved_test_data = BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' );
 // clang-format on
 }  // namespace
 
 BOOST_AUTO_TEST_SUITE( common_sip_parsers )
 
-BOOST_DATA_TEST_CASE( test_alphanum_parser, alphanum_test_data )
+BOOST_DATA_TEST_CASE( test_alphanum_parser, TestDatasets::alphanum )
 {
   BOOST_CHECK_EQUAL( sample, parse_alphanum( std::string_view( &sample, 1 ) ) );
 }
@@ -76,29 +70,29 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
 }
 
-BOOST_DATA_TEST_CASE( test_mark_parser, mark_test_data )
+BOOST_DATA_TEST_CASE( test_mark_parser, TestDatasets::mark )
 {
   BOOST_CHECK_EQUAL( sample, parse_mark( std::string_view( &sample, 1 ) ) );
 }
 
-BOOST_DATA_TEST_CASE( test_unreserved_parser, alphanum_test_data + mark_test_data )
+BOOST_DATA_TEST_CASE( test_unreserved_parser, TestDatasets::unreserved )
 {
   BOOST_CHECK_EQUAL( sample, parse_unreserved( std::string_view( &sample, 1 ) ) );
 }
 
-BOOST_DATA_TEST_CASE( test_reserved_parser, reserved_test_data )
+BOOST_DATA_TEST_CASE( test_reserved_parser, TestDatasets::reserved )
 {
   BOOST_CHECK_EQUAL( sample, parse_reserved( std::string_view( &sample, 1 ) ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_escaped_parser )
 {
-    BOOST_CHECK_EQUAL( '0', parse_escaped( "%30" ) );
-    BOOST_CHECK_EQUAL( 'A', parse_escaped( "%41" ) );
-    BOOST_CHECK_EQUAL( '\x00', parse_escaped( "%00" ) );
-    BOOST_CHECK_EQUAL( '\xff', parse_escaped( "%FF" ) );
+  BOOST_CHECK_EQUAL( '0', parse_escaped( "%30" ) );
+  BOOST_CHECK_EQUAL( 'A', parse_escaped( "%41" ) );
+  BOOST_CHECK_EQUAL( '\x00', parse_escaped( "%00" ) );
+  BOOST_CHECK_EQUAL( '\xff', parse_escaped( "%FF" ) );
 
-    BOOST_CHECK_THROW(parse_escaped("%F"), std::runtime_error);
+  BOOST_CHECK_THROW( parse_escaped( "%F" ), std::runtime_error );
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )

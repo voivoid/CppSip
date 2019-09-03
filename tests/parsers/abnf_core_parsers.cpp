@@ -16,17 +16,13 @@ define_noattr_parser(LF)
 define_noattr_parser(HTAB)
 define_noattr_parser(WSP)
 define_noattr_parser(CRLF)
-
-const auto ALPHA_test_data = BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' );
-const auto DIGIT_test_data = BoostTestData::xrange( '0', '9' );
-const auto HEX_test_data   = DIGIT_test_data + BoostTestData::xrange( 'A', 'F' );
 // clang-format on
 }  // namespace
 
 
 BOOST_AUTO_TEST_SUITE( abnf_core_parsers )
 
-BOOST_DATA_TEST_CASE( test_ALPHA_parser, ALPHA_test_data )
+BOOST_DATA_TEST_CASE( test_ALPHA_parser, TestDatasets::ALPHA )
 {
   BOOST_CHECK_EQUAL( sample, parse_ALPHA( std::string_view( &sample, 1 ) ) );
 }
@@ -39,7 +35,7 @@ BOOST_AUTO_TEST_CASE( test_ALPHA_parser_failures )
   BOOST_CHECK_THROW( parse_ALPHA( "{" ), std::runtime_error );
 }
 
-BOOST_DATA_TEST_CASE( test_DIGIT_parser, DIGIT_test_data )
+BOOST_DATA_TEST_CASE( test_DIGIT_parser, TestDatasets::DIGIT )
 {
   BOOST_CHECK_EQUAL( sample, parse_DIGIT( std::string_view( &sample, 1 ) ) );
 }
@@ -51,7 +47,7 @@ BOOST_AUTO_TEST_CASE( test_DIGIT_parser_failures )
   BOOST_CHECK_THROW( parse_DIGIT( ":" ), std::runtime_error );
 }
 
-BOOST_DATA_TEST_CASE( test_HEXDIG_parser, HEX_test_data )
+BOOST_DATA_TEST_CASE( test_HEXDIG_parser, TestDatasets::HEX )
 {
   BOOST_CHECK_EQUAL( sample, parse_HEXDIG( std::string_view( &sample, 1 ) ) );
 }

@@ -5,6 +5,7 @@ add_executable(CppSipTests main.cpp
                            parsers/message_parser.cpp
                            parsers/request_parsers.cpp
                            parsers/response_parsers.cpp
+                           parsers/datasets.h
                            parsers/utils.h
                            output/sip_message.h
                            output/sip_message.cpp

@@ -14,6 +14,7 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, si
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, host_port )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::UserInfo, user, password )
 
 namespace CppSip
 {
@@ -83,10 +84,17 @@ inline const auto host = bsx3::rule<struct _host, CppSip::Message::Host>{} = hos
 // hostport = host [ ":" port ]
 inline const auto hostport = bsx3::rule<struct _host_port, CppSip::Message::HostPort>{} = host >> -( ':' >> port );
 
-// password = *( unreserved / escaped / "&" / "=" / "+" / "$" / "," ) (!!!)
-// user-unreserved = "&" / "=" / "+" / "$" / "," / ";" / "?" / "/" (!!!)
-// user = 1*( unreserved / escaped / user-unreserved ) (!!!)
+// password = *( unreserved / escaped / "&" / "=" / "+" / "$" / "," )
+inline const auto password = *( unreserved | escaped | bsx3::char_( "&=+$," ) );
+
+// user-unreserved = "&" / "=" / "+" / "$" / "," / ";" / "?" / "/"
+inline const auto user_unreserved = bsx3::char_( "&=+$,;?/" );
+
+// user = 1*( unreserved / escaped / user-unreserved )
+inline const auto user = +( unreserved | escaped | user_unreserved );
+
 // userinfo = ( user / telephone-subscriber ) [ ":" password ] "@" (!!!)
+inline const auto userinfo = user > -( ':' > password );
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > hostport;
