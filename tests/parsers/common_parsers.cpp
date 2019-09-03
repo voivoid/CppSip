@@ -15,6 +15,10 @@ define_parser(alphanum, char)
 define_noattr_parser(LWS)
 define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
+define_parser(mark, char)
+define_parser(unreserved, char)
+define_parser(reserved, char)
+define_parser(escaped, std::string)
 define_parser(word, std::string)
 define_parser(callid, std::string)
 
@@ -77,6 +81,24 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_NO_THROW( parse_HCOLON( " \t: " ) );
 
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
+}
+
+BOOST_DATA_TEST_CASE( test_mark_parser, BoostTestData::make( '-', '_', '.', '!', '~', '*', '\'', '(', ')' ) )
+{
+  BOOST_CHECK_EQUAL( sample, parse_mark( std::string_view( &sample, 1 ) ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_unreserved_parser )
+{
+}
+
+BOOST_DATA_TEST_CASE( test_reserved_parser , BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' ) )
+{
+  BOOST_CHECK_EQUAL( sample, parse_reserved( std::string_view( &sample, 1 ) ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_escaped_parser )
+{
 }
 
 BOOST_AUTO_TEST_CASE( test_Method_parser )

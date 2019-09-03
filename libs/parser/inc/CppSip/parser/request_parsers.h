@@ -83,6 +83,11 @@ inline const auto host = bsx3::rule<struct _host, CppSip::Message::Host>{} = hos
 // hostport = host [ ":" port ]
 inline const auto hostport = bsx3::rule<struct _host_port, CppSip::Message::HostPort>{} = host >> -( ':' >> port );
 
+// password = *( unreserved / escaped / "&" / "=" / "+" / "$" / "," ) (!!!)
+// user-unreserved = "&" / "=" / "+" / "$" / "," / ";" / "?" / "/" (!!!)
+// user = 1*( unreserved / escaped / user-unreserved ) (!!!)
+// userinfo = ( user / telephone-subscriber ) [ ":" password ] "@" (!!!)
+
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > hostport;
 

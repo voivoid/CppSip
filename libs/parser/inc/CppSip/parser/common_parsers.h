@@ -29,6 +29,18 @@ inline const auto SWS = -LWS;
 // HCOLON = *( SP / HTAB ) ":" SWS
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
 
+// mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
+inline const auto mark = bsx3::char_( "-_.!~*'()" );
+
+// unreserved = alphanum / mark
+inline const auto unreserved = alphanum | mark;
+
+// reserved = ";" / "/" / "?" / ":" / "@" / "&" / "=" / "+" / "$" / ","
+inline const auto reserved = bsx3::char_( ";/?:@&=+$," );
+
+// escaped = "%" HEXDIG HEXDIG
+inline const auto escaped = bsx3::char_( '%' ) > HEXDIG > HEXDIG;
+
 // Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
 // extension-method (!!!)
 inline bsx3::symbols<CppSip::Message::Method> get_Method_parser()

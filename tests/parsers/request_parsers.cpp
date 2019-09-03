@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
 
 BOOST_AUTO_TEST_CASE( test_Request_parser )
 {
-  parse_Request(
+  const auto [ request_line, headers ] = parse_Request(
       "INVITE sip:domain.com SIP/2.0\r\n"
       "Call-ID: 1234567890\r\n"
       "CSeq: 12345 INVITE\r\n"
