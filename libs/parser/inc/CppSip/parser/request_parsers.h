@@ -13,6 +13,7 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, host_port )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
 
 namespace CppSip
 {

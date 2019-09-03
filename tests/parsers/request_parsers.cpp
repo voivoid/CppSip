@@ -28,6 +28,7 @@ define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
 define_parser(Request_Line, CppSipMsg::RequestLine)
+define_parser(Request, CppSipMsg::Request)
 // clang-format on
 
 }  // namespace
@@ -206,6 +207,16 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
     BOOST_CHECK_EQUAL( "2", major );
     BOOST_CHECK_EQUAL( "0", minor );
   }
+}
+
+BOOST_AUTO_TEST_CASE( test_Request_parser )
+{
+  parse_Request(
+      "INVITE sip:domain.com SIP/2.0\r\n"
+      "Call-ID: 1234567890\r\n"
+      "CSeq: 12345 INVITE\r\n"
+      "Max-Forwards: 10\r\n"
+      "\r\n" );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

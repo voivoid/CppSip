@@ -9,3 +9,20 @@
 #include "CppSip/message/request/sip_uri.h"
 
 #include "CppSip/message/headers/headers.h"
+
+#include <vector>
+
+namespace CppSip
+{
+
+namespace Message
+{
+
+struct Request
+{
+  RequestLine request_line;
+  std::vector<Header> headers;
+};
+
+}  // namespace Message
+}  // namespace CppSip
