@@ -96,10 +96,24 @@ inline const auto user = +( unreserved | escaped | user_unreserved );
 // userinfo = ( user / telephone-subscriber ) [ ":" password ] "@" (!!!)
 inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserInfo>{} = user >> -( ':' >> password ) >> '@';
 
+// hnv-unreserved  =  "[" / "]" / "/" / "?" / ":" / "+" / "$"
+inline const auto hnv_unreserved = bsx3::char_( "[]/?:+$" );
+
+// hvalue          =  *( hnv-unreserved / unreserved / escaped )
+inline const auto hvalue = *( hnv_unreserved | unreserved | escaped );
+
+// hname           =  1*( hnv-unreserved / unreserved / escaped )
+inline const auto hname = +( hnv_unreserved | unreserved | escaped );
+
+// header          =  hname "=" hvalue
+inline const auto header = hname > '=' > hvalue;
+
+// headers         =  "?" header *( "&" header )
+inline const auto headers = '?' > header > *( '&' > header );
+
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > -userinfo
                                                                                      > hostport;
-
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
 inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sips:" ) > bsx3::attr( true ) > -userinfo
                                                                                        > hostport;

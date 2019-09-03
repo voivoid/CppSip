@@ -16,5 +16,6 @@ const auto mark            = BoostTestData::make( '-', '_', '.', '!', '~', '*', 
 const auto reserved        = BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' );
 const auto unreserved      = alphanum + mark;
 const auto user_unreserved = BoostTestData::make( '&', '=', '+', '$', ',', ';', '?', '/' );
+const auto hnv_unreserved  = BoostTestData::make( '[', ']', '/', '?', ':', '+', '$' );
 
 }  // namespace TestDatasets

@@ -26,6 +26,11 @@ define_parser(password, std::string);
 define_parser(user_unreserved, char);
 define_parser(user, std::string);
 define_parser(userinfo, CppSipMsg::UserInfo);
+define_parser(hnv_unreserved, char);
+define_parser(hvalue, std::string)
+define_parser(hname, std::string)
+//define_parser(header, ...);
+//define_parser(headers, ...);
 define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
@@ -191,6 +196,27 @@ BOOST_AUTO_TEST_CASE( test_userinfo_parser )
     BOOST_CHECK_EQUAL( "user", user );
     BOOST_CHECK_EQUAL( "password", password );
   }
+}
+
+BOOST_DATA_TEST_CASE( test_hnv_unreserved_parser, TestDatasets::hnv_unreserved )
+{
+  BOOST_CHECK_EQUAL( sample, parse_hnv_unreserved( std::string_view( &sample, 1 ) ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_hvalue_parser )
+{
+}
+
+BOOST_AUTO_TEST_CASE( test_hname_parser )
+{
+}
+
+BOOST_AUTO_TEST_CASE( test_header_parser )
+{
+}
+
+BOOST_AUTO_TEST_CASE( test_headers_parser )
+{
 }
 
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
