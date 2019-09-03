@@ -12,7 +12,7 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::HostPort, host, port )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, host_port )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, userinfo, host_port )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::UserInfo, user, password )
 
@@ -94,13 +94,15 @@ inline const auto user_unreserved = bsx3::char_( "&=+$,;?/" );
 inline const auto user = +( unreserved | escaped | user_unreserved );
 
 // userinfo = ( user / telephone-subscriber ) [ ":" password ] "@" (!!!)
-inline const auto userinfo = user > -( ':' > password );
+inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserInfo>{} = user >> -( ':' >> password ) >> '@';
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > hostport;
+inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > -userinfo
+                                                                                     > hostport;
 
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sips:" ) > bsx3::attr( true ) > hostport;
+inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sips:" ) > bsx3::attr( true ) > -userinfo
+                                                                                       > hostport;
 
 // Request-URI = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto Request_URI = bsx3::rule<struct _request_uri, CppSip::Message::RequestUri>{} = SIP_URI | SIPS_URI;

@@ -182,12 +182,12 @@ BOOST_AUTO_TEST_CASE( test_user_parser )
 BOOST_AUTO_TEST_CASE( test_userinfo_parser )
 {
   {
-    auto [ user, password ] = parse_userinfo( "user" );
+    auto [ user, password ] = parse_userinfo( "user@" );
     BOOST_CHECK_EQUAL( "user", user );
     BOOST_CHECK( password.empty() );
   }
   {
-    auto [ user, password ] = parse_userinfo( "user:password" );
+    auto [ user, password ] = parse_userinfo( "user:password@" );
     BOOST_CHECK_EQUAL( "user", user );
     BOOST_CHECK_EQUAL( "password", password );
   }
@@ -196,8 +196,18 @@ BOOST_AUTO_TEST_CASE( test_userinfo_parser )
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
 {
   {
-    const auto [ sips, hostport ] = parse_SIP_URI( "sip:domain.com" );
+    const auto [ sips, userinfo, hostport ] = parse_SIP_URI( "sip:domain.com" );
     BOOST_CHECK( !sips );
+    BOOST_CHECK( !userinfo );
+    BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
+  }
+
+  {
+    const auto [ sips, userinfo, hostport ] = parse_SIP_URI( "sip:user:password@domain.com" );
+    BOOST_CHECK( !sips );
+    BOOST_CHECK( userinfo );
+    BOOST_CHECK_EQUAL( "user", userinfo->user );
+    BOOST_CHECK_EQUAL( "password", userinfo->password );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
   }
 
@@ -207,8 +217,9 @@ BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
 BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 {
   {
-    const auto [ sips, hostport ] = parse_SIPS_URI( "sips:domain.com" );
+    const auto [ sips, userinfo, hostport ] = parse_SIPS_URI( "sips:domain.com" );
     BOOST_CHECK( sips );
+    BOOST_CHECK( !userinfo );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
   }
 
@@ -218,9 +229,10 @@ BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
 {
   {
-    const auto [ sips, hostport ] = parse_Request_URI( "sip:domain.com" ).sip_uri;
+    const auto [ sips, userinfo, hostport ] = parse_Request_URI( "sip:domain.com" ).sip_uri;
 
     BOOST_CHECK( !sips );
+    BOOST_CHECK( !userinfo );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
   }
 }
@@ -229,11 +241,12 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
 {
   {
     const auto [ method, request_uri, sip_version ] = parse_Request_Line( "INVITE sip:domain.com SIP/2.0\r\n" );
-    const auto& [ sips, hostport ]                  = request_uri.sip_uri;
+    const auto& [ sips, userinfo, hostport ]        = request_uri.sip_uri;
     const auto& [ major, minor ]                    = sip_version;
 
     BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
     BOOST_CHECK( !sips );
+    BOOST_CHECK( !userinfo );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
     BOOST_CHECK_EQUAL( "2", major );
     BOOST_CHECK_EQUAL( "0", minor );
