@@ -18,6 +18,6 @@ struct CSeq
   Method method;
 };
 
-}  // namespace Header
+}  // namespace Headers
 }  // namespace Message
 }  // namespace CppSip

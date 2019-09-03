@@ -96,7 +96,7 @@ inline const auto Request_Line = bsx3::rule<struct _request_line, CppSip::Messag
     Method > SP > Request_URI > SP > SIP_Version > CRLF;
 
 // Request = Request-Line *(message-header) CRLF [message-body] (!!!)
-inline const auto Request = Request_Line > * (message_header) > CRLF;
+inline const auto Request = Request_Line > *( message_header ) > CRLF;
 
 }  // namespace Parsers
 }  // namespace CppSip

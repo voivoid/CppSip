@@ -8,11 +8,11 @@ namespace Message
 {
 namespace Headers
 {
-  struct CallId
-  {
-    std::string id;
-  };
+struct CallId
+{
+  std::string id;
+};
 
-}  // namespace Header
+}  // namespace Headers
 }  // namespace Message
 }  // namespace CppSip

@@ -50,7 +50,7 @@ inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message:
 inline const auto word = +( alphanum | bsx3::char_( "-.!%*_+`'~()<>:\\\"/[]?{}" ) );
 
 // callid = word[ "@" word ]
-inline const auto callid = bsx3::rule<struct _callid, std::string>{} = word >> -(bsx3::char_('@') > word);
+inline const auto callid = bsx3::rule<struct _callid, std::string>{} = word >> -( bsx3::char_( '@' ) > word );
 
 }  // namespace Parsers
 }  // namespace CppSip

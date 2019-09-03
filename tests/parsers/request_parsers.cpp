@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( test_SIPS_URI_parser )
 BOOST_AUTO_TEST_CASE( test_Request_URI_parser )
 {
   {
-    const auto [ sips, hostport ] = parse_Request_URI("sip:domain.com").sip_uri;
+    const auto [ sips, hostport ] = parse_Request_URI( "sip:domain.com" ).sip_uri;
 
     BOOST_CHECK( !sips );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
