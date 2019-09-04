@@ -30,6 +30,15 @@ inline const auto SWS = -LWS;
 // HCOLON = *( SP / HTAB ) ":" SWS
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
 
+// SLASH = SWS "/" SWS; slash
+inline const auto SLASH = SWS > '/' > SWS;
+
+// SEMI = SWS ";" SWS; semicolon
+inline const auto SEMI = SWS > ';' > SWS;
+
+// token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
+inline const auto token = +(alphanum | bsx3::char_("-.!%*_+`'~"));
+
 // mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
 inline const auto mark = bsx3::char_( "-_.!~*'()" );
 

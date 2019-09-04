@@ -12,6 +12,7 @@ namespace
 // clang-format off
 define_parser(Call_ID, CppSipMsg::Headers::CallId)
 define_parser(Content_Length, CppSip::Message::Headers::ContentLength)
+define_parser(discrete_type, std::string)
 define_parser(CSeq, CppSipMsg::Headers::CSeq)
 define_parser(Max_Forwards, CppSipMsg::Headers::MaxForwards)
 define_parser(message_header, CppSipMsg::Header)
@@ -28,7 +29,15 @@ BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
 
 BOOST_AUTO_TEST_CASE(test_Content_Length_parser)
 {
+  BOOST_CHECK_EQUAL(0, parse_Content_Length( "Content-Length: 0").length );
+  BOOST_CHECK_EQUAL(1024, parse_Content_Length( "Content-Length: 1024").length );
+  BOOST_CHECK_EQUAL(4294967295, parse_Content_Length( "Content-Length: 4294967295" ).length );
+  BOOST_CHECK_EQUAL(18446744073709551615, parse_Content_Length("Content-Length: 18446744073709551615").length);
+}
 
+BOOST_DATA_TEST_CASE(test_discrete_type_parser, TestDatasets::discrete_type)
+{
+  BOOST_CHECK_EQUAL(sample, parse_discrete_type( sample ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
