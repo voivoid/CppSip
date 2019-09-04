@@ -8,8 +8,7 @@ add_executable(CppSipTests main.cpp
                            parsers/datasets.h
                            parsers/utils.h
                            output/sip_message.h
-                           output/sip_message.cpp
-                           output/std.h)
+                           output/sip_message.cpp)
 
 target_include_directories(CppSipTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CppSipTests PRIVATE Boost::boost Boost::unit_test_framework CppSip::Common CppSip::Parser)

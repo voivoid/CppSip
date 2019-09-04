@@ -2,7 +2,8 @@
 
 #include <optional>
 #include <string>
-#include <variant>
+
+#include "boost/variant.hpp"
 
 namespace CppSip
 {
@@ -20,7 +21,7 @@ struct IPv4Address
 
 using HostName = std::string;
 
-using Host = std::variant<HostName, IPv4Address>;
+using Host = boost::variant<HostName, IPv4Address>;
 using Port = std::string;
 
 struct HostPort
