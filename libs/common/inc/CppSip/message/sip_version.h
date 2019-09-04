@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <cstdint>
 
 namespace CppSip
 {
@@ -11,8 +11,8 @@ namespace Message
 
 struct SipVersion
 {
-  std::string major;
-  std::string minor;
+  std::uint32_t major;
+  std::uint32_t minor;
 };
 
 }  // namespace Message

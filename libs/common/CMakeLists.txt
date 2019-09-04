@@ -1,4 +1,6 @@
 add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
+                                inc/CppSip/message/headers/content_length.h
+                                inc/CppSip/message/headers/content_type.h
                                 inc/CppSip/message/headers/cseq.h
                                 inc/CppSip/message/headers/headers.h
                                 inc/CppSip/message/headers/max_forwards.h
@@ -16,4 +18,5 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/method.h
                                 inc/CppSip/message/sip_version.h)
 add_library(CppSip::Common ALIAS CppSipCommon)
+target_link_libraries(CppSipCommon PUBLIC Boost::boost)
 target_include_directories(CppSipCommon PUBLIC inc PRIVATE src)

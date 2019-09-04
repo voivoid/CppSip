@@ -111,14 +111,14 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
 {
   {
     const auto [ major, minor ] = parse_SIP_Version( "SIP/1.0" );
-    BOOST_CHECK_EQUAL( "1", major );
-    BOOST_CHECK_EQUAL( "0", minor );
+    BOOST_CHECK_EQUAL( 1, major );
+    BOOST_CHECK_EQUAL( 0, minor );
   }
 
   {
     const auto [ major, minor ] = parse_SIP_Version( "SIP/2.1" );
-    BOOST_CHECK_EQUAL( "2", major );
-    BOOST_CHECK_EQUAL( "1", minor );
+    BOOST_CHECK_EQUAL( 2, major );
+    BOOST_CHECK_EQUAL( 1, minor );
   }
 
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );

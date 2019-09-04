@@ -14,8 +14,8 @@ namespace
 // clang-format off
 define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
-define_parser(hostname, std::string)
-define_parser(port, std::string)
+define_parser(hostname, CppSipMsg::HostName)
+define_parser(port, CppSipMsg::Port)
 define_parser(h16, unsigned)
 define_parser(IPv4address, CppSipMsg::IPv4Address)
 define_raw_parser(ls32)
@@ -96,9 +96,9 @@ BOOST_AUTO_TEST_CASE( test_hostname_parser )
 
 BOOST_AUTO_TEST_CASE( test_port_parser )
 {
-  BOOST_CHECK_EQUAL( "0", parse_port( "0" ) );
-  BOOST_CHECK_EQUAL( "5060", parse_port( "5060" ) );
-  BOOST_CHECK_EQUAL( "65535", parse_port( "65535" ) );
+  BOOST_CHECK_EQUAL( 0, parse_port( "0" ) );
+  BOOST_CHECK_EQUAL( 5060, parse_port( "5060" ) );
+  BOOST_CHECK_EQUAL( 65535, parse_port( "65535" ) );
 
   BOOST_CHECK_THROW( parse_port( "port" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_port( "-1" ), std::runtime_error );
@@ -164,8 +164,8 @@ BOOST_AUTO_TEST_CASE( test_host_parser )
 BOOST_AUTO_TEST_CASE( test_hostport_parser )
 {
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), parse_hostport( "domain.com" ) );
-  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { "5060" } } ), parse_hostport( "domain.com:5060" ) );
-  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { "5060" } } ),
+  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { 5060 } } ), parse_hostport( "domain.com:5060" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { 5060 } } ),
                      parse_hostport( "192.168.0.1:5060" ) );
 }
 
@@ -274,8 +274,8 @@ BOOST_AUTO_TEST_CASE( test_Request_Line_parser )
     BOOST_CHECK( !sips );
     BOOST_CHECK( !userinfo );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );
-    BOOST_CHECK_EQUAL( "2", major );
-    BOOST_CHECK_EQUAL( "0", minor );
+    BOOST_CHECK_EQUAL( 2, major );
+    BOOST_CHECK_EQUAL( 0, minor );
   }
 }
 

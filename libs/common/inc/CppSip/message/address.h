@@ -1,7 +1,8 @@
 #pragma once
 
+#include <cstdint>
 #include <optional>
-#include <string>
+
 
 #include "boost/variant.hpp"
 
@@ -22,7 +23,7 @@ struct IPv4Address
 using HostName = std::string;
 
 using Host = boost::variant<HostName, IPv4Address>;
-using Port = std::string;
+using Port = std::uint16_t;
 
 struct HostPort
 {

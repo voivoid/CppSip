@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <cstdint>
 
 namespace CppSip
 {
@@ -10,7 +10,7 @@ namespace Headers
 {
 struct MaxForwards
 {
-  std::string forwards;
+  std::uint32_t forwards;
 };
 }  // namespace Headers
 }  // namespace Message
