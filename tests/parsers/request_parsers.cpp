@@ -16,7 +16,7 @@ define_parser(domainlabel, std::string)
 define_parser(toplabel, std::string)
 define_parser(hostname, CppSipMsg::HostName)
 define_parser(port, CppSipMsg::Port)
-define_parser(h16, unsigned)
+define_parser(h16, std::uint16_t)
 define_parser(IPv4address, CppSipMsg::IPv4Address)
 define_raw_parser(ls32)
 define_raw_parser(IPv6address)
@@ -27,10 +27,10 @@ define_parser(user_unreserved, char);
 define_parser(user, std::string);
 define_parser(userinfo, CppSipMsg::UserInfo);
 define_parser(hnv_unreserved, char);
-define_parser(hvalue, std::string)
-define_parser(hname, std::string)
-//define_parser(header, ...);
-//define_parser(headers, ...);
+define_parser(hvalue, CppSipMsg::SipUriHeader::Value)
+define_parser(hname, CppSipMsg::SipUriHeader::Name)
+define_parser(header, CppSipMsg::SipUriHeader)
+define_parser(headers, std::vector<CppSipMsg::SipUriHeader>);
 define_parser(SIP_URI, CppSipMsg::SipUri);
 define_parser(SIPS_URI, CppSipMsg::SipUri);
 define_parser(Request_URI, CppSipMsg::RequestUri)
@@ -205,18 +205,43 @@ BOOST_DATA_TEST_CASE( test_hnv_unreserved_parser, TestDatasets::hnv_unreserved )
 
 BOOST_AUTO_TEST_CASE( test_hvalue_parser )
 {
+  std::string input = "[]/?:+$abc123-_.!~*'()";  
+  BOOST_CHECK_EQUAL(input, parse_hvalue(input));
+  BOOST_CHECK_EQUAL("", parse_hvalue(""));
 }
 
 BOOST_AUTO_TEST_CASE( test_hname_parser )
 {
+  std::string input = "[]/?:+$abc123-_.!~*'()";
+  BOOST_CHECK_EQUAL(input, parse_hname(input));
 }
 
 BOOST_AUTO_TEST_CASE( test_header_parser )
 {
+  {
+    const auto [name, value] = parse_header("name=value");
+    BOOST_CHECK_EQUAL("name", name);
+    BOOST_CHECK_EQUAL("value", value);
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_headers_parser )
 {
+  {
+    const auto headers = parse_headers("?name1=value1");
+    BOOST_REQUIRE_EQUAL(1, headers.size());
+    BOOST_CHECK_EQUAL("name1", headers[0].name);
+    BOOST_CHECK_EQUAL("value1", headers[0].value);
+  }
+
+  {
+    const auto headers = parse_headers("?name1=value1&name2=value2");
+    BOOST_REQUIRE_EQUAL(2, headers.size());
+    BOOST_CHECK_EQUAL("name1", headers[0].name);
+    BOOST_CHECK_EQUAL("value1", headers[0].value);
+    BOOST_CHECK_EQUAL("name2", headers[1].name);
+    BOOST_CHECK_EQUAL("value2", headers[1].value);
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
@@ -231,7 +256,7 @@ BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
   {
     const auto [ sips, userinfo, hostport ] = parse_SIP_URI( "sip:user:password@domain.com" );
     BOOST_CHECK( !sips );
-    BOOST_CHECK( userinfo );
+    BOOST_REQUIRE( userinfo );
     BOOST_CHECK_EQUAL( "user", userinfo->user );
     BOOST_CHECK_EQUAL( "password", userinfo->password );
     BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), hostport );

@@ -8,6 +8,7 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/request/request_line.h
                                 inc/CppSip/message/request/request_uri.h
                                 inc/CppSip/message/request/sip_uri.h
+                                inc/CppSip/message/request/sip_uri_header.h
                                 inc/CppSip/message/request/userinfo.h
                                 inc/CppSip/message/response/response.h
                                 inc/CppSip/message/response/status_code.h

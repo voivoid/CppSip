@@ -2,6 +2,7 @@
 
 #include "CppSip/message/address.h"
 #include "CppSip/message/request/userinfo.h"
+#include "CppSip/message/request/sip_uri_header.h"
 
 #include <optional>
 

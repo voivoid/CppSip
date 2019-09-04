@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CppSip/message/request/request.h"
+
 #include "CppSip/parser/abnf_core_parsers.h"
 #include "CppSip/parser/common_parsers.h"
 #include "CppSip/parser/header_parsers.h"
@@ -13,6 +14,7 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, userinfo, host_port )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUriHeader, name, value)
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::UserInfo, user, password )
 
@@ -100,13 +102,13 @@ inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserI
 inline const auto hnv_unreserved = bsx3::char_( "[]/?:+$" );
 
 // hvalue          =  *( hnv-unreserved / unreserved / escaped )
-inline const auto hvalue = *( hnv_unreserved | unreserved | escaped );
+inline const auto hvalue = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Value>{} = *(hnv_unreserved | unreserved | escaped);
 
 // hname           =  1*( hnv-unreserved / unreserved / escaped )
-inline const auto hname = +( hnv_unreserved | unreserved | escaped );
+inline const auto hname = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Name>{} = +( hnv_unreserved | unreserved | escaped );
 
 // header          =  hname "=" hvalue
-inline const auto header = hname > '=' > hvalue;
+inline const auto header = bsx3::rule<struct _header, CppSip::Message::SipUriHeader>{} = hname > '=' > hvalue;
 
 // headers         =  "?" header *( "&" header )
 inline const auto headers = '?' > header > *( '&' > header );
