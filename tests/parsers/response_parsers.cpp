@@ -32,6 +32,13 @@ BOOST_DATA_TEST_CASE( test_Status_Code_parser, TestDatasets::Status_Code )
   BOOST_CHECK_EQUAL( sample, parse_Status_Code( std::to_string( sample ) ) );
 }
 
+BOOST_AUTO_TEST_CASE( test_Status_Code_parser_failures )
+{
+  BOOST_CHECK_THROW( parse_Status_Code( "1" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_Status_Code( "999" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_Status_Code( "x" ), std::runtime_error );
+}
+
 BOOST_AUTO_TEST_CASE( test_Status_Line_parser )
 {
   {

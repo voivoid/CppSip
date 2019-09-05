@@ -41,14 +41,11 @@ namespace bsx3 = boost::spirit::x3;
 inline const auto Reason_Phrase = bsx3::rule<struct _reason_phrase, std::string>{} = *( reserved | unreserved | escaped | SP | HTAB );
 
 // Status-Code = Informational / Redirection / Success / Client-Error / Server-Error / Global-Failure / extension-code (!!!)
-inline const auto Status_Code = bsx3::uint_parser<std::uint16_t, 10, 3, 3>{}; /*[ ( []( auto& ctx ) {
- const auto& attr = _attr( ctx );
- _val( ctx )      = attr;
- _pass( ctx )     = Details::is_valid_status_code( attr );
-} ) ];*/
+inline const auto Status_Code =
+    bsx3::uint_parser<std::uint16_t, 10, 3, 3>{}[ ( []( auto& ctx ) { _pass( ctx ) = Details::is_valid_status_code( _attr( ctx ) ); } ) ];
 
 // Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
-inline const auto Status_Line = bsx3::rule<struct _status_line, CppSip::Message::StatusLine>{} =
+inline const auto Status_Line = bsx3::rule<struct _status_line, CppSip::Message::StatusLine>{} %=
     SIP_Version > SP > Status_Code > SP > Reason_Phrase > CRLF;
 
 // Response = Status-Line *( message-header ) CRLF [ message-body ] (!!!)
