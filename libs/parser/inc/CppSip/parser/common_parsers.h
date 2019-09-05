@@ -36,6 +36,9 @@ inline const auto SLASH = SWS > '/' > SWS;
 // SEMI = SWS ";" SWS; semicolon
 inline const auto SEMI = SWS > ';' > SWS;
 
+// EQUAL = SWS "=" SWS; equal
+inline const auto EQUAL = SWS > '=' > SWS;
+
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
 inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
 
@@ -73,6 +76,7 @@ inline const auto word = +( alphanum | bsx3::char_( "-.!%*_+`'~()<>:\\\"/[]?{}" 
 
 // callid = word[ "@" word ]
 inline const auto callid = bsx3::rule<struct _callid, std::string>{} = word >> -( bsx3::char_( '@' ) > word );
+
 
 }  // namespace Parsers
 }  // namespace CppSip

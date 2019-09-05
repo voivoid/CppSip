@@ -15,6 +15,7 @@ define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
 define_noattr_parser(SLASH)
 define_noattr_parser(SEMI)
+define_noattr_parser(EQUAL)
 define_parser(token, std::string)
 define_parser(mark, char)
 define_parser(unreserved, char)
@@ -87,6 +88,14 @@ BOOST_AUTO_TEST_CASE( test_SEMI_parser )
   BOOST_CHECK_NO_THROW( parse_SEMI( "; " ) );
   BOOST_CHECK_NO_THROW( parse_SEMI( " ;" ) );
   BOOST_CHECK_NO_THROW( parse_SEMI( " ; " ) );
+}
+
+BOOST_AUTO_TEST_CASE(test_EQUAL_parser)
+{
+  BOOST_CHECK_NO_THROW(parse_EQUAL("="));
+  BOOST_CHECK_NO_THROW(parse_EQUAL("= "));
+  BOOST_CHECK_NO_THROW(parse_EQUAL(" ="));
+  BOOST_CHECK_NO_THROW(parse_EQUAL(" = "));
 }
 
 BOOST_AUTO_TEST_CASE( test_token_parser )
