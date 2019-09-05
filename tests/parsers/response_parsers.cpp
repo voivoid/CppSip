@@ -52,6 +52,18 @@ BOOST_AUTO_TEST_CASE( test_Status_Line_parser )
 
 BOOST_AUTO_TEST_CASE( test_Response_parser )
 {
+  const auto [ status_line, headers ] = parse_Response(
+      "SIP/2.0 100 Trying\r\n"
+      "Call-ID: 1234567890\r\n"
+      "CSeq: 12345 INVITE\r\n"
+      "Max-Forwards: 10\r\n"
+      "\r\n" );
+
+  BOOST_CHECK_EQUAL( 2, status_line.sip_version.major );
+  BOOST_CHECK_EQUAL( 0, status_line.sip_version.minor );
+  BOOST_CHECK_EQUAL( 100, status_line.status_code );
+  BOOST_CHECK_EQUAL( "Trying", status_line.reason );
+  BOOST_REQUIRE_EQUAL( 3, headers.size() );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
