@@ -14,7 +14,7 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::IPv4Address, a, b, c, d )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUri, sips, userinfo, host_port )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUriHeader, name, value)
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::SipUriHeader, name, value )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::UserInfo, user, password )
 
@@ -33,8 +33,9 @@ inline const auto domainlabel = alphanum > -( *( domainchar >> &domainchar ) >> 
 inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphanum );
 
 // hostname = *( domainlabel "." ) toplabel [ "." ]
-inline const auto hostname = bsx3::rule<struct _hostname, CppSip::Message::HostName>{} = *( domainlabel >> bsx3::char_( '.' ) >> &alphanum ) >>
-                                                                           toplabel >> -bsx3::char_( '.' );
+inline const auto hostname = bsx3::rule<struct _hostname, CppSip::Message::HostName>{} = *( domainlabel >> bsx3::char_( '.' ) >>
+                                                                                            &alphanum ) >>
+                                                                                         toplabel >> -bsx3::char_( '.' );
 
 // port = 1*DIGIT
 inline const auto port = bsx3::rule<struct _port, CppSip::Message::Port>{} = bsx3::uint16;
@@ -102,7 +103,7 @@ inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserI
 inline const auto hnv_unreserved = bsx3::char_( "[]/?:+$" );
 
 // hvalue          =  *( hnv-unreserved / unreserved / escaped )
-inline const auto hvalue = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Value>{} = *(hnv_unreserved | unreserved | escaped);
+inline const auto hvalue = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Value>{} = *( hnv_unreserved | unreserved | escaped );
 
 // hname           =  1*( hnv-unreserved / unreserved / escaped )
 inline const auto hname = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Name>{} = +( hnv_unreserved | unreserved | escaped );

@@ -37,7 +37,7 @@ inline const auto SLASH = SWS > '/' > SWS;
 inline const auto SEMI = SWS > ';' > SWS;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
-inline const auto token = +(alphanum | bsx3::char_("-.!%*_+`'~"));
+inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
 
 // mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
 inline const auto mark = bsx3::char_( "-_.!~*'()" );

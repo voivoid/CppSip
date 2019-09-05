@@ -73,25 +73,25 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
 }
 
-BOOST_AUTO_TEST_CASE(test_SLASH_parser)
+BOOST_AUTO_TEST_CASE( test_SLASH_parser )
 {
-  BOOST_CHECK_NO_THROW(parse_SLASH("/"));
-  BOOST_CHECK_NO_THROW(parse_SLASH("/ "));
-  BOOST_CHECK_NO_THROW(parse_SLASH(" /"));
-  BOOST_CHECK_NO_THROW(parse_SLASH(" / "));
+  BOOST_CHECK_NO_THROW( parse_SLASH( "/" ) );
+  BOOST_CHECK_NO_THROW( parse_SLASH( "/ " ) );
+  BOOST_CHECK_NO_THROW( parse_SLASH( " /" ) );
+  BOOST_CHECK_NO_THROW( parse_SLASH( " / " ) );
 }
 
-BOOST_AUTO_TEST_CASE(test_SEMI_parser)
+BOOST_AUTO_TEST_CASE( test_SEMI_parser )
 {
-  BOOST_CHECK_NO_THROW(parse_SEMI(";"));
-  BOOST_CHECK_NO_THROW(parse_SEMI("; "));
-  BOOST_CHECK_NO_THROW(parse_SEMI(" ;"));
-  BOOST_CHECK_NO_THROW(parse_SEMI(" ; "));
+  BOOST_CHECK_NO_THROW( parse_SEMI( ";" ) );
+  BOOST_CHECK_NO_THROW( parse_SEMI( "; " ) );
+  BOOST_CHECK_NO_THROW( parse_SEMI( " ;" ) );
+  BOOST_CHECK_NO_THROW( parse_SEMI( " ; " ) );
 }
 
-BOOST_AUTO_TEST_CASE(test_token_parser)
+BOOST_AUTO_TEST_CASE( test_token_parser )
 {
-  BOOST_CHECK_EQUAL("abc-.!%*_+`'~", parse_token("abc-.!%*_+`'~"));
+  BOOST_CHECK_EQUAL( "abc-.!%*_+`'~", parse_token( "abc-.!%*_+`'~" ) );
 }
 
 BOOST_DATA_TEST_CASE( test_mark_parser, TestDatasets::mark )

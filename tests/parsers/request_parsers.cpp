@@ -165,8 +165,7 @@ BOOST_AUTO_TEST_CASE( test_hostport_parser )
 {
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, {} } ), parse_hostport( "domain.com" ) );
   BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ { "domain.com" }, { 5060 } } ), parse_hostport( "domain.com:5060" ) );
-  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { 5060 } } ),
-                     parse_hostport( "192.168.0.1:5060" ) );
+  BOOST_CHECK_EQUAL( ( CppSipMsg::HostPort{ CppSipMsg::IPv4Address{ 192, 168, 0, 1 }, { 5060 } } ), parse_hostport( "192.168.0.1:5060" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_password_parser )
@@ -205,42 +204,42 @@ BOOST_DATA_TEST_CASE( test_hnv_unreserved_parser, TestDatasets::hnv_unreserved )
 
 BOOST_AUTO_TEST_CASE( test_hvalue_parser )
 {
-  std::string input = "[]/?:+$abc123-_.!~*'()";  
-  BOOST_CHECK_EQUAL(input, parse_hvalue(input));
-  BOOST_CHECK_EQUAL("", parse_hvalue(""));
+  std::string input = "[]/?:+$abc123-_.!~*'()";
+  BOOST_CHECK_EQUAL( input, parse_hvalue( input ) );
+  BOOST_CHECK_EQUAL( "", parse_hvalue( "" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_hname_parser )
 {
   std::string input = "[]/?:+$abc123-_.!~*'()";
-  BOOST_CHECK_EQUAL(input, parse_hname(input));
+  BOOST_CHECK_EQUAL( input, parse_hname( input ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_header_parser )
 {
   {
-    const auto [name, value] = parse_header("name=value");
-    BOOST_CHECK_EQUAL("name", name);
-    BOOST_CHECK_EQUAL("value", value);
+    const auto [ name, value ] = parse_header( "name=value" );
+    BOOST_CHECK_EQUAL( "name", name );
+    BOOST_CHECK_EQUAL( "value", value );
   }
 }
 
 BOOST_AUTO_TEST_CASE( test_headers_parser )
 {
   {
-    const auto headers = parse_headers("?name1=value1");
-    BOOST_REQUIRE_EQUAL(1, headers.size());
-    BOOST_CHECK_EQUAL("name1", headers[0].name);
-    BOOST_CHECK_EQUAL("value1", headers[0].value);
+    const auto headers = parse_headers( "?name1=value1" );
+    BOOST_REQUIRE_EQUAL( 1, headers.size() );
+    BOOST_CHECK_EQUAL( "name1", headers[ 0 ].name );
+    BOOST_CHECK_EQUAL( "value1", headers[ 0 ].value );
   }
 
   {
-    const auto headers = parse_headers("?name1=value1&name2=value2");
-    BOOST_REQUIRE_EQUAL(2, headers.size());
-    BOOST_CHECK_EQUAL("name1", headers[0].name);
-    BOOST_CHECK_EQUAL("value1", headers[0].value);
-    BOOST_CHECK_EQUAL("name2", headers[1].name);
-    BOOST_CHECK_EQUAL("value2", headers[1].value);
+    const auto headers = parse_headers( "?name1=value1&name2=value2" );
+    BOOST_REQUIRE_EQUAL( 2, headers.size() );
+    BOOST_CHECK_EQUAL( "name1", headers[ 0 ].name );
+    BOOST_CHECK_EQUAL( "value1", headers[ 0 ].value );
+    BOOST_CHECK_EQUAL( "name2", headers[ 1 ].name );
+    BOOST_CHECK_EQUAL( "value2", headers[ 1 ].value );
   }
 }
 

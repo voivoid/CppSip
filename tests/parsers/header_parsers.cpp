@@ -27,17 +27,17 @@ BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
   BOOST_CHECK_EQUAL( "1234567890abcdefg@domain.com", parse_Call_ID( "Call-ID: 1234567890abcdefg@domain.com" ).id );
 }
 
-BOOST_AUTO_TEST_CASE(test_Content_Length_parser)
+BOOST_AUTO_TEST_CASE( test_Content_Length_parser )
 {
-  BOOST_CHECK_EQUAL(0, parse_Content_Length( "Content-Length: 0").length );
-  BOOST_CHECK_EQUAL(1024, parse_Content_Length( "Content-Length: 1024").length );
-  BOOST_CHECK_EQUAL(4294967295, parse_Content_Length( "Content-Length: 4294967295" ).length );
-  BOOST_CHECK_EQUAL(18446744073709551615, parse_Content_Length("Content-Length: 18446744073709551615").length);
+  BOOST_CHECK_EQUAL( 0, parse_Content_Length( "Content-Length: 0" ).length );
+  BOOST_CHECK_EQUAL( 1024, parse_Content_Length( "Content-Length: 1024" ).length );
+  BOOST_CHECK_EQUAL( 4294967295, parse_Content_Length( "Content-Length: 4294967295" ).length );
+  BOOST_CHECK_EQUAL( 18446744073709551615ULL, parse_Content_Length( "Content-Length: 18446744073709551615" ).length );
 }
 
-BOOST_DATA_TEST_CASE(test_discrete_type_parser, TestDatasets::discrete_type)
+BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
 {
-  BOOST_CHECK_EQUAL(sample, parse_discrete_type( sample ) );
+  BOOST_CHECK_EQUAL( sample, parse_discrete_type( sample ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
@@ -58,9 +58,8 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
   BOOST_CHECK_THROW( parse_Max_Forwards( "Max-Forwards:-1" ), std::runtime_error );
 }
 
-BOOST_AUTO_TEST_CASE(test_message_header_parser)
+BOOST_AUTO_TEST_CASE( test_message_header_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()
