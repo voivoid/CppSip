@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 namespace CppSip
 {
 
@@ -14,6 +17,8 @@ struct SipUriHeader
   Name name;
   Value value;
 };
+
+using SipUriHeaders = std::vector<SipUriHeader>;
 
 }  // namespace Message
 

@@ -18,6 +18,7 @@ struct SipUri
 
   std::optional<UserInfo> userinfo;
   HostPort host_port;
+  SipUriHeaders headers;
 };
 
 }  // namespace Message
