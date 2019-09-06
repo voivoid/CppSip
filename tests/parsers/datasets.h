@@ -24,5 +24,8 @@ const auto discrete_type   = BoostTestData::make( std::string_view( "text" ),
                                                 std::string_view( "video" ),
                                                 std::string_view( "application" ) );
 const auto composite_type  = BoostTestData::make( std::string_view( "message" ), std::string_view( "multipart" ) );
+const auto quoted_pair =
+    BoostTestData::xrange( '\x01', '\x09' ) + BoostTestData::xrange( '\x0B', '\x0C' ) + BoostTestData::xrange( '\x0E', '\x7F' );
+const auto qdtext = BoostTestData::make( '\x21' ) + BoostTestData::xrange( '\x23', '\x5B' ) + BoostTestData::xrange( '\x5D', '\x7E' );
 
 }  // namespace TestDatasets

@@ -75,6 +75,31 @@ inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::M
 inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
     ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
 
+// display-name = *(token LWS)/ quoted-string
+inline const auto display_name = ( *( token > LWS ) ) | quoted_string;
+
+// addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
+
+// name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
+
+// gen-value = token / host / quoted-string
+
+// generic-param = token [ EQUAL gen-value ]
+
+// tag-param = "tag" EQUAL token
+
+// from-param = tag-param / generic-param
+
+// from-spec = ( name-addr / addr-spec ) *( SEMI from-param )
+
+// From = ( "From" / "f" ) HCOLON from-spec
+
+// to-param = tag-param / generic-param
+
+// To = ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
+
+
+
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info
  / Expires / From / In-Reply-To / Max-Forwards / MIME-Version / Min-Expires / Organization / Priority / Proxy-Authenticate /

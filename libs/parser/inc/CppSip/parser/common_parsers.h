@@ -39,6 +39,22 @@ inline const auto SEMI = SWS >> ';' > SWS;
 // EQUAL = SWS "=" SWS; equal
 inline const auto EQUAL = SWS >> '=' > SWS;
 
+// RAQUOT  =  ">" SWS ; right angle quote
+inline const auto RAQUOT = '>' > SWS;
+
+// LAQUOT  =  SWS "<"; left angle quote
+inline const auto LAQUOT = SWS > '<';
+
+// quoted-pair = "\" (%x00-09 / %x0B-0C / %x0E-7F)
+inline const auto quoted_pair = bsx3::lit( '\\' ) >>
+                                ( bsx3::char_( '\x00', '\x09' ) | bsx3::char_( '\x0B', '\x0C' ) | bsx3::char_( '\x0E', '\x7F' ) );
+
+// qdtext = LWS / %x21 / %x23-5B / %x5D-7E / UTF8-NONASCII (!!!)
+inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\x5B' ) | bsx3::char_( '\x5D', '\x7E' );
+
+// quoted-string = SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE
+inline const auto quoted_string = SWS > DQUOTE > *( qdtext | quoted_pair ) > DQUOTE;
+
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
 inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
 

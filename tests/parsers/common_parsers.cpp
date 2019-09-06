@@ -16,6 +16,11 @@ define_noattr_parser(HCOLON)
 define_noattr_parser(SLASH)
 define_noattr_parser(SEMI)
 define_noattr_parser(EQUAL)
+define_noattr_parser(RAQUOT)
+define_noattr_parser(LAQUOT)
+define_parser(quoted_pair, char)
+define_parser(qdtext, char)
+define_parser(quoted_string, std::string)
 define_parser(token, std::string)
 define_parser(mark, char)
 define_parser(unreserved, char)
@@ -96,6 +101,40 @@ BOOST_AUTO_TEST_CASE( test_EQUAL_parser )
   BOOST_CHECK_NO_THROW( parse_EQUAL( "= " ) );
   BOOST_CHECK_NO_THROW( parse_EQUAL( " =" ) );
   BOOST_CHECK_NO_THROW( parse_EQUAL( " = " ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_RAQUOT_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_RAQUOT( ">" ) );
+  BOOST_CHECK_NO_THROW( parse_RAQUOT( "> " ) );
+  BOOST_CHECK_NO_THROW( parse_RAQUOT( ">  " ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_LAQUOT_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_LAQUOT( "<" ) );
+  BOOST_CHECK_NO_THROW( parse_LAQUOT( " <" ) );
+  BOOST_CHECK_NO_THROW( parse_LAQUOT( "  <" ) );
+}
+
+BOOST_DATA_TEST_CASE( test_quoted_pair_parser, TestDatasets::quoted_pair )
+{
+  BOOST_CHECK_EQUAL( sample, parse_quoted_pair( std::string( "\\" ) + sample ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_quoted_pair_parser_failures )
+{
+  BOOST_CHECK_THROW( parse_quoted_pair( "a" ), std::runtime_error );
+}
+
+BOOST_DATA_TEST_CASE( test_qdtext_parser, TestDatasets::qdtext )
+{
+  BOOST_CHECK_EQUAL( sample, parse_qdtext( std::string_view( &sample, 1 ) ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_quoted_string_parser )
+{
+  BOOST_CHECK_EQUAL( "abc", parse_quoted_string( "\"abc\"" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_token_parser )

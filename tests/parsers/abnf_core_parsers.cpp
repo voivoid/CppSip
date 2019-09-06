@@ -10,6 +10,7 @@ namespace
 define_parser(ALPHA, char)
 define_parser(DIGIT, char)
 define_parser(HEXDIG, char)
+define_noattr_parser(DQUOTE)
 define_noattr_parser(SP)
 define_noattr_parser(CR)
 define_noattr_parser(LF)
@@ -57,6 +58,11 @@ BOOST_AUTO_TEST_CASE( test_HEXDIG_parser_failures )
   BOOST_CHECK_THROW( parse_HEXDIG( "-" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_HEXDIG( "a" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_HEXDIG( "G" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_DQUOTE_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_DQUOTE( "\"" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_SP_parser )
