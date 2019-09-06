@@ -20,6 +20,7 @@ endif()
 option(CPPSIP_BUILD_EXAMPLES "Build examples" ON)
 if(CPPSIP_BUILD_EXAMPLES)
   enable_testing()
+  include(cmake/thirdparties/abnfgen.cmake)
   add_subdirectory(examples)
 endif()
 
