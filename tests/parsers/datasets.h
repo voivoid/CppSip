@@ -23,5 +23,6 @@ const auto discrete_type   = BoostTestData::make( std::string_view( "text" ),
                                                 std::string_view( "audio" ),
                                                 std::string_view( "video" ),
                                                 std::string_view( "application" ) );
+const auto composite_type  = BoostTestData::make( std::string_view( "message" ), std::string_view( "multipart" ) );
 
 }  // namespace TestDatasets

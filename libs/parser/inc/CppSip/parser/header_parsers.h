@@ -6,8 +6,11 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::MediaType, type, subtype, parameters )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::MediaType::Parameter, attribute, value )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CallId, id )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::ContentLength, length )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::ContentType, media_type )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CSeq, id, method )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MaxForwards, forwards )
 
@@ -41,7 +44,7 @@ inline const auto iana_token = token;
 inline const auto m_attribute = token;
 
 // x-token = "x-" token
-inline const auto x_token = bsx3::string("x-") > token;
+inline const auto x_token = bsx3::string( "x-" ) > token;
 
 // extension-token = ietf-token / x-token
 inline const auto extension_token = ietf_token | x_token;
@@ -50,11 +53,11 @@ inline const auto extension_token = ietf_token | x_token;
 inline const auto m_subtype = extension_token | iana_token;
 
 // discrete-type = "text" / "image" / "audio" / "video" / "application" / extension-token
-inline const auto discrete_type =
-  bsx3::string("text") | bsx3::string("image") | bsx3::string("audio") | bsx3::string("video") | bsx3::string("application") | extension_token;
+inline const auto discrete_type = bsx3::string( "text" ) | bsx3::string( "image" ) | bsx3::string( "audio" ) | bsx3::string( "video" ) |
+                                  bsx3::string( "application" ) | extension_token;
 
 // composite-type = "message" / "multipart" / extension-token
-inline const auto composite_type = bsx3::string("message") | bsx3::string("multipart") | extension_token;
+inline const auto composite_type = bsx3::string( "message" ) | bsx3::string( "multipart" ) | extension_token;
 
 // m-type = discrete-type / composite-type
 inline const auto m_type = discrete_type | composite_type;
@@ -63,13 +66,14 @@ inline const auto m_type = discrete_type | composite_type;
 inline const auto m_value = token;
 
 // m-parameter = m-attribute EQUAL m-value
-inline const auto m_parameter = m_attribute > EQUAL > m_value;
+inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message::MediaType::Parameter>{} = m_attribute > EQUAL > m_value;
 
 // media-type = m-type SLASH m-subtype *(SEMI m-parameter)
-inline const auto media_type = m_type > SLASH > m_subtype > * (SEMI > m_parameter);
+inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::MediaType>{} = m_type > SLASH > m_subtype >>
+                                                                                              *( SEMI > m_parameter );
 
 // Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
-inline const auto Content_Type = (bsx3::lit("Content-Type") | 'c') > HCOLON > media_type;
+inline const auto Content_Type = ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info

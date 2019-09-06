@@ -31,13 +31,13 @@ inline const auto SWS = -LWS;
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
 
 // SLASH = SWS "/" SWS; slash
-inline const auto SLASH = SWS > '/' > SWS;
+inline const auto SLASH = SWS >> '/' > SWS;
 
 // SEMI = SWS ";" SWS; semicolon
-inline const auto SEMI = SWS > ';' > SWS;
+inline const auto SEMI = SWS >> ';' > SWS;
 
 // EQUAL = SWS "=" SWS; equal
-inline const auto EQUAL = SWS > '=' > SWS;
+inline const auto EQUAL = SWS >> '=' > SWS;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
 inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );

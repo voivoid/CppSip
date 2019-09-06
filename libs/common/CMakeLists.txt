@@ -4,6 +4,7 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/headers/cseq.h
                                 inc/CppSip/message/headers/headers.h
                                 inc/CppSip/message/headers/max_forwards.h
+                                inc/CppSip/message/headers/media_type.h
                                 inc/CppSip/message/request/request.h
                                 inc/CppSip/message/request/request_line.h
                                 inc/CppSip/message/request/request_uri.h
