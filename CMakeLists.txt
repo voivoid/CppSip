@@ -32,7 +32,7 @@ endif()
 
 find_program(ClangFormat clang-format)
 if(ClangFormat)
-  set(Targets CppSipCommon CppSipParser CppSipTests)
+  set(Targets SipParserApp CppSipCommon CppSipParser CppSipTests)
   foreach(Target ${Targets})
     get_target_property(TargetSources ${Target} SOURCES)
     get_target_property(TargetDir ${Target} SOURCE_DIR)

@@ -71,9 +71,9 @@ inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message:
 // media-type = m-type SLASH m-subtype *(SEMI m-parameter)
 inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::MediaType>{} = m_type > SLASH > m_subtype >>
                                                                                               *( SEMI > m_parameter );
-
 // Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
-inline const auto Content_Type = ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
+inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
+    ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info
@@ -81,7 +81,7 @@ inline const auto Content_Type = ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON 
  Proxy-Authorization / Proxy-Require / Record-Route / Reply-To / Require / Retry-After / Route / Server / Subject /
  Supported / Timestamp / To / Unsupported / User-Agent / Via / Warning / WWW-Authenticate / extension-header) CRLF (!!!) */
 inline const auto message_header = bsx3::rule<struct _msg_header, CppSip::Message::Header>{} =
-    ( Call_ID | Content_Length | CSeq | Max_Forwards ) > CRLF;
+    ( Call_ID | Content_Length | Content_Type | CSeq | Max_Forwards ) > CRLF;
 
 
 }  // namespace Parsers
