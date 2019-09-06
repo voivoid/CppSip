@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CppSip/message/request/sip_uri.h"
+#include "CppSip/message/sip_uri.h"
 
 namespace CppSip
 {

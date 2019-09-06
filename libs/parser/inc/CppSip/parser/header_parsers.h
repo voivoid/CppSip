@@ -79,6 +79,7 @@ inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Messag
 inline const auto display_name = ( *( token > LWS ) ) | quoted_string;
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
+inline const auto addr_spec = SIP_URI | SIPS_URI;
 
 // name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
 
@@ -97,8 +98,6 @@ inline const auto display_name = ( *( token > LWS ) ) | quoted_string;
 // to-param = tag-param / generic-param
 
 // To = ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
-
-
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info

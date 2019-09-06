@@ -8,9 +8,6 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/request/request.h
                                 inc/CppSip/message/request/request_line.h
                                 inc/CppSip/message/request/request_uri.h
-                                inc/CppSip/message/request/sip_uri.h
-                                inc/CppSip/message/request/sip_uri_header.h
-                                inc/CppSip/message/request/userinfo.h
                                 inc/CppSip/message/response/response.h
                                 inc/CppSip/message/response/status_code.h
                                 inc/CppSip/message/response/status_line.h
@@ -18,7 +15,11 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
                                 src/CppSip/message/address.cpp
                                 inc/CppSip/message/message.h
                                 inc/CppSip/message/method.h
-                                inc/CppSip/message/sip_version.h)
+                                inc/CppSip/message/sip_uri.h
+                                inc/CppSip/message/sip_uri_header.h
+                                inc/CppSip/message/sip_version.h
+                                inc/CppSip/message/userinfo.h)
+
 add_library(CppSip::Common ALIAS CppSipCommon)
 target_link_libraries(CppSipCommon PUBLIC Boost::boost)
 target_include_directories(CppSipCommon PUBLIC inc PRIVATE src)
