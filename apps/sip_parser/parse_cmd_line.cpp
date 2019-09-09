@@ -19,7 +19,7 @@ std::variant<ParseCmd, HelpCmd> parse_cmd_line( const int argc, char** const arg
   boost::program_options::notify( vars_map );
   if ( vars_map.count( "parser" ) )
   {
-    return ParseCmd{ vars_map[ "problem" ].as<std::string>() };
+    return ParseCmd{ vars_map[ "parser" ].as<std::string>() };
   }
 
   std::ostringstream ss;

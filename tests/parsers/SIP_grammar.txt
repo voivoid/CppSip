@@ -1,0 +1,12 @@
+;ABNF
+
+ALPHA          =  %x41-5A / %x61-7A ; A-Z / a-z
+CR             =  %x0D ; carriage return
+CRLF           =  CR LF ; Internet standard newline
+DIGIT          =  %x30-39 ; 0-9
+DQUOTE         =  %x22 ; " (Double Quote)
+HEXDIG         =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+HTAB           =  %x09 ; horizontal tab
+LF             =  %x0A ; linefeed
+SP             =  %x20
+WSP            =  SP / HTAB ; white space
