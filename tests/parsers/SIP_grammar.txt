@@ -1,4 +1,4 @@
-;ABNF
+; ABNF
 
 ALPHA          =  %x41-5A / %x61-7A ; A-Z / a-z
 CR             =  %x0D ; carriage return
@@ -10,3 +10,39 @@ HTAB           =  %x09 ; horizontal tab
 LF             =  %x0A ; linefeed
 SP             =  %x20
 WSP            =  SP / HTAB ; white space
+
+
+; SIP Common
+
+alphanum  =  ALPHA / DIGIT
+
+LWS  =  [*WSP CRLF] 1*WSP ; linear whitespace
+SWS  =  [LWS] ; sep whitespace
+HCOLON  =  *( SP / HTAB ) ":" SWS
+
+SLASH   =  SWS "/" SWS ; slash
+SEMI    =  SWS ";" SWS ; semicolon
+EQUAL   =  SWS "=" SWS ; equal
+RAQUOT  =  ">" SWS ; right angle quote
+LAQUOT  =  SWS "<"; left angle quote
+
+quoted-pair  =  "\" (%x00-09 / %x0B-0C
+                / %x0E-7F)
+
+quoted-string  =  SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE
+qdtext         =  LWS / %x21 / %x23-5B / %x5D-7E ; / UTF8-NONASCII (!!!)
+
+token       =  1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
+mark        =  "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
+unreserved  =  alphanum / mark
+reserved    =  ";" / "/" / "?" / ":" / "@" / "&" / "=" / "+" / "$" / ","
+escaped     =  "%" HEXDIG HEXDIG
+
+
+; SIP Headers
+
+
+; SIP Request
+
+
+; SIP Response
