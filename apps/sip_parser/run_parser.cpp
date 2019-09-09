@@ -4,17 +4,15 @@
 
 namespace
 {
-  template <typename T>
-  void parse_with()
-  {
-
-  }
+template <typename T>
+void parse_with()
+{
 }
+}  // namespace
 
 namespace SipParserApp
 {
-  void parse(const std::string_view& parser_name)
-  {
-
-  }
+void parse( const std::string_view& parser_name )
+{
 }
+}  // namespace SipParserApp

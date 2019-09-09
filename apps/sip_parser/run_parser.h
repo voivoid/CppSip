@@ -4,5 +4,5 @@
 
 namespace SipParserApp
 {
-  void parse(const std::string_view& parser_name);
+void parse( const std::string_view& parser_name );
 }
