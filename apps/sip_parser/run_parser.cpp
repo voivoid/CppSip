@@ -75,6 +75,33 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM( reserved ),
     CPPSIP_PARSER_ITEM( escaped ),
 
+    CPPSIP_PARSER_ITEM( Method ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "SIP-Version", SIP_Version ),
+    CPPSIP_PARSER_ITEM( word ),
+    CPPSIP_PARSER_ITEM( callid ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "hnv-unreserved", hnv_unreserved ),
+    CPPSIP_PARSER_ITEM( hvalue ),
+    CPPSIP_PARSER_ITEM( hname ),
+    CPPSIP_PARSER_ITEM( header ),
+    CPPSIP_PARSER_ITEM( headers ),
+    CPPSIP_PARSER_ITEM( domainlabel ),
+    CPPSIP_PARSER_ITEM( toplabel ),
+    CPPSIP_PARSER_ITEM( hostname ),
+    CPPSIP_PARSER_ITEM( port ),
+    CPPSIP_PARSER_ITEM( h16 ),
+    CPPSIP_PARSER_ITEM_WITH_NAME("dec-octet", dec_octet ),
+    CPPSIP_PARSER_ITEM( IPv4address ),
+    CPPSIP_PARSER_ITEM( ls32 ),
+    CPPSIP_PARSER_ITEM( IPv6address ),
+    CPPSIP_PARSER_ITEM( host ),
+    CPPSIP_PARSER_ITEM( hostport ),
+    CPPSIP_PARSER_ITEM( password ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "user-unreserved", user_unreserved ),
+    CPPSIP_PARSER_ITEM( user ),
+    CPPSIP_PARSER_ITEM( userinfo ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "SIP-URI", SIP_URI ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "SIPS-URI", SIPS_URI ),
+
 
     // HEADERS
 

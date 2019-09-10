@@ -92,7 +92,7 @@ inline const auto Method = get_Method_parser();
 
 // SIP-Version = "SIP" "/" 1*DIGIT "." 1*DIGIT
 inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message::SipVersion>{} =
-    bsx3::lit( "SIP/" ) >> bsx3::uint32 >> '.' >> bsx3::uint32;
+    bsx3::no_case[ bsx3::lit( "SIP/" ) ] >> bsx3::uint32 >> '.' >> bsx3::uint32;
 
 // word = 1*( alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" / "(" / ")" / "<" / ">" / ":" / "\" / DQUOTE / "/" / "["
 // / "]" / "?" / "{" / "}" )
@@ -191,11 +191,11 @@ inline const auto user = +( unreserved | escaped | user_unreserved );
 inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserInfo>{} = user >> -( ':' >> password ) >> '@';
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sip:" ) > bsx3::attr( false ) > -userinfo
-                                                                                     > hostport > -headers;
+inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ bsx3::lit( "sip:" ) ] >
+                                                                                     bsx3::attr( false ) > -userinfo > hostport > -headers;
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::lit( "sips:" ) > bsx3::attr( true ) > -userinfo
-                                                                                       > hostport > -headers;
+inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ bsx3::lit( "sips:" ) ] >
+                                                                                       bsx3::attr( true ) > -userinfo > hostport > -headers;
 
 
 }  // namespace Parsers

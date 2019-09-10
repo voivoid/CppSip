@@ -215,6 +215,12 @@ BOOST_AUTO_TEST_CASE( test_SIP_Version_parser )
     BOOST_CHECK_EQUAL( 1, minor );
   }
 
+  {
+    const auto [ major, minor ] = parse_SIP_Version( "sip/42.11" );
+    BOOST_CHECK_EQUAL( 42, major );
+    BOOST_CHECK_EQUAL( 11, minor );
+  }
+
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP/2" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_SIP_Version( "SIP2.1" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_SIP_Version( "2.1" ), std::runtime_error );
@@ -444,7 +450,7 @@ BOOST_AUTO_TEST_CASE( test_SIP_URI_parser )
   }
 
   {
-    const auto [ sips, userinfo, hostport, sip_uri_headers ] = parse_SIP_URI( "sip:user:password@domain.com?name=value" );
+    const auto [ sips, userinfo, hostport, sip_uri_headers ] = parse_SIP_URI( "SIP:user:password@domain.com?name=value" );
     BOOST_CHECK( !sips );
     BOOST_REQUIRE( userinfo );
     BOOST_CHECK_EQUAL( "user", userinfo->user );

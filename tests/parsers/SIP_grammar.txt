@@ -38,6 +38,69 @@ unreserved  =  alphanum / mark
 reserved    =  ";" / "/" / "?" / ":" / "@" / "&" / "=" / "+" / "$" / ","
 escaped     =  "%" HEXDIG HEXDIG
 
+Method            =  INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm ; / extension-method (!!!)
+INVITEm           =  %x49.4E.56.49.54.45 ; INVITE in caps
+ACKm              =  %x41.43.4B ; ACK in caps
+OPTIONSm          =  %x4F.50.54.49.4F.4E.53 ; OPTIONS in caps
+BYEm              =  %x42.59.45 ; BYE in caps
+CANCELm           =  %x43.41.4E.43.45.4C ; CANCEL in caps
+REGISTERm         =  %x52.45.47.49.53.54.45.52 ; REGISTER in caps
+
+SIP-Version    =  "SIP" "/" 1*9DIGIT "." 1*9DIGIT
+
+word        =  1*(alphanum / "-" / "." / "!" / "%" / "*" /
+               "_" / "+" / "`" / "'" / "~" /
+               "(" / ")" / "<" / ">" /
+               ":" / "\" / DQUOTE /
+               "/" / "[" / "]" / "?" /
+               "{" / "}" )
+
+callid   =  word [ "@" word ]
+
+headers         =  "?" header *( "&" header )
+header          =  hname "=" hvalue
+hname           =  1*( hnv-unreserved / unreserved / escaped )
+hvalue          =  *( hnv-unreserved / unreserved / escaped )
+hnv-unreserved  =  "[" / "]" / "/" / "?" / ":" / "+" / "$"
+
+domainlabel      =  alphanum / alphanum *( alphanum / "-" ) alphanum
+toplabel         =  ALPHA / ALPHA *( alphanum / "-" ) alphanum
+hostname         =  *( domainlabel "." ) toplabel [ "." ]
+port             =  1*4DIGIT
+
+IPv6address   =                            6( h16 ":" ) ls32
+              /                       "::" 5( h16 ":" ) ls32
+              / [               h16 ] "::" 4( h16 ":" ) ls32
+              / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+              / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+              / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+              / [ *4( h16 ":" ) h16 ] "::"              ls32
+              / [ *5( h16 ":" ) h16 ] "::"              h16
+              / [ *6( h16 ":" ) h16 ] "::"
+
+h16           = 1*4HEXDIG
+ls32          = ( h16 ":" h16 ) / IPv4address
+IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
+dec-octet     = DIGIT                 ; 0-9
+              / %x31-39 DIGIT         ; 10-99
+              / "1" 2DIGIT            ; 100-199
+              / "2" %x30-34 DIGIT     ; 200-249
+              / "25" %x30-35          ; 250-255
+
+host             =  hostname / IPv4address ; / IPv6address (!!!)
+hostport         =  host [ ":" port ]
+
+password         =  *( unreserved / escaped / "&" / "=" / "+" / "$" / "," )
+userinfo         =  ( user ) [ ":" password ] "@" ; telephone-subscriber (!!!)
+user             =  1*( unreserved / escaped / user-unreserved )
+user-unreserved  =  "&" / "=" / "+" / "$" / "," / ";" / "?" / "/"
+
+
+SIP-URI          =  "sip:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
+SIPS-URI         =  "sips:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
+
+
+
 
 ; SIP Headers
 
