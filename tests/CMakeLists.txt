@@ -112,4 +112,18 @@ if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
 
   add_parser_test(message-header)
 
+  #REQUEST
+  add_parser_test(Request-URI)
+  add_parser_test(Request-Line)
+  add_parser_test(Request)
+
+  #RESPONSE
+  add_parser_test(Reason-Phrase)
+  add_parser_test(Status-Code)
+  add_parser_test(Status-Line)
+  add_parser_test(Response)
+
+  #MESSAGE
+  add_parser_test(SIP-message)
+
   endif()

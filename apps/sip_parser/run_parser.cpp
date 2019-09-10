@@ -128,7 +128,16 @@ const auto& get_parse_map()
 
     // REQUEST
 
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Request-URI", Request_URI ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Request-Line", Request_Line ),
+    CPPSIP_PARSER_ITEM( Request ),
+
     // RESPONSE
+
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Reason-Phrase", Reason_Phrase ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Status-Code", Status_Code ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Status-Line", Status_Line ),
+    CPPSIP_PARSER_ITEM( Response ),
 
     // MESSAGE
     CPPSIP_PARSER_ITEM_WITH_NAME( "SIP-message", SIP_message )
