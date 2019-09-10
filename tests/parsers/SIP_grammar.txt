@@ -26,7 +26,7 @@ EQUAL   =  SWS "=" SWS ; equal
 RAQUOT  =  ">" SWS ; right angle quote
 LAQUOT  =  SWS "<"; left angle quote
 
-quoted-pair  =  "\" (%x00-09 / %x0B-0C
+quoted-pair  =  "\" (%x01-09 / %x0B-0C
                 / %x0E-7F)
 
 quoted-string  =  SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE

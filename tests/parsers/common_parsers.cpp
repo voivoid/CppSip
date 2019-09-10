@@ -155,6 +155,7 @@ BOOST_DATA_TEST_CASE( test_qdtext_parser, TestDatasets::qdtext )
 
 BOOST_AUTO_TEST_CASE( test_quoted_string_parser )
 {
+  BOOST_CHECK_EQUAL( "", parse_quoted_string( "\"\"" ) );
   BOOST_CHECK_EQUAL( "abc", parse_quoted_string( "\"abc\"" ) );
 }
 

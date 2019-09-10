@@ -66,7 +66,7 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM( LAQUOT ),
 
     CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-pair", quoted_pair ),
-    CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-string", quoted_pair ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-string", quoted_string ),
     CPPSIP_PARSER_ITEM(qdtext),
 
     CPPSIP_PARSER_ITEM( token ),
