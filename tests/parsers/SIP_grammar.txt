@@ -25,8 +25,7 @@ EQUAL   =  SWS "=" SWS ; equal
 RAQUOT  =  ">" SWS ; right angle quote
 LAQUOT  =  SWS "<"; left angle quote
 
-quoted-pair  =  "\" (%x01-09 / %x0B-0C
-                / %x0E-7F)
+quoted-pair  =  "\" (%x01-09 / %x0B-0C / %x0E-7F)
 
 quoted-string  =  SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE
 qdtext         =  LWS / %x21 / %x23-5B / %x5D-7E ; / UTF8-NONASCII (!!!)
@@ -117,12 +116,16 @@ display-name   =  *(token LWS)/ quoted-string
 addr-spec      =  SIP-URI / SIPS-URI ; / absoluteURI (!!!)
 
 Call-ID  =  ( "Call-ID" / "i" ) HCOLON callid
-Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
+Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*9DIGIT
 Content-Type     =  ( "Content-Type" / "c" ) HCOLON media-type
 CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
 Max-Forwards  =  "Max-Forwards" HCOLON 1*9DIGIT
 
-
+message-header = ( Call-ID /
+                   Content-Length /
+                   Content-Type /
+                   CSeq /
+                   Max-Forwards ) CRLF ; extension-header (!!!)
 
 ;;;;; SIP Request
 

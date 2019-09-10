@@ -113,6 +113,10 @@ BOOST_AUTO_TEST_CASE( test_media_type_parser )
   }
 }
 
+BOOST_AUTO_TEST_CASE( test_display_name_parser )
+{
+}
+
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
 {
   BOOST_CHECK_EQUAL( "1234567890abcdefg@domain.com", parse_Call_ID( "Call-ID: 1234567890abcdefg@domain.com" ).id );

@@ -103,4 +103,13 @@ if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
   add_parser_test(media-type)
   add_parser_test(display-name)
   add_parser_test(addr-spec)
+
+  add_parser_test(Call-ID)
+  add_parser_test(Content-Length)
+  add_parser_test(Content-Type)
+  add_parser_test(CSeq)
+  add_parser_test(Max-Forwards)
+
+  add_parser_test(message-header)
+
   endif()

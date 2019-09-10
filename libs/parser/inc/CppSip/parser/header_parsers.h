@@ -58,29 +58,30 @@ inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::M
                                                                                               *( SEMI > m_parameter );
 
 // display-name = *(token LWS)/ quoted-string
-inline const auto display_name = ( *( token > LWS ) ) | quoted_string;
+inline const auto display_name = quoted_string | *( token >> LWS );
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto addr_spec = SIP_URI | SIPS_URI;
 
 // Call-ID = ( "Call-ID" / "i" ) HCOLON callid
 inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
-    ( bsx3::lit( "Call-ID" ) | 'i' ) > HCOLON > callid;
-
-// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
-inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
-
-// Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
-inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
-    bsx3::lit( "Max-Forwards" ) > HCOLON > bsx3::uint32;
+    bsx3::no_case[ ( bsx3::lit( "Call-ID" ) | 'i' ) ] >> HCOLON > callid;
 
 // Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
 inline const auto Content_Length = bsx3::rule<struct _content_length, CppSip::Message::Headers::ContentLength>{} =
-    ( bsx3::lit( "Content-Length" ) | 'i' ) > HCOLON > bsx3::uint64;
+    bsx3::no_case[ ( bsx3::lit( "Content-Length" ) | 'l' ) ] >> HCOLON > bsx3::uint64;
 
 // Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
 inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
-    ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
+    bsx3::no_case[ ( bsx3::lit( "Content-Type" ) | 'c' ) ] >> HCOLON > media_type;
+
+// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} =
+    bsx3::no_case[ bsx3::lit( "CSeq" ) ] > HCOLON > +DIGIT > LWS > Method;
+
+// Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
+inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
+    bsx3::no_case[ bsx3::lit( "Max-Forwards" ) ] > HCOLON > bsx3::uint32;
 
 // name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
 
