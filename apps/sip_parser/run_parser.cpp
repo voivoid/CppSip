@@ -25,7 +25,16 @@ bool parse_stdin( const Parser& parser )
   return true;
 }
 
+#if defined( CPPSIP_CURRY_PARSER ) || defined( CPPSIP_PARSER_ITEM ) || defined( CPPSIP_PARSER_ITEM2 )
+#  error macro redefinition
+#endif
+
 #define CPPSIP_CURRY_PARSER( P ) std::bind( BOOST_HOF_LIFT( parse_stdin ), CppSip::Parsers::P )
+#define CPPSIP_PARSER_ITEM_WITH_NAME( PNAME, PF )                                                                                          \
+  {                                                                                                                                        \
+    PNAME, CPPSIP_CURRY_PARSER( PF )                                                                                                       \
+  }
+#define CPPSIP_PARSER_ITEM( P ) CPPSIP_PARSER_ITEM_WITH_NAME( #P, P )
 
 using ParseFunc = std::function<bool()>;
 const auto& get_parse_map()
@@ -33,24 +42,34 @@ const auto& get_parse_map()
   // clang-format off
   static std::unordered_map<std::string_view, ParseFunc> map = {
     // ABNF
-    { "ALPHA", CPPSIP_CURRY_PARSER( ALPHA ) },
-    { "CR", CPPSIP_CURRY_PARSER( CR ) },
-    { "CRLF", CPPSIP_CURRY_PARSER( CRLF ) },
-    { "DIGIT", CPPSIP_CURRY_PARSER( DIGIT ) },
-    { "DQUOTE", CPPSIP_CURRY_PARSER( DQUOTE ) },
-    { "HEXDIG", CPPSIP_CURRY_PARSER( HEXDIG ) },
-    { "HTAB", CPPSIP_CURRY_PARSER( HTAB ) },
-    { "LF", CPPSIP_CURRY_PARSER( LF ) },
-    { "SP", CPPSIP_CURRY_PARSER( SP ) },
-    { "WSP", CPPSIP_CURRY_PARSER( WSP ) },
+    CPPSIP_PARSER_ITEM( ALPHA ),
+    CPPSIP_PARSER_ITEM( CR ),
+    CPPSIP_PARSER_ITEM( CRLF ),
+    CPPSIP_PARSER_ITEM( DIGIT ),
+    CPPSIP_PARSER_ITEM( DQUOTE ),
+    CPPSIP_PARSER_ITEM( HEXDIG ),
+    CPPSIP_PARSER_ITEM( HTAB ),
+    CPPSIP_PARSER_ITEM( LF ),
+    CPPSIP_PARSER_ITEM( SP ),
+    CPPSIP_PARSER_ITEM( WSP ),
 
     // COMMON
-    { "alphanum", CPPSIP_CURRY_PARSER( alphanum ) },
-    { "LWS", CPPSIP_CURRY_PARSER( LWS ) },
-    { "SWS", CPPSIP_CURRY_PARSER( SWS ) },
-    { "HCOLON", CPPSIP_CURRY_PARSER( HCOLON ) },
+    CPPSIP_PARSER_ITEM( alphanum ),
+    CPPSIP_PARSER_ITEM( LWS ),
+    CPPSIP_PARSER_ITEM( SWS ),
+    CPPSIP_PARSER_ITEM( HCOLON ),
 
-    { "token", CPPSIP_CURRY_PARSER( token ) },
+    CPPSIP_PARSER_ITEM( SLASH ),
+    CPPSIP_PARSER_ITEM( SEMI ),
+    CPPSIP_PARSER_ITEM( EQUAL ),
+    CPPSIP_PARSER_ITEM( RAQUOT ),
+    CPPSIP_PARSER_ITEM( LAQUOT ),
+
+    CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-pair", quoted_pair ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-string", quoted_pair ),
+    CPPSIP_PARSER_ITEM(qdtext),
+
+    CPPSIP_PARSER_ITEM( token ),
 
     // HEADERS
 
@@ -59,7 +78,7 @@ const auto& get_parse_map()
     // RESPONSE
 
     // MESSAGE
-    { "SIP-message", CPPSIP_CURRY_PARSER( SIP_message ) }
+    CPPSIP_PARSER_ITEM_WITH_NAME( "SIP-message", SIP_message )
   };
   // clang-format on
   return map;
