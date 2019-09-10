@@ -102,8 +102,27 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM_WITH_NAME( "SIP-URI", SIP_URI ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "SIPS-URI", SIPS_URI ),
 
-
     // HEADERS
+    CPPSIP_PARSER_ITEM_WITH_NAME( "ietf-token", ietf_token),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "iana-token", iana_token),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "m-attribute", m_attribute),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "x-token", x_token),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "m-subtype", m_subtype),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "extension-token", extension_token),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "discrete-type", discrete_type),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "composite-type", composite_type),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "m-type", m_type),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "m-value", m_value),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "m-parameter", m_parameter),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "media-type", media_type),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "display-name", display_name),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "addr-spec", addr_spec),
+
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Call-ID", Call_ID),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Length", Content_Length),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Type", Content_Type),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "CSeq", CSeq),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "Max-Forwards", Max_Forwards),
 
     // REQUEST
 

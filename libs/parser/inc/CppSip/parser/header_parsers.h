@@ -19,21 +19,6 @@ namespace CppSip
 namespace Parsers
 {
 
-// Call-ID = ( "Call-ID" / "i" ) HCOLON callid
-inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
-    ( bsx3::lit( "Call-ID" ) | 'i' ) > HCOLON > callid;
-
-// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
-inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
-
-// Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
-inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
-    bsx3::lit( "Max-Forwards" ) > HCOLON > bsx3::uint32;
-
-// Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
-inline const auto Content_Length = bsx3::rule<struct _content_length, CppSip::Message::Headers::ContentLength>{} =
-    ( bsx3::lit( "Content-Length" ) | 'i' ) > HCOLON > bsx3::uint64;
-
 // ietf-token = token
 inline const auto ietf_token = token;
 
@@ -44,7 +29,7 @@ inline const auto iana_token = token;
 inline const auto m_attribute = token;
 
 // x-token = "x-" token
-inline const auto x_token = bsx3::string( "x-" ) > token;
+inline const auto x_token = bsx3::no_case[ bsx3::string( "x-" ) ] > token;
 
 // extension-token = ietf-token / x-token
 inline const auto extension_token = ietf_token | x_token;
@@ -62,8 +47,8 @@ inline const auto composite_type = bsx3::string( "message" ) | bsx3::string( "mu
 // m-type = discrete-type / composite-type
 inline const auto m_type = discrete_type | composite_type;
 
-// m-value = token / quoted-string (!!!)
-inline const auto m_value = token;
+// m-value = token / quoted-string
+inline const auto m_value = token | quoted_string;
 
 // m-parameter = m-attribute EQUAL m-value
 inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message::MediaType::Parameter>{} = m_attribute > EQUAL > m_value;
@@ -71,15 +56,31 @@ inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message:
 // media-type = m-type SLASH m-subtype *(SEMI m-parameter)
 inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::MediaType>{} = m_type > SLASH > m_subtype >>
                                                                                               *( SEMI > m_parameter );
-// Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
-inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
-    ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
 
 // display-name = *(token LWS)/ quoted-string
 inline const auto display_name = ( *( token > LWS ) ) | quoted_string;
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto addr_spec = SIP_URI | SIPS_URI;
+
+// Call-ID = ( "Call-ID" / "i" ) HCOLON callid
+inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
+    ( bsx3::lit( "Call-ID" ) | 'i' ) > HCOLON > callid;
+
+// CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} = bsx3::lit( "CSeq" ) > HCOLON > +DIGIT > LWS > Method;
+
+// Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
+inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
+    bsx3::lit( "Max-Forwards" ) > HCOLON > bsx3::uint32;
+
+// Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
+inline const auto Content_Length = bsx3::rule<struct _content_length, CppSip::Message::Headers::ContentLength>{} =
+    ( bsx3::lit( "Content-Length" ) | 'i' ) > HCOLON > bsx3::uint64;
+
+// Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
+inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
+    ( bsx3::lit( "Content-Type" ) | 'c' ) > HCOLON > media_type;
 
 // name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
 

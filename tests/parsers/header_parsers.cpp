@@ -10,8 +10,7 @@ namespace
 {
 
 // clang-format off
-define_parser(Call_ID, CppSipMsg::Headers::CallId)
-define_parser(Content_Length, CppSipMsg::Headers::ContentLength)
+
 define_parser(ietf_token, std::string)
 define_parser(iana_token, std::string)
 define_parser(m_attribute, std::string)
@@ -24,8 +23,11 @@ define_parser(m_type, std::string)
 define_parser(m_value, std::string)
 define_parser(m_parameter, CppSipMsg::MediaType::Parameter)
 define_parser(media_type, CppSipMsg::MediaType)
-define_parser(Content_Type, CppSipMsg::Headers::ContentType)
 define_parser(display_name, std::string)
+
+define_parser(Call_ID, CppSipMsg::Headers::CallId)
+define_parser(Content_Length, CppSipMsg::Headers::ContentLength)
+define_parser(Content_Type, CppSipMsg::Headers::ContentType)
 define_parser(CSeq, CppSipMsg::Headers::CSeq)
 define_parser(Max_Forwards, CppSipMsg::Headers::MaxForwards)
 define_parser(message_header, CppSipMsg::Header)
@@ -34,19 +36,6 @@ define_parser(message_header, CppSipMsg::Header)
 }  // namespace
 
 BOOST_AUTO_TEST_SUITE( header_parsers )
-
-BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
-{
-  BOOST_CHECK_EQUAL( "1234567890abcdefg@domain.com", parse_Call_ID( "Call-ID: 1234567890abcdefg@domain.com" ).id );
-}
-
-BOOST_AUTO_TEST_CASE( test_Content_Length_parser )
-{
-  BOOST_CHECK_EQUAL( 0, parse_Content_Length( "Content-Length: 0" ).length );
-  BOOST_CHECK_EQUAL( 1024, parse_Content_Length( "Content-Length: 1024" ).length );
-  BOOST_CHECK_EQUAL( 4294967295, parse_Content_Length( "Content-Length: 4294967295" ).length );
-  BOOST_CHECK_EQUAL( 18446744073709551615ULL, parse_Content_Length( "Content-Length: 18446744073709551615" ).length );
-}
 
 BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
 {
@@ -122,6 +111,19 @@ BOOST_AUTO_TEST_CASE( test_media_type_parser )
     BOOST_CHECK_EQUAL( "attr2", params[ 1 ].attribute );
     BOOST_CHECK_EQUAL( "value2", params[ 1 ].value );
   }
+}
+
+BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
+{
+  BOOST_CHECK_EQUAL( "1234567890abcdefg@domain.com", parse_Call_ID( "Call-ID: 1234567890abcdefg@domain.com" ).id );
+}
+
+BOOST_AUTO_TEST_CASE( test_Content_Length_parser )
+{
+  BOOST_CHECK_EQUAL( 0, parse_Content_Length( "Content-Length: 0" ).length );
+  BOOST_CHECK_EQUAL( 1024, parse_Content_Length( "Content-Length: 1024" ).length );
+  BOOST_CHECK_EQUAL( 4294967295, parse_Content_Length( "Content-Length: 4294967295" ).length );
+  BOOST_CHECK_EQUAL( 18446744073709551615ULL, parse_Content_Length( "Content-Length: 18446744073709551615" ).length );
 }
 
 BOOST_AUTO_TEST_CASE( test_Content_Type_parser )

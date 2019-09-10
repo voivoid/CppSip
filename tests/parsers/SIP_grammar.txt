@@ -1,4 +1,4 @@
-; ABNF
+;;;;; ABNF
 
 ALPHA          =  %x41-5A / %x61-7A ; A-Z / a-z
 CR             =  %x0D ; carriage return
@@ -11,8 +11,7 @@ LF             =  %x0A ; linefeed
 SP             =  %x20
 WSP            =  SP / HTAB ; white space
 
-
-; SIP Common
+;;;;; SIP Common
 
 alphanum  =  ALPHA / DIGIT
 
@@ -99,13 +98,33 @@ user-unreserved  =  "&" / "=" / "+" / "$" / "," / ";" / "?" / "/"
 SIP-URI          =  "sip:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
 SIPS-URI         =  "sips:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
 
+;;;;; SIP Headers
+
+ietf-token       =  token
+iana-token       =  token
+m-attribute      =  token
+x-token          =  "x-" token
+m-subtype        =  extension-token / iana-token
+extension-token  =  ietf-token / x-token
+discrete-type    =  "text" / "image" / "audio" / "video" / "application" / extension-token
+composite-type   =  "message" / "multipart" / extension-token
+m-type           =  discrete-type / composite-type
+m-value          =  token / quoted-string
+m-parameter      =  m-attribute EQUAL m-value
+media-type       =  m-type SLASH m-subtype *(SEMI m-parameter)
+
+display-name   =  *(token LWS)/ quoted-string
+addr-spec      =  SIP-URI / SIPS-URI ; / absoluteURI (!!!)
+
+Call-ID  =  ( "Call-ID" / "i" ) HCOLON callid
+Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
+Content-Type     =  ( "Content-Type" / "c" ) HCOLON media-type
+CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+Max-Forwards  =  "Max-Forwards" HCOLON 1*9DIGIT
 
 
 
-; SIP Headers
+;;;;; SIP Request
 
 
-; SIP Request
-
-
-; SIP Response
+;;;;; SIP Response
