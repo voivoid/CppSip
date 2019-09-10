@@ -67,9 +67,14 @@ const auto& get_parse_map()
 
     CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-pair", quoted_pair ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-string", quoted_string ),
-    CPPSIP_PARSER_ITEM(qdtext),
+    CPPSIP_PARSER_ITEM( qdtext ),
 
     CPPSIP_PARSER_ITEM( token ),
+    CPPSIP_PARSER_ITEM( mark ),
+    CPPSIP_PARSER_ITEM( unreserved ),
+    CPPSIP_PARSER_ITEM( reserved ),
+    CPPSIP_PARSER_ITEM( escaped ),
+
 
     // HEADERS
 

@@ -56,6 +56,10 @@ if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
   add_parser_test(quoted-pair)
   add_parser_test(quoted-string)
   add_parser_test(qdtext)
-
   add_parser_test(token)
+  add_parser_test(mark)
+  add_parser_test(unreserved)
+  add_parser_test(reserved)
+  add_parser_test(escaped)
+
 endif()
