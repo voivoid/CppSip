@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( test_DIGIT_parser_failures )
   BOOST_CHECK_THROW( parse_DIGIT( ":" ), std::runtime_error );
 }
 
-BOOST_DATA_TEST_CASE( test_HEXDIG_parser, TestDatasets::HEX )
+BOOST_DATA_TEST_CASE( test_HEXDIG_parser, TestDatasets::HEXDIG )
 {
   BOOST_CHECK_EQUAL( sample, parse_HEXDIG( std::string_view( &sample, 1 ) ) );
 }
@@ -56,7 +56,7 @@ BOOST_DATA_TEST_CASE( test_HEXDIG_parser, TestDatasets::HEX )
 BOOST_AUTO_TEST_CASE( test_HEXDIG_parser_failures )
 {
   BOOST_CHECK_THROW( parse_HEXDIG( "-" ), std::runtime_error );
-  BOOST_CHECK_THROW( parse_HEXDIG( "a" ), std::runtime_error );
+  BOOST_CHECK_THROW( parse_HEXDIG( "g" ), std::runtime_error );
   BOOST_CHECK_THROW( parse_HEXDIG( "G" ), std::runtime_error );
 }
 

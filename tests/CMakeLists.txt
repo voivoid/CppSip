@@ -14,7 +14,40 @@ target_include_directories(CppSipTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(CppSipTests PRIVATE Boost::boost Boost::unit_test_framework CppSip::Common CppSip::Parser)
 #target_compile_definitions(CppSipTests PRIVATE BOOST_SPIRIT_X3_DEBUG)
 
-
-
 add_test(NAME CppSipTests
          COMMAND $<TARGET_FILE:CppSipTests>)
+
+
+option(CPPSIP_PARSER_ABNFGEN_TESTS "Build parser abnfgen tests" ON)
+if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
+  find_program(Bash bash)
+
+  include(${PROJECT_SOURCE_DIR}/cmake/thirdparties/abnfgen.cmake)
+
+  set(SIP_GRAMMAR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/parsers/SIP_grammar.txt)
+
+  function(add_parser_test parser)
+      add_test(NAME CppSipParser_${parser}
+           COMMAND bash -c "$<TARGET_FILE:ABNFGen> -c -x -s ${parser} ${SIP_GRAMMAR_PATH} | $<TARGET_FILE:SipParserApp> ${parser}")
+  endfunction()
+
+  # ABNF
+  add_parser_test(ALPHA)
+  add_parser_test(CR)
+  add_parser_test(CRLF)
+  add_parser_test(DIGIT)
+  add_parser_test(DQUOTE)
+  add_parser_test(HEXDIG)
+  add_parser_test(HTAB)
+  add_parser_test(LF)
+  add_parser_test(SP)
+  add_parser_test(WSP)
+
+  # COMMON
+  add_parser_test(alphanum)
+  add_parser_test(LWS)
+  add_parser_test(SWS)
+  add_parser_test(HCOLON)
+
+  add_parser_test(token)
+endif()

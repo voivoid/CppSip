@@ -18,4 +18,7 @@ ExternalProject_Add(
 
 add_executable(ABNFGen IMPORTED)
 
+ExternalProject_Get_Property(get_ABNFGen SOURCE_DIR)
+set_target_properties(ABNFGen PROPERTIES IMPORTED_LOCATION ${SOURCE_DIR}/abnfgen)
+
 add_dependencies(ABNFGen get_ABNFGen)

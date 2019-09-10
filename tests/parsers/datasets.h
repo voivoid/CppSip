@@ -10,7 +10,7 @@ namespace TestDatasets
 
 const auto ALPHA           = BoostTestData::xrange( 'a', 'z' ) + BoostTestData::xrange( 'A', 'Z' );
 const auto DIGIT           = BoostTestData::xrange( '0', '9' );
-const auto HEX             = DIGIT + BoostTestData::xrange( 'A', 'F' );
+const auto HEXDIG          = DIGIT + BoostTestData::xrange( 'A', 'F' ) + BoostTestData::xrange( 'a', 'f' );
 const auto alphanum        = ALPHA + DIGIT;
 const auto mark            = BoostTestData::make( '-', '_', '.', '!', '~', '*', '\'', '(', ')' );
 const auto reserved        = BoostTestData::make( ';', '/', '?', ':', '@', '&', '=', '+', '$', ',' );

@@ -19,7 +19,7 @@ inline const auto DIGIT = bsx3::char_( '0', '9' );
 inline const auto DQUOTE = bsx3::lit( '"' );
 
 // HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
-inline const auto HEXDIG = DIGIT | bsx3::char_( 'A', 'F' );
+inline const auto HEXDIG = DIGIT | bsx3::char_( 'A', 'F' ) | bsx3::char_( 'a', 'f' );
 
 // SP = %x20 ; space
 inline const auto SP = bsx3::lit( ' ' );
