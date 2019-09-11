@@ -46,6 +46,4 @@ int main( int argc, char* argv[] )
     std::cerr << "Unhandled unknown exception" << std::endl;
     return 1;
   }
-
-  return 0;
 }

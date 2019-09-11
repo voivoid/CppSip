@@ -2,7 +2,6 @@
 
 #include "CppSip/parser/message_parser.h"
 
-#include "boost/hof/lift.hpp"
 #include "boost/spirit/include/support_istream_iterator.hpp"
 
 #include <functional>
@@ -29,7 +28,7 @@ bool parse_stdin( const Parser& parser )
 #  error macro redefinition
 #endif
 
-#define CPPSIP_CURRY_PARSER( P ) std::bind( BOOST_HOF_LIFT( parse_stdin ), CppSip::Parsers::P )
+#define CPPSIP_CURRY_PARSER( PF ) [](){ return parse_stdin( CppSip::Parsers::PF ); }
 #define CPPSIP_PARSER_ITEM_WITH_NAME( PNAME, PF )                                                                                          \
   {                                                                                                                                        \
     PNAME, CPPSIP_CURRY_PARSER( PF )                                                                                                       \
