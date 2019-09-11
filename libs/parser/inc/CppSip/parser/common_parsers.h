@@ -76,7 +76,7 @@ inline const auto unreserved = alphanum | mark;
 inline const auto reserved = bsx3::char_( ";/?:@&=+$," );
 
 // escaped = "%" HEXDIG HEXDIG
-inline const auto escaped = bsx3::rule<struct _espaced, char>{} = '%' > bsx3::uint_parser<std::uint8_t, 16, 2, 2>{};
+inline const auto escaped = bsx3::rule<struct _espaced, char>{} = '%' >> bsx3::uint_parser<std::uint8_t, 16, 2, 2>{};
 
 // Method = INVITEm / ACKm / OPTIONSm / BYEm / CANCELm / REGISTERm /
 // extension-method (!!!)

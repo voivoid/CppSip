@@ -15,10 +15,17 @@ bool parse_stdin( const Parser& parser )
 {
   boost::spirit::istream_iterator begin( std::cin >> std::noskipws ), end;
 
-  const bool is_parsed = boost::spirit::x3::parse( begin, end, parser );
-  if ( !is_parsed || begin != end )
+  try
   {
-    return false;
+    bool is_parsed = boost::spirit::x3::parse( begin, end, parser );
+    if ( !is_parsed || begin != end )
+    {
+      return false;
+    }
+  }
+  catch ( const boost::spirit::x3::expectation_failure<boost::spirit::istream_iterator>& )
+  {
+    throw;
   }
 
   return true;
