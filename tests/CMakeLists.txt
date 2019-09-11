@@ -31,99 +31,28 @@ if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
            COMMAND bash -c "$<TARGET_FILE:ABNFGen> -c -x -s ${parser} ${SIP_GRAMMAR_PATH} | $<TARGET_FILE:SipParserApp> ${parser}")
   endfunction()
 
-  # ABNF
-  add_parser_test(ALPHA)
-  add_parser_test(CR)
-  add_parser_test(CRLF)
-  add_parser_test(DIGIT)
-  add_parser_test(DQUOTE)
-  add_parser_test(HEXDIG)
-  add_parser_test(HTAB)
-  add_parser_test(LF)
-  add_parser_test(SP)
-  add_parser_test(WSP)
+  set(PARSERS_TO_TEST
+    # ABNF
+    ALPHA CR CRLF DIGIT DQUOTE HEXDIG HTAB LF SP WSP
+    # COMMON
+    alphanum LWS SWS HCOLON SLASH SEMI EQUAL RAQUOT LAQUOT quoted-pair quoted-string qdtext token mark unreserved reserved escaped Method SIP-Version word callid
+    hnv-unreserved hvalue hname header headers domainlabel toplabel hostname port h16 dec-octet IPv4address ls32 host hostport password user-unreserved user
+    userinfo SIP-URI SIPS-URI
+    # HEADERS
+    ietf-token iana-token x-token m-subtype extension-token discrete-type composite-type m-attribute m-type m-value m-parameter media-type display-name addr-spec
+    Call-ID Content-Length Content-Type CSeq Max-Forwards message-header
+    # REQUEST
+    Request-URI Request-Line Request
+    # RESPONSE
+    Reason-Phrase Status-Code Status-Line Response
+    # MESSAGE
+    SIP-message
+  )
 
-  # COMMON
-  add_parser_test(alphanum)
-  add_parser_test(LWS)
-  add_parser_test(SWS)
-  add_parser_test(HCOLON)
-  add_parser_test(SLASH)
-  add_parser_test(SEMI)
-  add_parser_test(EQUAL)
-  add_parser_test(RAQUOT)
-  add_parser_test(LAQUOT)
-  add_parser_test(quoted-pair)
-  add_parser_test(quoted-string)
-  add_parser_test(qdtext)
-  add_parser_test(token)
-  add_parser_test(mark)
-  add_parser_test(unreserved)
-  add_parser_test(reserved)
-  add_parser_test(escaped)
-  add_parser_test(Method)
-  add_parser_test(SIP-Version)
-  add_parser_test(word)
-  add_parser_test(callid)
-  add_parser_test(hnv-unreserved)
-  add_parser_test(hvalue)
-  add_parser_test(hname)
-  add_parser_test(header)
-  add_parser_test(headers)
-  add_parser_test(domainlabel)
-  add_parser_test(toplabel)
-  add_parser_test(hostname)
-  add_parser_test(port)
-  add_parser_test(h16)
-  add_parser_test(dec-octet)
-  add_parser_test(IPv4address)
-  add_parser_test(ls32)
-#  add_parser_test(IPv6address)
-  add_parser_test(host)
-  add_parser_test(hostport)
-  add_parser_test(password)
-  add_parser_test(user-unreserved)
-  add_parser_test(user)
-  add_parser_test(userinfo)
-  add_parser_test(SIP-URI)
-  add_parser_test(SIPS-URI)
+  # TODO: add IPv6address test
 
-  #HEADERS
-  add_parser_test(ietf-token)
-  add_parser_test(iana-token)
-  add_parser_test(x-token)
-  add_parser_test(m-subtype)
-  add_parser_test(extension-token)
-  add_parser_test(discrete-type)
-  add_parser_test(composite-type)
-  add_parser_test(m-attribute)
-  add_parser_test(m-type)
-  add_parser_test(m-value)
-  add_parser_test(m-parameter)
-  add_parser_test(media-type)
-  add_parser_test(display-name)
-  add_parser_test(addr-spec)
+  foreach(PARSER ${PARSERS_TO_TEST})
+    add_parser_test(${PARSER})
+  endforeach()
 
-  add_parser_test(Call-ID)
-  add_parser_test(Content-Length)
-  add_parser_test(Content-Type)
-  add_parser_test(CSeq)
-  add_parser_test(Max-Forwards)
-
-  add_parser_test(message-header)
-
-  #REQUEST
-  add_parser_test(Request-URI)
-  add_parser_test(Request-Line)
-  add_parser_test(Request)
-
-  #RESPONSE
-  add_parser_test(Reason-Phrase)
-  add_parser_test(Status-Code)
-  add_parser_test(Status-Line)
-  add_parser_test(Response)
-
-  #MESSAGE
-  add_parser_test(SIP-message)
-
-  endif()
+endif()
