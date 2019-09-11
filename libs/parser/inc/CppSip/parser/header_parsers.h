@@ -25,9 +25,6 @@ inline const auto ietf_token = token;
 // iana-token = token
 inline const auto iana_token = token;
 
-// m-attribute = token
-inline const auto m_attribute = token;
-
 // x-token = "x-" token
 inline const auto x_token = bsx3::no_case[ bsx3::string( "x-" ) ] > token;
 
@@ -49,6 +46,9 @@ inline const auto m_type = discrete_type | composite_type;
 
 // m-value = token / quoted-string
 inline const auto m_value = token | quoted_string;
+
+// m-attribute = token
+inline const auto m_attribute = token;
 
 // m-parameter = m-attribute EQUAL m-value
 inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message::MediaType::Parameter>{} = m_attribute > EQUAL > m_value;

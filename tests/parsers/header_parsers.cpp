@@ -13,14 +13,14 @@ namespace
 
 define_parser(ietf_token, std::string)
 define_parser(iana_token, std::string)
-define_parser(m_attribute, std::string)
 define_parser(x_token, std::string)
-define_parser(m_subtype, std::string)
 define_parser(extension_token, std::string)
+define_parser(m_subtype, std::string)
 define_parser(discrete_type, std::string)
 define_parser(composite_type, std::string)
 define_parser(m_type, std::string)
 define_parser(m_value, std::string)
+define_parser(m_attribute, std::string)
 define_parser(m_parameter, CppSipMsg::MediaType::Parameter)
 define_parser(media_type, CppSipMsg::MediaType)
 define_parser(display_name, std::string)
@@ -30,6 +30,7 @@ define_parser(Content_Length, CppSipMsg::Headers::ContentLength)
 define_parser(Content_Type, CppSipMsg::Headers::ContentType)
 define_parser(CSeq, CppSipMsg::Headers::CSeq)
 define_parser(Max_Forwards, CppSipMsg::Headers::MaxForwards)
+
 define_parser(message_header, CppSipMsg::Header)
 // clang-format on
 
@@ -37,30 +38,11 @@ define_parser(message_header, CppSipMsg::Header)
 
 BOOST_AUTO_TEST_SUITE( header_parsers )
 
-BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_discrete_type( sample ) );
-}
-
-BOOST_DATA_TEST_CASE( test_composite_type_parser, TestDatasets::composite_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
-}
-
-BOOST_DATA_TEST_CASE( test_m_type_parser, TestDatasets::discrete_type + TestDatasets::composite_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
-}
-
 BOOST_AUTO_TEST_CASE( test_ietf_token_parser )
 {
 }
 
 BOOST_AUTO_TEST_CASE( test_iana_token_parser )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_m_attribute_parser )
 {
 }
 
@@ -79,7 +61,26 @@ BOOST_AUTO_TEST_CASE( test_m_subtype_parser )
 {
 }
 
+BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
+{
+  BOOST_CHECK_EQUAL( sample, parse_discrete_type( sample ) );
+}
+
+BOOST_DATA_TEST_CASE( test_composite_type_parser, TestDatasets::composite_type )
+{
+  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
+}
+
+BOOST_DATA_TEST_CASE( test_m_type_parser, TestDatasets::discrete_type + TestDatasets::composite_type )
+{
+  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
+}
+
 BOOST_AUTO_TEST_CASE( test_m_value_parser )
+{
+}
+
+BOOST_AUTO_TEST_CASE( test_m_attribute_parser )
 {
 }
 
