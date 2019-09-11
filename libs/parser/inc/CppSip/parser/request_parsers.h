@@ -9,8 +9,8 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version );
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri );
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestLine, method, request_uri, sip_version )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::RequestUri, sip_uri )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Request, request_line, headers )
 
 namespace CppSip

@@ -40,17 +40,17 @@ define_raw_parser(ls32)
 define_raw_parser(IPv6address)
 define_parser(host, CppSipMsg::Host)
 define_parser(hostport, CppSipMsg::HostPort)
-define_parser(password, std::string);
-define_parser(user_unreserved, char);
-define_parser(user, std::string);
-define_parser(userinfo, CppSipMsg::UserInfo);
-define_parser(hnv_unreserved, char);
+define_parser(password, std::string)
+define_parser(user_unreserved, char)
+define_parser(user, std::string)
+define_parser(userinfo, CppSipMsg::UserInfo)
+define_parser(hnv_unreserved, char)
 define_parser(hvalue, CppSipMsg::SipUriHeader::Value)
 define_parser(hname, CppSipMsg::SipUriHeader::Name)
 define_parser(header, CppSipMsg::SipUriHeader)
-define_parser(headers, CppSipMsg::SipUriHeaders);
-define_parser(SIP_URI, CppSipMsg::SipUri);
-define_parser(SIPS_URI, CppSipMsg::SipUri);
+define_parser(headers, CppSipMsg::SipUriHeaders)
+define_parser(SIP_URI, CppSipMsg::SipUri)
+define_parser(SIPS_URI, CppSipMsg::SipUri)
 // clang-format on
 }  // namespace
 

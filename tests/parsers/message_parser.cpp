@@ -6,7 +6,7 @@
 
 namespace
 {
-define_parser( SIP_message, CppSip::Message::Message )
+// define_parser( SIP_message, CppSip::Message::Message )
 }
 
 BOOST_AUTO_TEST_SUITE( message_parsers )

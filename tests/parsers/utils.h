@@ -40,19 +40,19 @@ void parse_noattr( Parser parser, const std::string_view input )
 }
 
 #define define_parser( parser, type )                                                                                                      \
-  type parse_##parser( const std::string_view input )                                                                                      \
+  [[maybe_unused]] type parse_##parser( const std::string_view input )                                                                     \
   {                                                                                                                                        \
     return parse<type>( CppSip::Parsers::parser, input );                                                                                  \
   }
 
 #define define_raw_parser( parser )                                                                                                        \
-  bool parse_##parser( const std::string_view input )                                                                                      \
+  [[maybe_unused]] bool parse_##parser( const std::string_view input )                                                                     \
   {                                                                                                                                        \
     return input == parse<std::string>( boost::spirit::x3::raw[ CppSip::Parsers::parser ], input );                                        \
   }
 
 #define define_noattr_parser( parser )                                                                                                     \
-  void parse_##parser( const std::string_view input )                                                                                      \
+  [[maybe_unused]] void parse_##parser( const std::string_view input )                                                                     \
   {                                                                                                                                        \
     parse_noattr( CppSip::Parsers::parser, input );                                                                                        \
   }

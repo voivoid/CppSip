@@ -28,7 +28,7 @@ bool parse_stdin( const Parser& parser )
 #  error macro redefinition
 #endif
 
-#define CPPSIP_CURRY_PARSER( PF ) [](){ return parse_stdin( CppSip::Parsers::PF ); }
+#define CPPSIP_CURRY_PARSER( PF ) []() { return parse_stdin( CppSip::Parsers::PF ); }
 #define CPPSIP_PARSER_ITEM_WITH_NAME( PNAME, PF )                                                                                          \
   {                                                                                                                                        \
     PNAME, CPPSIP_CURRY_PARSER( PF )                                                                                                       \

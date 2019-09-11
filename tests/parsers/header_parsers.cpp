@@ -34,7 +34,7 @@ define_parser(Content_Type, CppSipHdr::ContentType)
 define_parser(CSeq, CppSipHdr::CSeq)
 define_parser(Max_Forwards, CppSipHdr::MaxForwards)
 
-define_parser(message_header, CppSip::Message::Header)
+// define_parser(message_header, CppSip::Message::Header)
 // clang-format on
 
 }  // namespace
