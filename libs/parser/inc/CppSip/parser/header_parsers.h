@@ -71,16 +71,16 @@ inline const auto addr_spec = bsx3::rule<struct _addr_spec, CppSip::Message::Hea
 
 // name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
 inline const auto name_addr = bsx3::rule<struct _name_addr, CppSip::Message::Headers::NameAddr>{} =
-    -display_name > LAQUOT > addr_spec > RAQUOT;
+    -display_name >> LAQUOT > addr_spec > RAQUOT;
 
 // gen-value = token / host / quoted-string
 inline const auto gen_value = bsx3::rule<struct _gen_value, std::string>{} = token | bsx3::raw[ host ] | quoted_string;
 
 // generic-param = token [ EQUAL gen-value ]
-inline const auto generic_param = token >> -( EQUAL >> gen_value );
+inline const auto generic_param = token > -( EQUAL > gen_value );
 
 // tag-param = "tag" EQUAL token
-inline const auto tag_param = bsx3::no_case[ bsx3::lit( "tag" ) ] >> EQUAL >> token;
+inline const auto tag_param = bsx3::no_case[ bsx3::lit( "tag" ) ] > EQUAL > token;
 
 // from-to-param = tag-param / generic-param
 inline const auto from_to_param = tag_param | generic_param;

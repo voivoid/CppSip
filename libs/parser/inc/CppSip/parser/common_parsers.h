@@ -48,10 +48,10 @@ inline const auto SEMI = ( SWS >> ';' ) > SWS;
 inline const auto EQUAL = ( SWS >> '=' ) > SWS;
 
 // RAQUOT  =  ">" SWS ; right angle quote
-inline const auto RAQUOT = '>' > SWS;
+inline const auto RAQUOT = '>' >> SWS;
 
 // LAQUOT  =  SWS "<"; left angle quote
-inline const auto LAQUOT = SWS > '<';
+inline const auto LAQUOT = SWS >> '<';
 
 // quoted-pair = "\" (%x00-09 / %x0B-0C / %x0E-7F)
 inline const auto quoted_pair = bsx3::lit( '\\' ) >>

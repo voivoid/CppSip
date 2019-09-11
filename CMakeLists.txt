@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+#BOOST_SPIRIT_X3_DEBUG
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set(CppSipWarningFlags "-Wall -Wextra -Wpedantic -Werror -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wshadow -Wformat=2 -Wconversion -Wsign-conversion -Wfloat-equal -Wcast-qual -Winit-self -Wpointer-arith -Wswitch -Wswitch-enum -Woverloaded-virtual -Wundef")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
