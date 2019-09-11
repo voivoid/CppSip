@@ -428,12 +428,12 @@ BOOST_AUTO_TEST_CASE( test_user_parser )
 BOOST_AUTO_TEST_CASE( test_userinfo_parser )
 {
   {
-    auto [ user, password ] = parse_userinfo( "user@" );
+    const auto [ user, password ] = parse_userinfo( "user@" );
     BOOST_CHECK_EQUAL( "user", user );
     BOOST_CHECK( password.empty() );
   }
   {
-    auto [ user, password ] = parse_userinfo( "user:password@" );
+    const auto [ user, password ] = parse_userinfo( "user:password@" );
     BOOST_CHECK_EQUAL( "user", user );
     BOOST_CHECK_EQUAL( "password", password );
   }

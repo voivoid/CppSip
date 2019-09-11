@@ -1,8 +1,10 @@
-add_library(CppSipCommon STATIC inc/CppSip/message/headers/callid.h
+add_library(CppSipCommon STATIC inc/CppSip/message/headers/addr.h
+                                inc/CppSip/message/headers/callid.h
                                 inc/CppSip/message/headers/content_length.h
                                 inc/CppSip/message/headers/content_type.h
                                 inc/CppSip/message/headers/cseq.h
                                 inc/CppSip/message/headers/headers.h
+                                inc/CppSip/message/headers/from_to.h
                                 inc/CppSip/message/headers/max_forwards.h
                                 inc/CppSip/message/headers/media_type.h
                                 inc/CppSip/message/request/request.h

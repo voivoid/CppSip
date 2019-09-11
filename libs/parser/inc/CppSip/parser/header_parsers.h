@@ -6,13 +6,18 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
 
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::MediaType, type, subtype, parameters )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::MediaType::Parameter, attribute, value )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType, type, subtype, parameters )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType::Parameter, attribute, value )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::AddrSpec, sip_uri )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::NameAddr, display_name, addr_spec )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::From, addr, params )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::To, addr, params )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CallId, id )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::ContentLength, length )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::ContentType, media_type )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CSeq, id, method )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MaxForwards, forwards )
+
 
 namespace CppSip
 {
@@ -51,17 +56,38 @@ inline const auto m_value = token | quoted_string;
 inline const auto m_attribute = token;
 
 // m-parameter = m-attribute EQUAL m-value
-inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message::MediaType::Parameter>{} = m_attribute > EQUAL > m_value;
+inline const auto m_parameter = bsx3::rule<struct _m_parameter, CppSip::Message::Headers::MediaType::Parameter>{} =
+    m_attribute > EQUAL > m_value;
 
 // media-type = m-type SLASH m-subtype *(SEMI m-parameter)
-inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::MediaType>{} = m_type > SLASH > m_subtype >>
-                                                                                              *( SEMI > m_parameter );
+inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::Headers::MediaType>{} = m_type > SLASH > m_subtype >>
+                                                                                                       *( SEMI > m_parameter );
 
 // display-name = *(token LWS)/ quoted-string
-inline const auto display_name = quoted_string | *( token >> LWS );
+inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = quoted_string | *( token >> LWS );
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
-inline const auto addr_spec = SIP_URI | SIPS_URI;
+inline const auto addr_spec = bsx3::rule<struct _addr_spec, CppSip::Message::Headers::AddrSpec>{} = SIP_URI | SIPS_URI;
+
+// name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
+inline const auto name_addr = bsx3::rule<struct _name_addr, CppSip::Message::Headers::NameAddr>{} =
+    -display_name > LAQUOT > addr_spec > RAQUOT;
+
+// gen-value = token / host / quoted-string
+inline const auto gen_value = bsx3::rule<struct _gen_value, std::string>{} = token | bsx3::raw[ host ] | quoted_string;
+
+// generic-param = token [ EQUAL gen-value ]
+inline const auto generic_param = token > -( EQUAL > gen_value );
+
+// tag-param = "tag" EQUAL token
+inline const auto tag_param = bsx3::no_case[ bsx3::lit( "tag" ) ] > EQUAL > token;
+
+// from-to-param = tag-param / generic-param
+inline const auto from_to_param = tag_param | generic_param;
+
+// from-to-spec = ( name-addr / addr-spec ) *( SEMI from-param )
+inline const auto from_to_spec = ( name_addr | addr_spec ) > *( SEMI > from_to_param );
+
 
 // Call-ID = ( "Call-ID" / "i" ) HCOLON callid
 inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
@@ -83,23 +109,11 @@ inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq
 inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
     bsx3::no_case[ bsx3::lit( "Max-Forwards" ) ] > HCOLON > bsx3::uint32;
 
-// name-addr = [ display-name ] LAQUOT addr-spec RAQUOT
+// From = ( "From" / "f" ) HCOLON from-to-spec
+inline const auto From = bsx3::no_case[ bsx3::lit( "From" ) | 'f' ] >> HCOLON > from_to_spec;
 
-// gen-value = token / host / quoted-string
-
-// generic-param = token [ EQUAL gen-value ]
-
-// tag-param = "tag" EQUAL token
-
-// from-param = tag-param / generic-param
-
-// from-spec = ( name-addr / addr-spec ) *( SEMI from-param )
-
-// From = ( "From" / "f" ) HCOLON from-spec
-
-// to-param = tag-param / generic-param
-
-// To = ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
+// To = ( "To" / "t" ) HCOLON from-to-spec
+inline const auto To = bsx3::no_case[ bsx3::lit( "To" ) | 't' ] >> HCOLON > from_to_spec;
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info

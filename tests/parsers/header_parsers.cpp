@@ -4,7 +4,7 @@
 
 #include "parsers/utils.h"
 
-namespace CppSipMsg = CppSip::Message;
+namespace CppSipHdr = CppSip::Message::Headers;
 
 namespace
 {
@@ -21,17 +21,20 @@ define_parser(composite_type, std::string)
 define_parser(m_type, std::string)
 define_parser(m_value, std::string)
 define_parser(m_attribute, std::string)
-define_parser(m_parameter, CppSipMsg::MediaType::Parameter)
-define_parser(media_type, CppSipMsg::MediaType)
+define_parser(m_parameter, CppSipHdr::MediaType::Parameter)
+define_parser(media_type, CppSipHdr::MediaType)
 define_parser(display_name, std::string)
+define_parser(addr_spec, CppSipHdr::AddrSpec)
+define_parser(name_addr, CppSipHdr::NameAddr)
+define_parser(gen_value, std::string)
 
-define_parser(Call_ID, CppSipMsg::Headers::CallId)
-define_parser(Content_Length, CppSipMsg::Headers::ContentLength)
-define_parser(Content_Type, CppSipMsg::Headers::ContentType)
-define_parser(CSeq, CppSipMsg::Headers::CSeq)
-define_parser(Max_Forwards, CppSipMsg::Headers::MaxForwards)
+define_parser(Call_ID, CppSipHdr::CallId)
+define_parser(Content_Length, CppSipHdr::ContentLength)
+define_parser(Content_Type, CppSipHdr::ContentType)
+define_parser(CSeq, CppSipHdr::CSeq)
+define_parser(Max_Forwards, CppSipHdr::MaxForwards)
 
-define_parser(message_header, CppSipMsg::Header)
+define_parser(message_header, CppSip::Message::Header)
 // clang-format on
 
 }  // namespace
@@ -116,6 +119,37 @@ BOOST_AUTO_TEST_CASE( test_media_type_parser )
 
 BOOST_AUTO_TEST_CASE( test_display_name_parser )
 {
+  BOOST_CHECK_EQUAL( "name", parse_display_name( "\"name\"" ) );
+  BOOST_CHECK_EQUAL( "name", parse_display_name( "name  " ) );
+  // BOOST_CHECK_EQUAL( "cool name", parse_display_name( "cool name" ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_addr_spec_parser )
+{
+  {
+    const auto [ sips, userinfo, hostport, sip_uri_headers ] = parse_addr_spec( "sip:domain.com" ).sip_uri;
+    BOOST_CHECK( !sips );
+    BOOST_CHECK( !userinfo );
+    BOOST_CHECK_EQUAL( ( CppSip::Message::HostPort{ { "domain.com" }, {} } ), hostport );
+    BOOST_CHECK( sip_uri_headers.empty() );
+  }
+}
+
+BOOST_AUTO_TEST_CASE( test_name_addr_parser )
+{
+  {
+    const auto [ display_name, addr ] = parse_name_addr( "<sip:domain.com>" );
+    BOOST_CHECK( display_name.empty() );
+    BOOST_CHECK_EQUAL( ( CppSip::Message::HostPort{ { "domain.com" }, {} } ), addr.sip_uri.host_port );
+  }
+
+  {
+    // const auto [ display_name, addr ] = parse_name_addr( "john doe <sip:domain.com>" );
+  }
+}
+
+BOOST_AUTO_TEST_CASE( test_gen_value_parser )
+{
 }
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
@@ -146,7 +180,7 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
   {
     const auto [ id, method ] = parse_CSeq( "CSeq: 12345 INVITE" );
     BOOST_CHECK_EQUAL( "12345", id );
-    BOOST_CHECK_EQUAL( CppSipMsg::Method::Invite, method );
+    BOOST_CHECK_EQUAL( CppSip::Message::Method::Invite, method );
   }
 }
 

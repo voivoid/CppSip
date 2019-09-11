@@ -7,6 +7,8 @@ namespace CppSip
 {
 namespace Message
 {
+namespace Headers
+{
 
 struct MediaType
 {
@@ -21,5 +23,6 @@ struct MediaType
   std::vector<Parameter> parameters;
 };
 
+}  // namespace Headers
 }  // namespace Message
 }  // namespace CppSip

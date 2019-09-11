@@ -1,9 +1,11 @@
 #pragma once
 
+#include "CppSip/message/headers/addr.h"
 #include "CppSip/message/headers/callid.h"
 #include "CppSip/message/headers/content_length.h"
 #include "CppSip/message/headers/content_type.h"
 #include "CppSip/message/headers/cseq.h"
+#include "CppSip/message/headers/from_to.h"
 #include "CppSip/message/headers/max_forwards.h"
 
 #include "boost/variant.hpp"

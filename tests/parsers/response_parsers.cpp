@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE( test_Status_Code_parser_failures )
 BOOST_AUTO_TEST_CASE( test_Status_Line_parser )
 {
   {
-    auto [ sip_version, status_code, reason ] = parse_Status_Line( "SIP/2.0 200 OK\r\n" );
+    const auto [ sip_version, status_code, reason ] = parse_Status_Line( "SIP/2.0 200 OK\r\n" );
     BOOST_CHECK_EQUAL( 2, sip_version.major );
     BOOST_CHECK_EQUAL( 0, sip_version.minor );
     BOOST_CHECK_EQUAL( 200, status_code );
