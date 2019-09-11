@@ -91,15 +91,15 @@ inline const auto from_to_spec = ( name_addr | addr_spec ) > *( SEMI > from_to_p
 
 // Call-ID = ( "Call-ID" / "i" ) HCOLON callid
 inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
-    bsx3::no_case[ ( bsx3::lit( "Call-ID" ) | 'i' ) ] >> HCOLON > callid;
+    ( bsx3::no_case[ ( bsx3::lit( "Call-ID" ) | 'i' ) ] >> HCOLON ) > callid;
 
 // Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*DIGIT
 inline const auto Content_Length = bsx3::rule<struct _content_length, CppSip::Message::Headers::ContentLength>{} =
-    bsx3::no_case[ ( bsx3::lit( "Content-Length" ) | 'l' ) ] >> HCOLON > bsx3::uint64;
+    ( bsx3::no_case[ ( bsx3::lit( "Content-Length" ) | 'l' ) ] >> HCOLON ) > bsx3::uint64;
 
 // Content-Type =  ( "Content-Type" / "c" ) HCOLON media-type
 inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Message::Headers::ContentType>{} =
-    bsx3::no_case[ ( bsx3::lit( "Content-Type" ) | 'c' ) ] >> HCOLON > media_type;
+    ( bsx3::no_case[ ( bsx3::lit( "Content-Type" ) | 'c' ) ] >> HCOLON ) > media_type;
 
 // CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
 inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} =
@@ -110,10 +110,10 @@ inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Messag
     bsx3::no_case[ bsx3::lit( "Max-Forwards" ) ] > HCOLON > bsx3::uint32;
 
 // From = ( "From" / "f" ) HCOLON from-to-spec
-inline const auto From = bsx3::no_case[ bsx3::lit( "From" ) | 'f' ] >> HCOLON > from_to_spec;
+inline const auto From = ( bsx3::no_case[ bsx3::lit( "From" ) | 'f' ] >> HCOLON ) > from_to_spec;
 
 // To = ( "To" / "t" ) HCOLON from-to-spec
-inline const auto To = bsx3::no_case[ bsx3::lit( "To" ) | 't' ] >> HCOLON > from_to_spec;
+inline const auto To = ( bsx3::no_case[ bsx3::lit( "To" ) | 't' ] >> HCOLON ) > from_to_spec;
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info

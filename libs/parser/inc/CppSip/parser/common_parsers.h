@@ -61,7 +61,7 @@ inline const auto quoted_pair = bsx3::lit( '\\' ) >>
 inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\x5B' ) | bsx3::char_( '\x5D', '\x7E' );
 
 // quoted-string = SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE
-inline const auto quoted_string = SWS >> DQUOTE > *( qdtext | quoted_pair ) > DQUOTE;
+inline const auto quoted_string = ( SWS >> DQUOTE ) > *( qdtext | quoted_pair ) > DQUOTE;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
 inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
