@@ -114,12 +114,22 @@ media-type       =  m-type SLASH m-subtype *(SEMI m-parameter)
 
 display-name   =  *(token LWS)/ quoted-string
 addr-spec      =  SIP-URI / SIPS-URI ; / absoluteURI (!!!)
+name-addr      =  [ display-name ] LAQUOT addr-spec RAQUOT
+generic-param  =  token [ EQUAL gen-value ]
+gen-value      =  token / host / quoted-string
+tag-param      =  "tag" EQUAL token
+from-param  =  tag-param / generic-param
+from-spec   =  ( name-addr / addr-spec )
+               *( SEMI from-param )
+to-param  =  tag-param / generic-param
 
 Call-ID  =  ( "Call-ID" / "i" ) HCOLON callid
 Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*9DIGIT
 Content-Type     =  ( "Content-Type" / "c" ) HCOLON media-type
 CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
+From        =  ( "From" / "f" ) HCOLON from-spec
 Max-Forwards  =  "Max-Forwards" HCOLON 1*9DIGIT
+To        =  ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
 
 message-header = ( Call-ID /
                    Content-Length /

@@ -120,8 +120,9 @@ BOOST_AUTO_TEST_CASE( test_media_type_parser )
 BOOST_AUTO_TEST_CASE( test_display_name_parser )
 {
   BOOST_CHECK_EQUAL( "name", parse_display_name( "\"name\"" ) );
-  BOOST_CHECK_EQUAL( "name", parse_display_name( "name  " ) );
-  // BOOST_CHECK_EQUAL( "cool name", parse_display_name( "cool name" ) );
+  BOOST_CHECK_EQUAL( "name  ", parse_display_name( "name  " ) );
+  BOOST_CHECK_EQUAL( "cool name", parse_display_name( "\"cool\\ name\"" ) );
+  BOOST_CHECK_EQUAL( "cool name ", parse_display_name( "cool name " ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_addr_spec_parser )
@@ -150,6 +151,11 @@ BOOST_AUTO_TEST_CASE( test_name_addr_parser )
 
 BOOST_AUTO_TEST_CASE( test_gen_value_parser )
 {
+}
+
+BOOST_AUTO_TEST_CASE( test_from_to_spec_parser )
+{
+  // test "sip:O.:1763"
 }
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )

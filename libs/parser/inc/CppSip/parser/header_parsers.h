@@ -64,7 +64,7 @@ inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::H
                                                                                                        *( SEMI > m_parameter );
 
 // display-name = *(token LWS)/ quoted-string
-inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = quoted_string | *( token >> LWS );
+inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = quoted_string | bsx3::raw[ *( token >> LWS ) ];
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto addr_spec = bsx3::rule<struct _addr_spec, CppSip::Message::Headers::AddrSpec>{} = SIP_URI | SIPS_URI;
@@ -77,10 +77,10 @@ inline const auto name_addr = bsx3::rule<struct _name_addr, CppSip::Message::Hea
 inline const auto gen_value = bsx3::rule<struct _gen_value, std::string>{} = token | bsx3::raw[ host ] | quoted_string;
 
 // generic-param = token [ EQUAL gen-value ]
-inline const auto generic_param = token > -( EQUAL > gen_value );
+inline const auto generic_param = token >> -( EQUAL >> gen_value );
 
 // tag-param = "tag" EQUAL token
-inline const auto tag_param = bsx3::no_case[ bsx3::lit( "tag" ) ] > EQUAL > token;
+inline const auto tag_param = bsx3::no_case[ bsx3::lit( "tag" ) ] >> EQUAL >> token;
 
 // from-to-param = tag-param / generic-param
 inline const auto from_to_param = tag_param | generic_param;

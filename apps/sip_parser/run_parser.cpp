@@ -116,12 +116,22 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM_WITH_NAME( "media-type", media_type ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "display-name", display_name ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "addr-spec", addr_spec ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "name-addr", name_addr ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "generic-param", generic_param ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "gen-value", gen_value ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "tag-param", tag_param ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "from-param", from_to_param ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "from-spec", from_to_spec ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "to-param", from_to_param ),
 
     CPPSIP_PARSER_ITEM_WITH_NAME( "Call-ID", Call_ID ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Length", Content_Length ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Type", Content_Type ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "CSeq", CSeq ),
+    CPPSIP_PARSER_ITEM( From ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "Max-Forwards", Max_Forwards ),
+    CPPSIP_PARSER_ITEM( To ),
+
 
     CPPSIP_PARSER_ITEM_WITH_NAME( "message-header", message_header ),
 
