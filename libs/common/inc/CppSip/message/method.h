@@ -16,5 +16,5 @@ enum class Method
   Register
 };
 
-} 
+}
 }  // namespace CppSip

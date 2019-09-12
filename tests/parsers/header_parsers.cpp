@@ -49,12 +49,12 @@ BOOST_AUTO_TEST_SUITE( header_parsers )
 
 BOOST_AUTO_TEST_CASE( test_ietf_token_parser )
 {
-  BOOST_CHECK_EQUAL("ietf-token", parse_ietf_token("ietf-token"));
+  BOOST_CHECK_EQUAL( "ietf-token", parse_ietf_token( "ietf-token" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_iana_token_parser )
 {
-  BOOST_CHECK_EQUAL("iana-token", parse_iana_token("iana-token"));
+  BOOST_CHECK_EQUAL( "iana-token", parse_iana_token( "iana-token" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_x_token_parser )
@@ -66,12 +66,12 @@ BOOST_AUTO_TEST_CASE( test_x_token_parser )
 
 BOOST_AUTO_TEST_CASE( test_extension_token_parser )
 {
-  BOOST_CHECK_EQUAL("extension-token", parse_extension_token("extension-token"));
+  BOOST_CHECK_EQUAL( "extension-token", parse_extension_token( "extension-token" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_m_subtype_parser )
 {
-  BOOST_CHECK_EQUAL("subtype", parse_m_subtype("subtype"));
+  BOOST_CHECK_EQUAL( "subtype", parse_m_subtype( "subtype" ) );
 }
 
 BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
@@ -91,13 +91,13 @@ BOOST_DATA_TEST_CASE( test_m_type_parser, TestDatasets::discrete_type + TestData
 
 BOOST_AUTO_TEST_CASE( test_m_value_parser )
 {
-  BOOST_CHECK_EQUAL("token", parse_m_value("token"));
-  BOOST_CHECK_EQUAL("token", parse_m_value("\"token\""));
+  BOOST_CHECK_EQUAL( "token", parse_m_value( "token" ) );
+  BOOST_CHECK_EQUAL( "token", parse_m_value( "\"token\"" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_m_attribute_parser )
 {
-  BOOST_CHECK_EQUAL("attribute", parse_m_attribute("attribute"));
+  BOOST_CHECK_EQUAL( "attribute", parse_m_attribute( "attribute" ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_m_parameter_parser )
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE( test_name_addr_parser )
 
   {
     const auto [ display_name, addr ] = parse_name_addr( "john doe <sip:domain.com>" );
-    BOOST_CHECK_EQUAL("john doe ", display_name);
+    BOOST_CHECK_EQUAL( "john doe ", display_name );
   }
 }
 
@@ -167,19 +167,16 @@ BOOST_AUTO_TEST_CASE( test_gen_value_parser )
 {
 }
 
-BOOST_AUTO_TEST_CASE(test_generic_param_parser)
+BOOST_AUTO_TEST_CASE( test_generic_param_parser )
 {
-
 }
 
-BOOST_AUTO_TEST_CASE(test_tag_param_parser)
+BOOST_AUTO_TEST_CASE( test_tag_param_parser )
 {
-
 }
 
-BOOST_AUTO_TEST_CASE(test_from_to_param_parser)
+BOOST_AUTO_TEST_CASE( test_from_to_param_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_CASE( test_from_to_spec_parser )
@@ -219,9 +216,8 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
   }
 }
 
-BOOST_AUTO_TEST_CASE(test_From_parser)
+BOOST_AUTO_TEST_CASE( test_From_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
@@ -233,9 +229,8 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
   BOOST_CHECK_THROW( parse_Max_Forwards( "Max-Forwards:-1" ), std::runtime_error );
 }
 
-BOOST_AUTO_TEST_CASE(test_To_parser)
+BOOST_AUTO_TEST_CASE( test_To_parser )
 {
-
 }
 
 BOOST_AUTO_TEST_CASE( test_message_header_parser )
