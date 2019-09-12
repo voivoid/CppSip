@@ -27,12 +27,18 @@ define_parser(display_name, std::string)
 define_parser(addr_spec, CppSipHdr::AddrSpec)
 define_parser(name_addr, CppSipHdr::NameAddr)
 define_parser(gen_value, std::string)
+define_parser(generic_param, CppSipHdr::GenericParam)
+define_parser(tag_param, CppSipHdr::Tag)
+define_parser(from_to_param, CppSipHdr::FromTo::Param)
+define_parser(from_to_spec, CppSipHdr::FromTo)
 
 define_parser(Call_ID, CppSipHdr::CallId)
 define_parser(Content_Length, CppSipHdr::ContentLength)
 define_parser(Content_Type, CppSipHdr::ContentType)
 define_parser(CSeq, CppSipHdr::CSeq)
+define_parser(From, CppSipHdr::From)
 define_parser(Max_Forwards, CppSipHdr::MaxForwards)
+define_parser(To, CppSipHdr::To)
 
 // define_parser(message_header, CppSip::Message::Header)
 // clang-format on
@@ -43,10 +49,12 @@ BOOST_AUTO_TEST_SUITE( header_parsers )
 
 BOOST_AUTO_TEST_CASE( test_ietf_token_parser )
 {
+  BOOST_CHECK_EQUAL("ietf-token", parse_ietf_token("ietf-token"));
 }
 
 BOOST_AUTO_TEST_CASE( test_iana_token_parser )
 {
+  BOOST_CHECK_EQUAL("iana-token", parse_iana_token("iana-token"));
 }
 
 BOOST_AUTO_TEST_CASE( test_x_token_parser )
@@ -58,10 +66,12 @@ BOOST_AUTO_TEST_CASE( test_x_token_parser )
 
 BOOST_AUTO_TEST_CASE( test_extension_token_parser )
 {
+  BOOST_CHECK_EQUAL("extension-token", parse_extension_token("extension-token"));
 }
 
 BOOST_AUTO_TEST_CASE( test_m_subtype_parser )
 {
+  BOOST_CHECK_EQUAL("subtype", parse_m_subtype("subtype"));
 }
 
 BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
@@ -81,10 +91,13 @@ BOOST_DATA_TEST_CASE( test_m_type_parser, TestDatasets::discrete_type + TestData
 
 BOOST_AUTO_TEST_CASE( test_m_value_parser )
 {
+  BOOST_CHECK_EQUAL("token", parse_m_value("token"));
+  BOOST_CHECK_EQUAL("token", parse_m_value("\"token\""));
 }
 
 BOOST_AUTO_TEST_CASE( test_m_attribute_parser )
 {
+  BOOST_CHECK_EQUAL("attribute", parse_m_attribute("attribute"));
 }
 
 BOOST_AUTO_TEST_CASE( test_m_parameter_parser )
@@ -145,12 +158,28 @@ BOOST_AUTO_TEST_CASE( test_name_addr_parser )
   }
 
   {
-    // const auto [ display_name, addr ] = parse_name_addr( "john doe <sip:domain.com>" );
+    const auto [ display_name, addr ] = parse_name_addr( "john doe <sip:domain.com>" );
+    BOOST_CHECK_EQUAL("john doe ", display_name);
   }
 }
 
 BOOST_AUTO_TEST_CASE( test_gen_value_parser )
 {
+}
+
+BOOST_AUTO_TEST_CASE(test_generic_param_parser)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_tag_param_parser)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_from_to_param_parser)
+{
+
 }
 
 BOOST_AUTO_TEST_CASE( test_from_to_spec_parser )
@@ -190,6 +219,11 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
   }
 }
 
+BOOST_AUTO_TEST_CASE(test_From_parser)
+{
+
+}
+
 BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
 {
   BOOST_CHECK_EQUAL( 0, parse_Max_Forwards( "Max-Forwards:0" ).forwards );
@@ -197,6 +231,11 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
   BOOST_CHECK_EQUAL( 1024, parse_Max_Forwards( "Max-Forwards:1024" ).forwards );
 
   BOOST_CHECK_THROW( parse_Max_Forwards( "Max-Forwards:-1" ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE(test_To_parser)
+{
+
 }
 
 BOOST_AUTO_TEST_CASE( test_message_header_parser )

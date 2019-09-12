@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CppSip/message/headers/addr.h"
+#include "CppSip/message/headers/param.h"
 #include "boost/variant.hpp"
 
 #include <string>
@@ -14,22 +15,21 @@ namespace Message
 namespace Headers
 {
 
-struct From
+struct FromTo
 {
-  using Param  = std::string;
-  using Params = std::vector<Param>;
+  using Param = boost::variant< GenericParam, Tag >;
+  using Params = std::vector< Param >;
 
   boost::variant<NameAddr, AddrSpec> addr;
   Params params;
 };
 
-struct To
+struct From : FromTo
 {
-  using Param  = std::string;
-  using Params = std::vector<Param>;
+};
 
-  boost::variant<NameAddr, AddrSpec> addr;
-  Params params;
+struct To : FromTo
+{
 };
 
 }  // namespace Headers

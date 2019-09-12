@@ -2,7 +2,6 @@
 
 namespace CppSip
 {
-
 namespace Message
 {
 
@@ -17,6 +16,5 @@ enum class Method
   Register
 };
 
-}
-
+} 
 }  // namespace CppSip
