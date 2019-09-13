@@ -10,28 +10,6 @@ namespace
 {
 
 // clang-format off
-
-define_parser(ietf_token, std::string)
-define_parser(iana_token, std::string)
-define_parser(x_token, std::string)
-define_parser(extension_token, std::string)
-define_parser(m_subtype, std::string)
-define_parser(discrete_type, std::string)
-define_parser(composite_type, std::string)
-define_parser(m_type, std::string)
-define_parser(m_value, std::string)
-define_parser(m_attribute, std::string)
-define_parser(m_parameter, CppSipHdr::MediaType::Parameter)
-define_parser(media_type, CppSipHdr::MediaType)
-define_parser(display_name, std::string)
-define_parser(addr_spec, CppSipHdr::AddrSpec)
-define_parser(name_addr, CppSipHdr::NameAddr)
-define_parser(gen_value, std::string)
-define_parser(generic_param, CppSipHdr::GenericParam)
-define_parser(tag_param, CppSipHdr::Tag)
-define_parser(from_to_param, CppSipHdr::FromTo::Param)
-define_parser(from_to_spec, CppSipHdr::FromTo)
-
 define_parser(Call_ID, CppSipHdr::CallId)
 define_parser(Content_Length, CppSipHdr::ContentLength)
 define_parser(Content_Type, CppSipHdr::ContentType)
@@ -39,150 +17,12 @@ define_parser(CSeq, CppSipHdr::CSeq)
 define_parser(From, CppSipHdr::From)
 define_parser(Max_Forwards, CppSipHdr::MaxForwards)
 define_parser(To, CppSipHdr::To)
-
-// define_parser(message_header, CppSip::Message::Header)
+define_parser(message_header, CppSip::Message::Header)
 // clang-format on
 
 }  // namespace
 
 BOOST_AUTO_TEST_SUITE( header_parsers )
-
-BOOST_AUTO_TEST_CASE( test_ietf_token_parser )
-{
-  BOOST_CHECK_EQUAL( "ietf-token", parse_ietf_token( "ietf-token" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_iana_token_parser )
-{
-  BOOST_CHECK_EQUAL( "iana-token", parse_iana_token( "iana-token" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_x_token_parser )
-{
-  BOOST_CHECK_EQUAL( "x-abc123", parse_x_token( "x-abc123" ) );
-
-  BOOST_CHECK_THROW( parse_x_token( "abc123" ), std::runtime_error );
-}
-
-BOOST_AUTO_TEST_CASE( test_extension_token_parser )
-{
-  BOOST_CHECK_EQUAL( "extension-token", parse_extension_token( "extension-token" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_m_subtype_parser )
-{
-  BOOST_CHECK_EQUAL( "subtype", parse_m_subtype( "subtype" ) );
-}
-
-BOOST_DATA_TEST_CASE( test_discrete_type_parser, TestDatasets::discrete_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_discrete_type( sample ) );
-}
-
-BOOST_DATA_TEST_CASE( test_composite_type_parser, TestDatasets::composite_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
-}
-
-BOOST_DATA_TEST_CASE( test_m_type_parser, TestDatasets::discrete_type + TestDatasets::composite_type )
-{
-  BOOST_CHECK_EQUAL( sample, parse_composite_type( sample ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_m_value_parser )
-{
-  BOOST_CHECK_EQUAL( "token", parse_m_value( "token" ) );
-  BOOST_CHECK_EQUAL( "token", parse_m_value( "\"token\"" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_m_attribute_parser )
-{
-  BOOST_CHECK_EQUAL( "attribute", parse_m_attribute( "attribute" ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_m_parameter_parser )
-{
-  {
-    const auto [ attr, value ] = parse_m_parameter( "attr=value" );
-    BOOST_CHECK_EQUAL( "attr", attr );
-    BOOST_CHECK_EQUAL( "value", value );
-  }
-}
-
-BOOST_AUTO_TEST_CASE( test_media_type_parser )
-{
-  {
-    const auto [ type, subtype, params ] = parse_media_type( "text/html" );
-    BOOST_CHECK_EQUAL( "text", type );
-    BOOST_CHECK_EQUAL( "html", subtype );
-    BOOST_CHECK( params.empty() );
-  }
-
-  {
-    const auto [ type, subtype, params ] = parse_media_type( "text/html;attr1=value1;attr2=value2" );
-    BOOST_CHECK_EQUAL( "text", type );
-    BOOST_CHECK_EQUAL( "html", subtype );
-    BOOST_REQUIRE_EQUAL( 2, params.size() );
-    BOOST_CHECK_EQUAL( "attr1", params[ 0 ].attribute );
-    BOOST_CHECK_EQUAL( "value1", params[ 0 ].value );
-    BOOST_CHECK_EQUAL( "attr2", params[ 1 ].attribute );
-    BOOST_CHECK_EQUAL( "value2", params[ 1 ].value );
-  }
-}
-
-BOOST_AUTO_TEST_CASE( test_display_name_parser )
-{
-  BOOST_CHECK_EQUAL( "name", parse_display_name( "\"name\"" ) );
-  BOOST_CHECK_EQUAL( "name  ", parse_display_name( "name  " ) );
-  BOOST_CHECK_EQUAL( "cool name", parse_display_name( "\"cool\\ name\"" ) );
-  BOOST_CHECK_EQUAL( "cool name ", parse_display_name( "cool name " ) );
-}
-
-BOOST_AUTO_TEST_CASE( test_addr_spec_parser )
-{
-  {
-    const auto [ sips, userinfo, hostport, sip_uri_headers ] = parse_addr_spec( "sip:domain.com" ).sip_uri;
-    BOOST_CHECK( !sips );
-    BOOST_CHECK( !userinfo );
-    BOOST_CHECK_EQUAL( ( CppSip::Message::HostPort{ { "domain.com" }, {} } ), hostport );
-    BOOST_CHECK( sip_uri_headers.empty() );
-  }
-}
-
-BOOST_AUTO_TEST_CASE( test_name_addr_parser )
-{
-  {
-    const auto [ display_name, addr ] = parse_name_addr( "<sip:domain.com>" );
-    BOOST_CHECK( display_name.empty() );
-    BOOST_CHECK_EQUAL( ( CppSip::Message::HostPort{ { "domain.com" }, {} } ), addr.sip_uri.host_port );
-  }
-
-  {
-    const auto [ display_name, addr ] = parse_name_addr( "john doe <sip:domain.com>" );
-    BOOST_CHECK_EQUAL( "john doe ", display_name );
-  }
-}
-
-BOOST_AUTO_TEST_CASE( test_gen_value_parser )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_generic_param_parser )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_tag_param_parser )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_from_to_param_parser )
-{
-}
-
-BOOST_AUTO_TEST_CASE( test_from_to_spec_parser )
-{
-  // test "sip:O.:1763"
-}
 
 BOOST_AUTO_TEST_CASE( test_Call_ID_parser )
 {
@@ -218,6 +58,18 @@ BOOST_AUTO_TEST_CASE( test_CSEQ_parser )
 
 BOOST_AUTO_TEST_CASE( test_From_parser )
 {
+  {
+    const auto [addr, params] = parse_From("From: <sip:domain.com>");
+    BOOST_CHECK(boost::get< CppSipHdr::NameAddr>(&addr));
+    BOOST_CHECK(params.empty());
+  }
+
+  {
+    const auto [addr, params] = parse_From("From: <sip:domain.com>;tag=12345");
+    BOOST_REQUIRE(params.size() == 1);
+    BOOST_CHECK_EQUAL("tag", params[0].param);
+    BOOST_CHECK_EQUAL("12345", *params[0].value);
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
@@ -231,10 +83,56 @@ BOOST_AUTO_TEST_CASE( test_Max_Forwards_parser )
 
 BOOST_AUTO_TEST_CASE( test_To_parser )
 {
+  {
+    const auto [addr, params] = parse_To("To: <sip:domain.com>");
+    BOOST_CHECK(boost::get< CppSipHdr::NameAddr>(&addr));
+    BOOST_CHECK(params.empty());
+  }
+
+  {
+    const auto [addr, params] = parse_To("To: <sip:domain.com>;tag=12345");
+    BOOST_REQUIRE(params.size() == 1);
+    BOOST_CHECK_EQUAL("tag", params[0].param);
+    BOOST_CHECK_EQUAL("12345", *params[0].value);
+  }
 }
 
 BOOST_AUTO_TEST_CASE( test_message_header_parser )
 {
+  {
+    auto header = parse_message_header("Call-ID: 1234567890abcdefg@domain.com\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::CallId>(&header));
+  }
+
+  {
+    auto header = parse_message_header("Content-Length: 1024\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::ContentLength>(&header));
+  }
+
+  {
+    auto header = parse_message_header("Content-Type: application/sdp\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::ContentType>(&header));
+  }
+  
+  {
+    auto header = parse_message_header("CSeq: 12345 INVITE\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::CSeq>(&header));
+  }
+
+  {
+    auto header = parse_message_header("From: <sip:domain.com>;tag=12345\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::From>(&header));
+  }
+
+  {
+    auto header = parse_message_header("Max-Forwards:70\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::MaxForwards>(&header));
+  }
+
+  {
+    auto header = parse_message_header("To: <sip:domain.com>;tag=12345\r\n");
+    BOOST_CHECK(boost::get<CppSipHdr::To>(&header));
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

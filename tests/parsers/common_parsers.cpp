@@ -37,6 +37,7 @@ define_parser(port, CppSipMsg::Port)
 define_parser(h16, std::uint16_t)
 define_parser(IPv4address, CppSipMsg::IPv4Address)
 define_raw_parser(ls32)
+// IPv6reference
 define_raw_parser(IPv6address)
 define_parser(host, CppSipMsg::Host)
 define_parser(hostport, CppSipMsg::HostPort)
@@ -395,6 +396,10 @@ BOOST_AUTO_TEST_CASE( test_IPv6address_parser )
   BOOST_CHECK( parse_IPv6address( "::BBBB" ) );                                //                       "::" h16
   BOOST_CHECK( parse_IPv6address( "FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF::" ) );  // [ *6( h16 ":" ) h16 ] "::"
   BOOST_CHECK( parse_IPv6address( "::" ) );                                    //                       "::"
+}
+
+BOOST_AUTO_TEST_CASE(test_IPv6reference_parser)
+{
 }
 
 BOOST_AUTO_TEST_CASE( test_host_parser )

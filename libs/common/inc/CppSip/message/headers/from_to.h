@@ -17,7 +17,7 @@ namespace Headers
 
 struct FromTo
 {
-  using Param  = boost::variant<GenericParam, Tag>;
+  using Param  = GenericParam;
   using Params = std::vector<Param>;
 
   boost::variant<NameAddr, AddrSpec> addr;

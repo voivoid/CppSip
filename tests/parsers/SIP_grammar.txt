@@ -66,6 +66,8 @@ toplabel         =  ALPHA / ALPHA *( alphanum / "-" ) alphanum
 hostname         =  *( domainlabel "." ) toplabel [ "." ]
 port             =  1*4DIGIT
 
+IPv6reference  =  "[" IPv6address "]"
+
 IPv6address   =                            6( h16 ":" ) ls32
               /                       "::" 5( h16 ":" ) ls32
               / [               h16 ] "::" 4( h16 ":" ) ls32
@@ -85,7 +87,7 @@ dec-octet     = DIGIT                 ; 0-9
               / "2" %x30-34 DIGIT     ; 200-249
               / "25" %x30-35          ; 250-255
 
-host             =  hostname / IPv4address ; / IPv6address (!!!)
+host             =  hostname / IPv4address ; / IPv6reference (!!!)
 hostport         =  host [ ":" port ]
 
 password         =  *( unreserved / escaped / "&" / "=" / "+" / "$" / "," )

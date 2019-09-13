@@ -14,11 +14,6 @@ struct GenericParam
   std::optional<std::string> value;
 };
 
-struct Tag
-{
-  std::string value;
-};
-
 }  // namespace Headers
 }  // namespace Message
 }  // namespace CppSip

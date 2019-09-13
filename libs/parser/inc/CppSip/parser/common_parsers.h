@@ -64,7 +64,7 @@ inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\
 inline const auto quoted_string = ( SWS >> DQUOTE ) > *( qdtext | quoted_pair ) > DQUOTE;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
-inline const auto token = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
+inline const auto token = bsx3::rule<struct _token, std::string>{} = +(alphanum | bsx3::char_("-.!%*_+`'~"));
 
 // mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
 inline const auto mark = bsx3::char_( "-_.!~*'()" );
@@ -172,7 +172,10 @@ inline const auto IPv6address = (                            bsx3::repeat(6)[ h1
 );
 // clang-format on
 
-// host = hostname / IPv4address / IPv6address (!!!)
+// IPv6reference = "[" IPv6address "]"
+inline const auto IPv6reference = '[' > IPv6address > ']';
+
+// host = hostname / IPv4address / IPv6reference (!!!)
 inline const auto host = bsx3::rule<struct _host, CppSip::Message::Host>{} = hostname | IPv4address;
 
 // hostport = host [ ":" port ]

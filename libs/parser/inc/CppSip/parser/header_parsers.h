@@ -11,7 +11,6 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType::Parameter, attri
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::AddrSpec, sip_uri )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::NameAddr, display_name, addr_spec )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::GenericParam, param, value )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Tag, value )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::FromTo, addr, params )
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CallId, id )
@@ -85,13 +84,13 @@ inline const auto generic_param = bsx3::rule<struct _generic_param, CppSip::Mess
                                                                                                                 -( EQUAL > gen_value );
 
 // tag-param = "tag" EQUAL token
-inline const auto tag_param = bsx3::rule<struct _tag_param, CppSip::Message::Headers::Tag>{} =
-    bsx3::no_case[ bsx3::lit( "tag" ) ] > EQUAL > token;
+inline const auto tag_param = bsx3::rule<struct _tag_param, CppSip::Message::Headers::GenericParam>{} = 
+  bsx3::no_case[bsx3::string("tag")] > EQUAL > token;
 
 // from-to-param = tag-param / generic-param
 inline const auto from_to_param = bsx3::rule<struct _from_to_param, CppSip::Message::Headers::FromTo::Param>{} = tag_param | generic_param;
 
-// from-to-spec = ( name-addr / addr-spec ) *( SEMI from-param )
+// from-to-spec = ( name-addr / addr-spec ) *( SEMI from-to-param )
 inline const auto from_to_spec = bsx3::rule<struct _from_to_spec, CppSip::Message::Headers::FromTo>{} = ( name_addr | addr_spec ) >
                                                                                                         *( SEMI > from_to_param );
 
@@ -112,13 +111,13 @@ inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Messag
 inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} =
     bsx3::no_case[ bsx3::lit( "CSeq" ) ] > HCOLON > +DIGIT > LWS > Method;
 
+// From = ( "From" / "f" ) HCOLON from-to-spec
+inline const auto From = bsx3::rule<struct _from, CppSip::Message::Headers::From>{} =
+    (bsx3::no_case[bsx3::lit("From") | 'f'] >> HCOLON) > from_to_spec;
+
 // Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
 inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
     bsx3::no_case[ bsx3::lit( "Max-Forwards" ) ] > HCOLON > bsx3::uint32;
-
-// From = ( "From" / "f" ) HCOLON from-to-spec
-inline const auto From = bsx3::rule<struct _from, CppSip::Message::Headers::From>{} =
-    ( bsx3::no_case[ bsx3::lit( "From" ) | 'f' ] >> HCOLON ) > from_to_spec;
 
 // To = ( "To" / "t" ) HCOLON from-to-spec
 inline const auto To = bsx3::rule<struct _from, CppSip::Message::Headers::To>{} =
@@ -130,7 +129,7 @@ inline const auto To = bsx3::rule<struct _from, CppSip::Message::Headers::To>{} 
  Proxy-Authorization / Proxy-Require / Record-Route / Reply-To / Require / Retry-After / Route / Server / Subject /
  Supported / Timestamp / To / Unsupported / User-Agent / Via / Warning / WWW-Authenticate / extension-header) CRLF (!!!) */
 inline const auto message_header = bsx3::rule<struct _msg_header, CppSip::Message::Header>{} =
-    ( Call_ID | Content_Length | Content_Type | CSeq | Max_Forwards ) > CRLF;
+    ( Call_ID | Content_Length | Content_Type | CSeq | From | Max_Forwards | To ) > CRLF;
 
 
 }  // namespace Parsers
