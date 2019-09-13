@@ -114,7 +114,7 @@ inline const auto Content_Type = bsx3::rule<struct _content_type, CppSip::Messag
 
 // CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
 inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq>{} =
-    bsx3::no_case[ bsx3::lit( "CSeq" ) ] > HCOLON > +DIGIT > LWS > Method;
+    bsx3::no_case[ "CSeq" ] > HCOLON > +DIGIT > LWS > Method;
 
 // From = ( "From" / "f" ) HCOLON from-to-spec
 inline const auto From = bsx3::rule<struct _from, CppSip::Message::Headers::From>{} =
@@ -122,7 +122,7 @@ inline const auto From = bsx3::rule<struct _from, CppSip::Message::Headers::From
 
 // Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
 inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
-    bsx3::no_case[ bsx3::lit( "Max-Forwards" ) ] > HCOLON > bsx3::uint32;
+    bsx3::no_case[ "Max-Forwards" ] > HCOLON > bsx3::uint32;
 
 // To = ( "To" / "t" ) HCOLON from-to-spec
 inline const auto To = bsx3::rule<struct _from, CppSip::Message::Headers::To>{} =
