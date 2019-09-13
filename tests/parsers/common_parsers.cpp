@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE( test_IPv6address_parser )
   BOOST_CHECK( parse_IPv6address( "::" ) );                                    //                       "::"
 }
 
-BOOST_AUTO_TEST_CASE(test_IPv6reference_parser)
+BOOST_AUTO_TEST_CASE( test_IPv6reference_parser )
 {
 }
 

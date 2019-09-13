@@ -16,7 +16,8 @@ namespace CppSip
 namespace Message
 {
 
-using Header = boost::variant<Headers::CallId, Headers::ContentLength, Headers::ContentType, Headers::CSeq, Headers::From, Headers::MaxForwards, Headers::To>;
+using Header = boost::
+    variant<Headers::CallId, Headers::ContentLength, Headers::ContentType, Headers::CSeq, Headers::From, Headers::MaxForwards, Headers::To>;
 
 }
 }  // namespace CppSip
