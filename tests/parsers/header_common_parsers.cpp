@@ -122,9 +122,9 @@ BOOST_AUTO_TEST_CASE(test_media_type_parser)
 BOOST_AUTO_TEST_CASE(test_display_name_parser)
 {
   BOOST_CHECK_EQUAL("name", parse_display_name("\"name\""));
-  BOOST_CHECK_EQUAL("name  ", parse_display_name("name  "));
+  BOOST_CHECK_EQUAL("name", parse_display_name("name  "));
   BOOST_CHECK_EQUAL("cool name", parse_display_name("\"cool\\ name\""));
-  BOOST_CHECK_EQUAL("cool name ", parse_display_name("cool name "));
+  BOOST_CHECK_EQUAL("cool name", parse_display_name("cool name "));
 }
 
 BOOST_AUTO_TEST_CASE(test_addr_spec_parser)
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(test_name_addr_parser)
 
   {
     const auto [display_name, addr] = parse_name_addr("john doe <sip:domain.com>");
-    BOOST_CHECK_EQUAL("john doe ", display_name);
+    BOOST_CHECK_EQUAL("john doe", display_name);
   }
 }
 

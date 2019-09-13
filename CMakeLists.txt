@@ -15,7 +15,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CppSipCxxFlags "-march=native")
 elseif (MSVC)
   set(CppSipWarningFlags "/W3 /WX")
-  set(CppSipCxxFlags "/DNOMINMAX /DWIN32_LEAN_AND_MEAN /MP /permissive- /bigobj")
+  set(CppSipCxxFlags "/DNOMINMAX /DWIN32_LEAN_AND_MEAN /permissive- /bigobj")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CppSipWarningFlags} ${CppSipCxxFlags} ${CMAKE_CXX_FLAGS}")

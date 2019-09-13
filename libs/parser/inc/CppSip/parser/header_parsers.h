@@ -5,6 +5,7 @@
 
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
+#include "boost/algorithm/string/trim.hpp"
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType, type, subtype, parameters )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType::Parameter, attribute, value )
@@ -67,7 +68,11 @@ inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::H
                                                                                                        *( SEMI > m_parameter );
 
 // display-name = *(token LWS)/ quoted-string
-inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = quoted_string | bsx3::raw[ *( token >> LWS ) ];
+inline const auto display_name_raw = bsx3::rule<struct _display_name_raw, std::string>{} = quoted_string | bsx3::raw[*(token >> LWS)];
+inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = display_name_raw[([](auto& ctx) {
+  boost::trim_right(_attr(ctx));
+  _val(ctx) = _attr(ctx);
+  })];
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto addr_spec = bsx3::rule<struct _addr_spec, CppSip::Message::Headers::AddrSpec>{} = SIP_URI | SIPS_URI;
