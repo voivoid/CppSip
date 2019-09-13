@@ -64,7 +64,7 @@ inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\
 inline const auto quoted_string = ( SWS >> DQUOTE ) > *( qdtext | quoted_pair ) > DQUOTE;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
-inline const auto token = bsx3::rule<struct _token, std::string>{} = +(alphanum | bsx3::char_("-.!%*_+`'~"));
+inline const auto token = bsx3::rule<struct _token, std::string>{} = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
 
 // mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
 inline const auto mark = bsx3::char_( "-_.!~*'()" );

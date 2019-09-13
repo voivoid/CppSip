@@ -3,9 +3,9 @@
 #include "CppSip/message/headers/headers.h"
 #include "CppSip/parser/common_parsers.h"
 
+#include "boost/algorithm/string/trim.hpp"
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"
-#include "boost/algorithm/string/trim.hpp"
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType, type, subtype, parameters )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::MediaType::Parameter, attribute, value )
@@ -68,11 +68,11 @@ inline const auto media_type = bsx3::rule<struct _media_type, CppSip::Message::H
                                                                                                        *( SEMI > m_parameter );
 
 // display-name = *(token LWS)/ quoted-string
-inline const auto display_name_raw = bsx3::rule<struct _display_name_raw, std::string>{} = quoted_string | bsx3::raw[*(token >> LWS)];
-inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = display_name_raw[([](auto& ctx) {
-  boost::trim_right(_attr(ctx));
-  _val(ctx) = _attr(ctx);
-  })];
+inline const auto display_name_raw = bsx3::rule<struct _display_name_raw, std::string>{} = quoted_string | bsx3::raw[ *( token >> LWS ) ];
+inline const auto display_name = bsx3::rule<struct _display_name, std::string>{} = display_name_raw[ ( []( auto& ctx ) {
+  boost::trim_right( _attr( ctx ) );
+  _val( ctx ) = _attr( ctx );
+} ) ];
 
 // addr-spec = SIP-URI / SIPS-URI / absoluteURI (!!!)
 inline const auto addr_spec = bsx3::rule<struct _addr_spec, CppSip::Message::Headers::AddrSpec>{} = SIP_URI | SIPS_URI;
@@ -89,8 +89,8 @@ inline const auto generic_param = bsx3::rule<struct _generic_param, CppSip::Mess
                                                                                                                 -( EQUAL > gen_value );
 
 // tag-param = "tag" EQUAL token
-inline const auto tag_param = bsx3::rule<struct _tag_param, CppSip::Message::Headers::GenericParam>{} = 
-  bsx3::no_case[bsx3::string("tag")] > EQUAL > token;
+inline const auto tag_param = bsx3::rule<struct _tag_param, CppSip::Message::Headers::GenericParam>{} =
+    bsx3::no_case[ bsx3::string( "tag" ) ] > EQUAL > token;
 
 // from-to-param = tag-param / generic-param
 inline const auto from_to_param = bsx3::rule<struct _from_to_param, CppSip::Message::Headers::FromTo::Param>{} = tag_param | generic_param;
@@ -118,7 +118,7 @@ inline const auto CSeq = bsx3::rule<struct _cseq, CppSip::Message::Headers::CSeq
 
 // From = ( "From" / "f" ) HCOLON from-to-spec
 inline const auto From = bsx3::rule<struct _from, CppSip::Message::Headers::From>{} =
-    (bsx3::no_case[bsx3::lit("From") | 'f'] >> HCOLON) > from_to_spec;
+    ( bsx3::no_case[ bsx3::lit( "From" ) | 'f' ] >> HCOLON ) > from_to_spec;
 
 // Max-Forwards = "Max-Forwards" HCOLON 1*DIGIT
 inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Message::Headers::MaxForwards>{} =
