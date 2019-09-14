@@ -8,6 +8,7 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/addr.h
                                 inc/CppSip/message/headers/max_forwards.h
                                 inc/CppSip/message/headers/media_type.h
                                 inc/CppSip/message/headers/param.h
+                                inc/CppSip/message/headers/via.h
                                 inc/CppSip/message/request/request.h
                                 inc/CppSip/message/request/request_line.h
                                 inc/CppSip/message/request/request_uri.h
@@ -21,6 +22,7 @@ add_library(CppSipCommon STATIC inc/CppSip/message/headers/addr.h
                                 inc/CppSip/message/sip_uri.h
                                 inc/CppSip/message/sip_uri_header.h
                                 inc/CppSip/message/sip_version.h
+                                inc/CppSip/message/token.h
                                 inc/CppSip/message/userinfo.h)
 
 add_library(CppSip::Common ALIAS CppSipCommon)

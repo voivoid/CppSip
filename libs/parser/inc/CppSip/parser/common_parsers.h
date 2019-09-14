@@ -10,6 +10,7 @@
 #include "CppSip/message/method.h"
 #include "CppSip/message/sip_uri.h"
 #include "CppSip/message/sip_version.h"
+#include "CppSip/message/token.h"
 #include "CppSip/message/userinfo.h"
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::HostPort, host, port )
@@ -38,6 +39,12 @@ inline const auto SWS = -LWS;
 // HCOLON = *( SP / HTAB ) ":" SWS
 inline const auto HCOLON = *( SP | HTAB ) >> ':' >> SWS;
 
+// COLON = SWS ":" SWS ; colon
+inline const auto COLON = ( SWS >> ':' ) > SWS;
+
+// COMMA = SWS "," SWS ; comma
+inline const auto COMMA = ( SWS >> ',' ) > SWS;
+
 // SLASH = SWS "/" SWS; slash
 inline const auto SLASH = ( SWS >> '/' ) > SWS;
 
@@ -54,8 +61,7 @@ inline const auto RAQUOT = '>' >> SWS;
 inline const auto LAQUOT = SWS >> '<';
 
 // quoted-pair = "\" (%x00-09 / %x0B-0C / %x0E-7F)
-inline const auto quoted_pair = '\\' >>
-                                ( bsx3::char_( '\x00', '\x09' ) | bsx3::char_( '\x0B', '\x0C' ) | bsx3::char_( '\x0E', '\x7F' ) );
+inline const auto quoted_pair = '\\' >> ( bsx3::char_( '\x00', '\x09' ) | bsx3::char_( '\x0B', '\x0C' ) | bsx3::char_( '\x0E', '\x7F' ) );
 
 // qdtext = LWS / %x21 / %x23-5B / %x5D-7E / UTF8-NONASCII (!!!)
 inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\x5B' ) | bsx3::char_( '\x5D', '\x7E' );
@@ -64,7 +70,7 @@ inline const auto qdtext = LWS | bsx3::char_( '\x21' ) | bsx3::char_( '\x23', '\
 inline const auto quoted_string = ( SWS >> DQUOTE ) > *( qdtext | quoted_pair ) > DQUOTE;
 
 // token = 1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
-inline const auto token = bsx3::rule<struct _token, std::string>{} = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
+inline const auto token = bsx3::rule<struct _token, CppSip::Message::Token>{} = +( alphanum | bsx3::char_( "-.!%*_+`'~" ) );
 
 // mark = "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
 inline const auto mark = bsx3::char_( "-_.!~*'()" );
@@ -194,12 +200,11 @@ inline const auto user = +( unreserved | escaped | user_unreserved );
 inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserInfo>{} = user >> -( ':' >> password ) >> '@';
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ "sip:" ] >
-                                                                                     bsx3::attr( false ) > -userinfo > hostport > -headers;
+inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ "sip:" ] > bsx3::attr( false ) >
+                                                                                     -userinfo > hostport > -headers;
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ "sips:" ] >
-                                                                                       bsx3::attr( true ) > -userinfo > hostport > -headers;
-
+inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{} = bsx3::no_case[ "sips:" ] > bsx3::attr( true ) >
+                                                                                       -userinfo > hostport > -headers;
 
 }  // namespace Parsers
 }  // namespace CppSip

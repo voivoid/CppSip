@@ -13,6 +13,8 @@ define_parser(alphanum, char)
 define_noattr_parser(LWS)
 define_noattr_parser(SWS)
 define_noattr_parser(HCOLON)
+define_noattr_parser(COLON)
+define_noattr_parser(COMMA)
 define_noattr_parser(SLASH)
 define_noattr_parser(SEMI)
 define_noattr_parser(EQUAL)
@@ -21,7 +23,7 @@ define_noattr_parser(LAQUOT)
 define_parser(quoted_pair, char)
 define_parser(qdtext, char)
 define_parser(quoted_string, std::string)
-define_parser(token, std::string)
+define_parser(token, CppSipMsg::Token)
 define_parser(mark, char)
 define_parser(unreserved, char)
 define_parser(reserved, char)
@@ -99,6 +101,22 @@ BOOST_AUTO_TEST_CASE( test_HCOLON_parser )
   BOOST_CHECK_NO_THROW( parse_HCOLON( " \t: " ) );
 
   BOOST_CHECK_THROW( parse_HCOLON( " " ), std::runtime_error );
+}
+
+BOOST_AUTO_TEST_CASE( test_COMMA_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_COMMA( "," ) );
+  BOOST_CHECK_NO_THROW( parse_COMMA( ", " ) );
+  BOOST_CHECK_NO_THROW( parse_COMMA( " ," ) );
+  BOOST_CHECK_NO_THROW( parse_COMMA( " , " ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_COLON_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_COLON( ":" ) );
+  BOOST_CHECK_NO_THROW( parse_COLON( ": " ) );
+  BOOST_CHECK_NO_THROW( parse_COLON( " :" ) );
+  BOOST_CHECK_NO_THROW( parse_COLON( " : " ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_SLASH_parser )

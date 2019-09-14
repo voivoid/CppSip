@@ -22,8 +22,9 @@ struct IPv4Address
 
 using HostName = std::string;
 
-using Host = boost::variant<HostName, IPv4Address>;
-using Port = std::uint16_t;
+using Host    = boost::variant<HostName, IPv4Address>;
+using Address = boost::variant<IPv4Address>;
+using Port    = std::uint16_t;
 
 struct HostPort
 {

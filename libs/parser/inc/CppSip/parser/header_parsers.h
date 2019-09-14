@@ -13,6 +13,13 @@ BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::AddrSpec, sip_uri )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::NameAddr, display_name, addr_spec )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::GenericParam, param, value )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::FromTo, addr, params )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Protocol, name, version, transport )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::TTL, ttl )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::MAddr, host )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Received, address )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Branch, branch )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Extension, ext )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via, params )
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::CallId, id )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::ContentLength, length )
@@ -99,6 +106,55 @@ inline const auto from_to_param = bsx3::rule<struct _from_to_param, CppSip::Mess
 inline const auto from_to_spec = bsx3::rule<struct _from_to_spec, CppSip::Message::Headers::FromTo>{} = ( name_addr | addr_spec ) >
                                                                                                         *( SEMI > from_to_param );
 
+// protocol-name = "SIP" / token
+inline const auto protocol_name = token;
+
+// protocol-version = token
+inline const auto protocol_version = token;
+
+// other-transport = token
+inline const auto other_transport = token;
+
+// transport = "UDP" / "TCP" / "TLS" / "SCTP" / other-transport
+inline const auto transport = token | other_transport;
+
+// sent-protocol = protocol-name SLASH protocol-version SLASH transport
+inline const auto sent_protocol = protocol_name > SLASH > protocol_version > SLASH > transport;
+
+// sent-by = host [ COLON port ]
+inline const auto sent_by = host >> -( COLON > port );
+
+// ttl = 1*3DIGIT ; 0 to 255
+inline const auto ttl = bsx3::uint8;
+
+// via-extension = generic-param
+inline const auto via_extension = bsx3::rule<struct _via_extension, CppSip::Message::Headers::Via::Extension>{ "via-extension" } =
+    generic_param;
+
+// via-branch = "branch" EQUAL token
+inline const auto via_branch = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::Branch>{ "via-branch" } =
+    bsx3::no_case[ "branch" ] > EQUAL > token;
+
+// via-received = "received" EQUAL (IPv4address / IPv6address)
+inline const auto via_received = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::Received>{ "via-received" } =
+    bsx3::no_case[ "received" ] > EQUAL > IPv4address;  // IPv6address (!!!)
+
+// via-maddr = "maddr" EQUAL host
+inline const auto via_maddr = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::MAddr>{ "via-maddr" } =
+    bsx3::no_case[ "maddr" ] > EQUAL > host;
+
+// via-ttl = "ttl" EQUAL ttl
+inline const auto via_ttl = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::TTL>{ "via-ttl" } =
+    bsx3::no_case[ "ttl" ] > EQUAL > ttl;
+
+// via-params = via-ttl / via-maddr / via-received / via-branch / via-extension
+inline const auto via_params = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::Param>{ "via-param" } =
+    via_ttl | via_maddr | via_received | via_branch | via_extension;
+
+// via-parm = sent-protocol LWS sent-by *( SEMI via-params )
+inline const auto via_param = sent_protocol > LWS > sent_by > *( SEMI > via_params );
+
+
 
 // Call-ID = ( "Call-ID" / "i" ) HCOLON callid
 inline const auto Call_ID = bsx3::rule<struct _callid, CppSip::Message::Headers::CallId>{} =
@@ -127,6 +183,9 @@ inline const auto Max_Forwards = bsx3::rule<struct _max_forwards, CppSip::Messag
 // To = ( "To" / "t" ) HCOLON from-to-spec
 inline const auto To = bsx3::rule<struct _from, CppSip::Message::Headers::To>{} =
     ( bsx3::no_case[ bsx3::lit( "To" ) | 't' ] >> HCOLON ) > from_to_spec;
+
+// Via = ( "Via" / "v" ) HCOLON via-parm *(COMMA via-parm)
+inline const auto Via = ( bsx3::no_case[ bsx3::lit( "Via" ) | 'v' ] >> HCOLON ) > via_param > *( COMMA > via_param );
 
 /* message-header = (Accept / Accept-Encoding / Accept-Language / Alert-Info / Allow / Authentication-Info / Authorization / Call-ID /
  Call-Info / Contact / Content-Disposition / Content-Encoding / Content-Language / Content-Length / Content-Type / CSeq / Date / Error-Info

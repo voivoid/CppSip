@@ -4,20 +4,22 @@
 
 #include "parsers/utils.h"
 
-namespace CppSipHdr = CppSip::Message::Headers;
+namespace CppSipMsg = CppSip::Message;
+namespace CppSipHdr = CppSipMsg::Headers;
+
 
 namespace
 {
 
 // clang-format off
-define_parser(ietf_token, std::string)
-define_parser(iana_token, std::string)
-define_parser(x_token, std::string)
-define_parser(extension_token, std::string)
-define_parser(m_subtype, std::string)
-define_parser(discrete_type, std::string)
-define_parser(composite_type, std::string)
-define_parser(m_type, std::string)
+define_parser(ietf_token, CppSipMsg::Token)
+define_parser(iana_token, CppSipMsg::Token)
+define_parser(x_token, CppSipMsg::Token)
+define_parser(extension_token, CppSipMsg::Token)
+define_parser(m_subtype, CppSipMsg::Token)
+define_parser(discrete_type, CppSipMsg::Token)
+define_parser(composite_type, CppSipMsg::Token)
+define_parser(m_type, CppSipMsg::Token)
 define_parser(m_value, std::string)
 define_parser(m_attribute, std::string)
 define_parser(m_parameter, CppSipHdr::MediaType::Parameter)
@@ -30,6 +32,11 @@ define_parser(generic_param, CppSipHdr::GenericParam)
 define_parser(tag_param, CppSipHdr::GenericParam)
 define_parser(from_to_param, CppSipHdr::FromTo::Param)
 define_parser(from_to_spec, CppSipHdr::FromTo)
+define_parser(protocol_name, CppSipMsg::Token)
+define_parser(protocol_version, CppSipMsg::Token)
+define_parser(other_transport, CppSipMsg::Token)
+define_parser(transport, CppSipMsg::Token)
+
 // clang-format on
 
 }  // namespace

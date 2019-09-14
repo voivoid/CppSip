@@ -8,6 +8,7 @@
 #include "CppSip/message/headers/from_to.h"
 #include "CppSip/message/headers/max_forwards.h"
 #include "CppSip/message/headers/param.h"
+#include "CppSip/message/headers/via.h"
 
 #include "boost/variant.hpp"
 

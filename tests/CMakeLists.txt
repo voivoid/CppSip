@@ -41,8 +41,9 @@ if(UNIX AND CPPSIP_PARSER_ABNFGEN_TESTS)
     userinfo SIP-URI SIPS-URI
     # HEADERS
     ietf-token iana-token x-token m-subtype extension-token discrete-type composite-type m-attribute m-type m-value m-parameter media-type display-name addr-spec
-    name-addr generic-param gen-value tag-param from-param from-spec to-param
-    Call-ID Content-Length Content-Type CSeq From Max-Forwards To message-header
+    name-addr generic-param gen-value tag-param from-param from-spec to-param protocol-name protocol-version other-transport transport sent-protocol sent-by ttl
+    via-extension via-branch via-received via-maddr via-ttl via-params via-parm
+    Call-ID Content-Length Content-Type CSeq From Max-Forwards To Via message-header
     # REQUEST
     Request-URI Request-Line Request
     # RESPONSE

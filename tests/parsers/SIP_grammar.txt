@@ -17,7 +17,9 @@ alphanum  =  ALPHA / DIGIT
 
 LWS  =  [*WSP CRLF] 1*WSP ; linear whitespace
 SWS  =  [LWS] ; sep whitespace
-HCOLON  =  *( SP / HTAB ) ":" SWS
+COLON   = SWS ":" SWS ; colon
+COMMA   = SWS "," SWS ; comma
+HCOLON  = *( SP / HTAB ) ":" SWS
 
 SLASH   =  SWS "/" SWS ; slash
 SEMI    =  SWS ";" SWS ; semicolon
@@ -95,9 +97,22 @@ userinfo         =  ( user ) [ ":" password ] "@" ; telephone-subscriber (!!!)
 user             =  1*( unreserved / escaped / user-unreserved )
 user-unreserved  =  "&" / "=" / "+" / "$" / "," / ";" / "?" / "/"
 
-
 SIP-URI          =  "sip:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
 SIPS-URI         =  "sips:" [ userinfo ] hostport [ headers ] ; uri-parameters (!!!)
+
+sent-protocol     =  protocol-name SLASH protocol-version
+                     SLASH transport
+protocol-name     =  "SIP" / token
+protocol-version  =  token
+transport         =  "UDP" / "TCP" / "TLS" / "SCTP"
+                     / other-transport
+other-transport = token
+sent-by           = host [ COLON port ]
+ttl               = DIGIT                 ; 0-9
+                  / %x31-39 DIGIT         ; 10-99
+                  / "1" 2DIGIT            ; 100-199
+                  / "2" %x30-34 DIGIT     ; 200-249
+                  / "25" %x30-35          ; 250-255
 
 ;;;;; SIP Headers
 
@@ -125,13 +140,24 @@ from-spec   =  ( name-addr / addr-spec )
                *( SEMI from-param )
 to-param  =  tag-param / generic-param
 
-Call-ID  =  ( "Call-ID" / "i" ) HCOLON callid
-Content-Length  =  ( "Content-Length" / "l" ) HCOLON 1*9DIGIT
-Content-Type     =  ( "Content-Type" / "c" ) HCOLON media-type
-CSeq  =  "CSeq" HCOLON 1*DIGIT LWS Method
-From        =  ( "From" / "f" ) HCOLON from-spec
-Max-Forwards  =  "Max-Forwards" HCOLON 1*9DIGIT
-To        =  ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
+via-parm          =  sent-protocol LWS sent-by *( SEMI via-params )
+via-params        =  via-ttl / via-maddr
+                     / via-received / via-branch
+                     / via-extension
+via-ttl           =  "ttl" EQUAL ttl
+via-maddr         =  "maddr" EQUAL host
+via-received      =  "received" EQUAL (IPv4address) ; IPv6address (!!!)
+via-branch        =  "branch" EQUAL token
+via-extension     =  generic-param
+
+Call-ID        = ( "Call-ID" / "i" ) HCOLON callid
+Content-Length = ( "Content-Length" / "l" ) HCOLON 1*9DIGIT
+Content-Type   = ( "Content-Type" / "c" ) HCOLON media-type
+CSeq           = "CSeq" HCOLON 1*DIGIT LWS Method
+From           = ( "From" / "f" ) HCOLON from-spec
+Max-Forwards   = "Max-Forwards" HCOLON 1*9DIGIT
+To             = ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-param )
+Via            = ( "Via" / "v" ) HCOLON via-parm *(COMMA via-parm)
 
 message-header = ( Call-ID /
                    Content-Length /
