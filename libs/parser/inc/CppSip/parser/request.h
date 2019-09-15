@@ -2,9 +2,9 @@
 
 #include "CppSip/message/request/request.h"
 
-#include "CppSip/parser/abnf_core_parsers.h"
-#include "CppSip/parser/common_parsers.h"
-#include "CppSip/parser/header_parsers.h"
+#include "CppSip/parser/abnf_core.h"
+#include "CppSip/parser/common.h"
+#include "CppSip/parser/header.h"
 
 #include "boost/fusion/include/adapt_struct.hpp"
 #include "boost/spirit/home/x3.hpp"

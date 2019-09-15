@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CppSip/message/message.h"
-#include "CppSip/parser/request_parsers.h"
-#include "CppSip/parser/response_parsers.h"
+#include "CppSip/parser/request.h"
+#include "CppSip/parser/response.h"
 
 #include "boost/spirit/home/x3.hpp"
 

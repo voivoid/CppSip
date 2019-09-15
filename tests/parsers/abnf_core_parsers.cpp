@@ -1,6 +1,6 @@
 #include "boost/test/unit_test.hpp"
 
-#include "CppSip/parser/abnf_core_parsers.h"
+#include "CppSip/parser/abnf_core.h"
 
 #include "parsers/utils.h"
 

@@ -1,6 +1,6 @@
 #include "boost/test/unit_test.hpp"
 
-#include "CppSip/parser/header_parsers.h"
+#include "CppSip/parser/header.h"
 
 #include "parsers/utils.h"
 

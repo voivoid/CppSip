@@ -1,7 +1,8 @@
 #pragma once
 
 #include "CppSip/message/headers/headers.h"
-#include "CppSip/parser/common_parsers.h"
+#include "CppSip/parser/abnf_core.h"
+#include "CppSip/parser/common.h"
 
 #include "boost/algorithm/string/trim.hpp"
 #include "boost/fusion/include/adapt_struct.hpp"
