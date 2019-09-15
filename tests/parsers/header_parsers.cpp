@@ -10,14 +10,15 @@ namespace
 {
 
 // clang-format off
-define_parser(Call_ID, CppSipHdr::CallId)
-define_parser(Content_Length, CppSipHdr::ContentLength)
-define_parser(Content_Type, CppSipHdr::ContentType)
-define_parser(CSeq, CppSipHdr::CSeq)
-define_parser(From, CppSipHdr::From)
-define_parser(Max_Forwards, CppSipHdr::MaxForwards)
-define_parser(To, CppSipHdr::To)
-define_parser(message_header, CppSip::Message::Header)
+define_parser( Call_ID, CppSipHdr::CallId )
+define_parser( Content_Length, CppSipHdr::ContentLength )
+define_parser( Content_Type, CppSipHdr::ContentType )
+define_parser( CSeq, CppSipHdr::CSeq )
+define_parser( From, CppSipHdr::From )
+define_parser( Max_Forwards, CppSipHdr::MaxForwards )
+define_parser( To, CppSipHdr::To )
+define_parser( Via, CppSipHdr::Via )
+define_parser( message_header, CppSip::Message::Header )
 // clang-format on
 
 }  // namespace
@@ -97,6 +98,10 @@ BOOST_AUTO_TEST_CASE( test_To_parser )
   }
 }
 
+BOOST_AUTO_TEST_CASE( test_Via_parser )
+{
+}
+
 BOOST_AUTO_TEST_CASE( test_message_header_parser )
 {
   {
@@ -132,6 +137,11 @@ BOOST_AUTO_TEST_CASE( test_message_header_parser )
   {
     auto header = parse_message_header( "To: <sip:domain.com>;tag=12345\r\n" );
     BOOST_CHECK( boost::get<CppSipHdr::To>( &header ) );
+  }
+
+  {
+    auto header = parse_message_header( "Via: SIP/2.0/UDP domain.com;branch=abc123\r\n" );
+    BOOST_CHECK( boost::get<CppSipHdr::Via>( &header ) );
   }
 }
 

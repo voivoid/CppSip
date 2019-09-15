@@ -11,8 +11,8 @@ namespace Message
 
 struct SipVersion
 {
-  std::uint32_t major;
-  std::uint32_t minor;
+  std::uint8_t major;
+  std::uint8_t minor;
 };
 
 }  // namespace Message

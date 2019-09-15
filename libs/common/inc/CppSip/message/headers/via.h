@@ -18,15 +18,15 @@ namespace Message
 namespace Headers
 {
 
-struct Protocol
-{
-  std::string name;
-  std::string version;
-  std::string transport;
-};
-
 struct Via
 {
+  struct Protocol
+  {
+    std::string name;
+    std::string version;
+    std::string transport;
+  };
+
   struct TTL
   {
     std::uint8_t ttl;
@@ -52,8 +52,16 @@ struct Via
     GenericParam ext;
   };
 
-  using Param = boost::variant<TTL, MAddr, Received, Branch, Extension>;
-  std::vector<Param> params;
+  struct Param
+  {
+    Protocol protocol;
+    HostPort by;
+
+    using Type = boost::variant<TTL, MAddr, Received, Branch, Extension>;
+    std::vector<Type> params;
+  };
+
+  std::vector<Param> vias;
 };
 
 }  // namespace Headers

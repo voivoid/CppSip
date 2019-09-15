@@ -98,7 +98,7 @@ inline const auto Method = get_Method_parser();
 
 // SIP-Version = "SIP" "/" 1*DIGIT "." 1*DIGIT
 inline const auto SIP_Version = bsx3::rule<struct _sip_version, CppSip::Message::SipVersion>{} =
-    bsx3::no_case[ "SIP/" ] >> bsx3::uint32 >> '.' >> bsx3::uint32;
+    bsx3::no_case[ "SIP/" ] >> bsx3::uint8 >> '.' >> bsx3::uint8;
 
 // word = 1*( alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" / "(" / ")" / "<" / ">" / ":" / "\" / DQUOTE / "/" / "["
 // / "]" / "?" / "{" / "}" )

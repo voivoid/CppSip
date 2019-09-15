@@ -46,7 +46,7 @@ BYEm              =  %x42.59.45 ; BYE in caps
 CANCELm           =  %x43.41.4E.43.45.4C ; CANCEL in caps
 REGISTERm         =  %x52.45.47.49.53.54.45.52 ; REGISTER in caps
 
-SIP-Version    =  "SIP" "/" 1*9DIGIT "." 1*9DIGIT
+SIP-Version    =  "SIP" "/" dec-octet "." dec-octet
 
 word        =  1*(alphanum / "-" / "." / "!" / "%" / "*" /
                "_" / "+" / "`" / "'" / "~" /
@@ -108,11 +108,7 @@ transport         =  "UDP" / "TCP" / "TLS" / "SCTP"
                      / other-transport
 other-transport = token
 sent-by           = host [ COLON port ]
-ttl               = DIGIT                 ; 0-9
-                  / %x31-39 DIGIT         ; 10-99
-                  / "1" 2DIGIT            ; 100-199
-                  / "2" %x30-34 DIGIT     ; 200-249
-                  / "25" %x30-35          ; 250-255
+ttl               = dec-octet
 
 ;;;;; SIP Headers
 
