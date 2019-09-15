@@ -1,8 +1,15 @@
 add_executable(CppSipTests main.cpp
+                           parsers/headers/headers_common_parsers.cpp
+                           parsers/headers/headers_parsers.cpp
+                           parsers/headers/call_id_parsers.cpp
+                           parsers/headers/content_length_parsers.cpp
+                           parsers/headers/content_type_parsers.cpp
+                           parsers/headers/cseq_parsers.cpp
+                           parsers/headers/from_to_parsers.cpp
+                           parsers/headers/max_forward_parsers.cpp
+                           parsers/headers/via_parsers.cpp
                            parsers/abnf_core_parsers.cpp
                            parsers/common_parsers.cpp
-                           parsers/header_common_parsers.cpp
-                           parsers/header_parsers.cpp
                            parsers/message_parser.cpp
                            parsers/request_parsers.cpp
                            parsers/response_parsers.cpp

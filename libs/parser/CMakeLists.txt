@@ -1,4 +1,12 @@
-add_library(CppSipParser inc/CppSip/parser/abnf_core.h
+add_library(CppSipParser inc/CppSip/parser/headers/common.h
+                         inc/CppSip/parser/headers/call_id.h
+                         inc/CppSip/parser/headers/content_length.h
+                         inc/CppSip/parser/headers/content_type.h
+                         inc/CppSip/parser/headers/cseq.h
+                         inc/CppSip/parser/headers/from_to.h
+                         inc/CppSip/parser/headers/max_forwards.h
+                         inc/CppSip/parser/headers/via.h
+                         inc/CppSip/parser/abnf_core.h
                          inc/CppSip/parser/common.h
                          inc/CppSip/parser/header.h
                          inc/CppSip/parser/message.h
