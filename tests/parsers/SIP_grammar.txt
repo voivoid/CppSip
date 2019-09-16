@@ -23,6 +23,7 @@ HCOLON  = *( SP / HTAB ) ":" SWS
 
 SLASH   =  SWS "/" SWS ; slash
 SEMI    =  SWS ";" SWS ; semicolon
+STAR    =  SWS "*" SWS ; asterisk
 EQUAL   =  SWS "=" SWS ; equal
 RAQUOT  =  ">" SWS ; right angle quote
 LAQUOT  =  SWS "<"; left angle quote
@@ -146,7 +147,19 @@ via-received      =  "received" EQUAL (IPv4address) ; IPv6address (!!!)
 via-branch        =  "branch" EQUAL token
 via-extension     =  generic-param
 
+contact-param  =  (name-addr / addr-spec) *(SEMI contact-params)
+
+qvalue         =  ( "0" [ "." 0*3DIGIT ] ) / ( "1" [ "." 0*3("0") ] )
+
+contact-params     =  c-p-q / c-p-expires
+                      / contact-extension
+c-p-q              =  "q" EQUAL qvalue
+c-p-expires        =  "expires" EQUAL delta-seconds
+contact-extension  =  generic-param
+delta-seconds      =  1*DIGIT
+
 Call-ID        = ( "Call-ID" / "i" ) HCOLON callid
+Contact        =  ("Contact" / "m" ) HCOLON ( STAR / (contact-param *(COMMA contact-param)))
 Content-Length = ( "Content-Length" / "l" ) HCOLON 1*9DIGIT
 Content-Type   = ( "Content-Type" / "c" ) HCOLON media-type
 CSeq           = "CSeq" HCOLON 1*DIGIT LWS Method
@@ -159,7 +172,10 @@ message-header = ( Call-ID /
                    Content-Length /
                    Content-Type /
                    CSeq /
-                   Max-Forwards ) CRLF ; extension-header (!!!)
+                   From /
+                   Max-Forwards /
+                   To /
+                   Via ) CRLF ; extension-header (!!!)
 
 ;;;;; SIP Request
 

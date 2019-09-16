@@ -1,5 +1,6 @@
 add_library(CppSipParser inc/CppSip/parser/headers/common.h
                          inc/CppSip/parser/headers/call_id.h
+                         inc/CppSip/parser/headers/contact.h
                          inc/CppSip/parser/headers/content_length.h
                          inc/CppSip/parser/headers/content_type.h
                          inc/CppSip/parser/headers/cseq.h

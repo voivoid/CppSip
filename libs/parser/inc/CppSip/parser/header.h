@@ -3,6 +3,7 @@
 #include "CppSip/message/headers/headers.h"
 
 #include "CppSip/parser/headers/call_id.h"
+#include "CppSip/parser/headers/contact.h"
 #include "CppSip/parser/headers/content_length.h"
 #include "CppSip/parser/headers/content_type.h"
 #include "CppSip/parser/headers/cseq.h"

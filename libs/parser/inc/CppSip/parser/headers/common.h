@@ -38,5 +38,7 @@ inline const auto generic_param = bsx3::rule<struct _generic_param, CppSip::Mess
   "generic-param"
 } = token > -( EQUAL > gen_value );
 
+// qvalue         =  ( "0" [ "." 0*3DIGIT ] ) / ( "1" [ "." 0*3("0") ] )
+
 }  // namespace Parsers
 }  // namespace CppSip
