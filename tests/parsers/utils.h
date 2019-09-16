@@ -12,7 +12,7 @@
 template <typename Attr, typename Parser>
 Attr parse( Parser parser, const std::string_view input )
 {
-  Attr attr;
+  Attr attr = {};
 
   auto begin = input.begin();
   auto end   = input.end();

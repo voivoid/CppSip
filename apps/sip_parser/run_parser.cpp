@@ -23,8 +23,9 @@ bool parse_stdin( const Parser& parser )
       return false;
     }
   }
-  catch ( const boost::spirit::x3::expectation_failure<boost::spirit::istream_iterator>& )
+  catch ( const boost::spirit::x3::expectation_failure<boost::spirit::istream_iterator>& /*ex*/ )
   {
+//  std::cout << "!!!!!!!!" << std::endl << ex.which() << std::endl << std::string( ex.where(), boost::spirit::istream_iterator() ) << std::endl;
     throw;
   }
 

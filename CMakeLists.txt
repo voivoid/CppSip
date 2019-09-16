@@ -6,10 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#BOOST_SPIRIT_X3_DEBUG
-
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set(CppSipWarningFlags "-Wall -Wextra -Wpedantic -Werror -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wshadow -Wformat=2 -Wconversion -Wsign-conversion -Wfloat-equal -Wcast-qual -Winit-self -Wpointer-arith -Wswitch -Wswitch-enum -Woverloaded-virtual -Wundef")
+  set(CppSipCxxFlags "-march=native")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CppSipWarningFlags "-Wall -Wextra -Wpedantic -Werror -Wnull-dereference -Wold-style-cast -Wdouble-promotion -Wshadow -Wformat=2 -Wconversion -Wsign-conversion -Wfloat-equal -Wcast-qual -Winit-self -Wpointer-arith")
   set(CppSipCxxFlags "-march=native")
@@ -18,6 +17,7 @@ elseif (MSVC)
   set(CppSipCxxFlags "/DNOMINMAX /DWIN32_LEAN_AND_MEAN /permissive- /bigobj")
 endif()
 
+#-DBOOST_SPIRIT_X3_DEBUG
 set(CMAKE_CXX_FLAGS "${CppSipWarningFlags} ${CppSipCxxFlags} ${CMAKE_CXX_FLAGS}")
 
 

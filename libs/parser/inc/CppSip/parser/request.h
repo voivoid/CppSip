@@ -21,10 +21,10 @@ namespace Parsers
 namespace bsx3 = boost::spirit::x3;
 
 // Request-URI = SIP-URI / SIPS-URI / absoluteURI (!!!)
-inline const auto Request_URI = bsx3::rule<struct _request_uri, CppSip::Message::RequestUri>{} = SIP_URI | SIPS_URI;
+inline const auto Request_URI = bsx3::rule<struct _request_uri, CppSip::Message::RequestUri>{ "Request_URI" } = SIP_URI | SIPS_URI;
 
 // Request-Line = Method SP Request-URI SP SIP-Version CRLF
-inline const auto Request_Line = bsx3::rule<struct _request_line, CppSip::Message::RequestLine>{} =
+inline const auto Request_Line = bsx3::rule<struct _request_line, CppSip::Message::RequestLine>{ "Request_Line" } =
     Method > SP > Request_URI > SP > SIP_Version > CRLF;
 
 // Request = Request-Line *(message-header) CRLF [message-body] (!!!)

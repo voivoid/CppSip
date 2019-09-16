@@ -23,7 +23,7 @@ namespace Parsers
  / Expires / From / In-Reply-To / Max-Forwards / MIME-Version / Min-Expires / Organization / Priority / Proxy-Authenticate /
  Proxy-Authorization / Proxy-Require / Record-Route / Reply-To / Require / Retry-After / Route / Server / Subject /
  Supported / Timestamp / To / Unsupported / User-Agent / Via / Warning / WWW-Authenticate / extension-header) CRLF (!!!) */
-inline const auto message_header = bsx3::rule<struct _msg_header, CppSip::Message::Header>{} =
+inline const auto message_header = bsx3::rule<struct _msg_header, CppSip::Message::Header>{ "message_header" } =
     ( Call_ID | Content_Length | Content_Type | CSeq | From | Max_Forwards | To | Via ) > CRLF;
 
 

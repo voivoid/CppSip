@@ -38,18 +38,18 @@ inline bool is_valid_status_code( const std::uint16_t s )
 namespace bsx3 = boost::spirit::x3;
 
 // Reason-Phrase = *(reserved / unreserved / escaped / UTF8-NONASCII / UTF8-CONT / SP / HTAB) (!!!)
-inline const auto Reason_Phrase = bsx3::rule<struct _reason_phrase, std::string>{} = *( reserved | unreserved | escaped | SP | HTAB );
+inline const auto Reason_Phrase = bsx3::rule<struct _reason_phrase, std::string>{ "Reason_Phrase" } = *( reserved | unreserved | escaped | SP | HTAB );
 
 // Status-Code = Informational / Redirection / Success / Client-Error / Server-Error / Global-Failure / extension-code (!!!)
 inline const auto Status_Code =
     bsx3::uint_parser<std::uint16_t, 10, 3, 3>{}[ ( []( auto& ctx ) { _pass( ctx ) = Details::is_valid_status_code( _attr( ctx ) ); } ) ];
 
 // Status-Line = SIP-Version SP Status-Code SP Reason-Phrase CRLF
-inline const auto Status_Line = bsx3::rule<struct _status_line, CppSip::Message::StatusLine>{} %=
+inline const auto Status_Line = bsx3::rule<struct _status_line, CppSip::Message::StatusLine>{ "Status_Line" } %=
     SIP_Version > SP > Status_Code > SP > Reason_Phrase > CRLF;
 
 // Response = Status-Line *( message-header ) CRLF [ message-body ] (!!!)
-inline const auto Response = bsx3::rule<struct _response, CppSip::Message::Response>{} = Status_Line > *message_header > CRLF;
+inline const auto Response = bsx3::rule<struct _response, CppSip::Message::Response>{ "Response" } = Status_Line > *message_header > CRLF;
 
 }  // namespace Parsers
 }  // namespace CppSip
