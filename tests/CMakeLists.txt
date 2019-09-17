@@ -2,6 +2,7 @@ add_executable(CppSipTests main.cpp
                            parsers/headers/headers_common_parsers.cpp
                            parsers/headers/headers_parsers.cpp
                            parsers/headers/call_id_parsers.cpp
+                           parsers/headers/contact_parsers.cpp
                            parsers/headers/content_length_parsers.cpp
                            parsers/headers/content_type_parsers.cpp
                            parsers/headers/cseq_parsers.cpp

@@ -16,6 +16,7 @@ define_parser(addr_spec, CppSipHdr::AddrSpec)
 define_parser(name_addr, CppSipHdr::NameAddr)
 define_parser(gen_value, std::string)
 define_parser(generic_param, CppSipHdr::GenericParam)
+define_parser(qvalue, std::string)
 // clang-format on
 
 }  // namespace

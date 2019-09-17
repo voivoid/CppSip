@@ -38,9 +38,10 @@ inline const auto generic_param = bsx3::rule<struct _generic_param, CppSip::Mess
   "generic-param"
 } = token > -( EQUAL > gen_value );
 
-// qvalue         =  ( "0" [ "." 0*3DIGIT ] ) / ( "1" [ "." 0*3("0") ] )
-inline const auto qvalue = ( bsx3::char_( '0' ) > -( bsx3::lit( '.' ) > bsx3::repeat( 0, 3 )[ DIGIT ] ) ) |
-                           ( bsx3::char_( '1' ) > -( bsx3::lit( '.' ) > bsx3::repeat( 0, 3 )[ bsx3::char_( '0' ) ] ) );
+// qvalue = ( "0" [ "." 0*3DIGIT ] ) / ( "1" [ "." 0*3("0") ] )
+inline const auto qvalue = bsx3::rule<struct _qvalue, std::string>{ "qvalue" } =
+    ( bsx3::char_( '0' ) > -( bsx3::lit( '.' ) > bsx3::repeat( 0, 3 )[ DIGIT ] ) ) |
+    ( bsx3::char_( '1' ) > -( bsx3::lit( '.' ) > bsx3::repeat( 0, 3 )[ bsx3::char_( '0' ) ] ) );
 
 }  // namespace Parsers
 }  // namespace CppSip

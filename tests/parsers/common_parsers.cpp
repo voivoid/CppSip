@@ -17,6 +17,7 @@ define_noattr_parser(COLON)
 define_noattr_parser(COMMA)
 define_noattr_parser(SLASH)
 define_noattr_parser(SEMI)
+define_noattr_parser(STAR)
 define_noattr_parser(EQUAL)
 define_noattr_parser(RAQUOT)
 define_noattr_parser(LAQUOT)
@@ -133,6 +134,14 @@ BOOST_AUTO_TEST_CASE( test_SEMI_parser )
   BOOST_CHECK_NO_THROW( parse_SEMI( "; " ) );
   BOOST_CHECK_NO_THROW( parse_SEMI( " ;" ) );
   BOOST_CHECK_NO_THROW( parse_SEMI( " ; " ) );
+}
+
+BOOST_AUTO_TEST_CASE( test_STAR_parser )
+{
+  BOOST_CHECK_NO_THROW( parse_STAR( "*" ) );
+  BOOST_CHECK_NO_THROW( parse_STAR( "* " ) );
+  BOOST_CHECK_NO_THROW( parse_STAR( " *" ) );
+  BOOST_CHECK_NO_THROW( parse_STAR( " * " ) );
 }
 
 BOOST_AUTO_TEST_CASE( test_EQUAL_parser )
