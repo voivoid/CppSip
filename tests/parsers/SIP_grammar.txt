@@ -32,6 +32,8 @@ quoted-pair  =  "\" (%x01-09 / %x0B-0C / %x0E-7F)
 
 quoted-string  =  SWS DQUOTE *(qdtext / quoted-pair ) DQUOTE
 qdtext         =  LWS / %x21 / %x23-5B / %x5D-7E ; / UTF8-NONASCII (!!!)
+qvalue         =  ( "0" [ "." 0*3DIGIT ] )
+                  / ( "1" [ "." 0*3("0") ] )
 
 token       =  1*(alphanum / "-" / "." / "!" / "%" / "*" / "_" / "+" / "`" / "'" / "~" )
 mark        =  "-" / "_" / "." / "!" / "~" / "*" / "'" / "(" / ")"
@@ -148,15 +150,12 @@ via-branch        =  "branch" EQUAL token
 via-extension     =  generic-param
 
 contact-param  =  (name-addr / addr-spec) *(SEMI contact-params)
-
-qvalue         =  ( "0" [ "." 0*3DIGIT ] ) / ( "1" [ "." 0*3("0") ] )
-
 contact-params     =  c-p-q / c-p-expires
                       / contact-extension
 c-p-q              =  "q" EQUAL qvalue
 c-p-expires        =  "expires" EQUAL delta-seconds
 contact-extension  =  generic-param
-delta-seconds      =  1*DIGIT
+delta-seconds      =  1*9DIGIT
 
 Call-ID        = ( "Call-ID" / "i" ) HCOLON callid
 Contact        =  ("Contact" / "m" ) HCOLON ( STAR / (contact-param *(COMMA contact-param)))

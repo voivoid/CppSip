@@ -51,6 +51,9 @@ inline const auto SLASH = ( SWS >> '/' ) > SWS;
 // SEMI = SWS ";" SWS; semicolon
 inline const auto SEMI = ( SWS >> ';' ) > SWS;
 
+// STAR = SWS "*" SWS ; asterisk
+inline const auto STAR = ( SWS >> '*' ) > SWS;
+
 // EQUAL = SWS "=" SWS; equal
 inline const auto EQUAL = ( SWS >> '=' ) > SWS;
 

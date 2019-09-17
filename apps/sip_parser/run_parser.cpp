@@ -25,8 +25,6 @@ bool parse_stdin( const Parser& parser )
   }
   catch ( const boost::spirit::x3::expectation_failure<boost::spirit::istream_iterator>& /*ex*/ )
   {
-    //  std::cout << "!!!!!!!!" << std::endl << ex.which() << std::endl << std::string( ex.where(), boost::spirit::istream_iterator() ) <<
-    //  std::endl;
     throw;
   }
 
@@ -69,6 +67,7 @@ const auto& get_parse_map()
 
     CPPSIP_PARSER_ITEM( SLASH ),
     CPPSIP_PARSER_ITEM( SEMI ),
+    CPPSIP_PARSER_ITEM( STAR ),
     CPPSIP_PARSER_ITEM( EQUAL ),
     CPPSIP_PARSER_ITEM( RAQUOT ),
     CPPSIP_PARSER_ITEM( LAQUOT ),
@@ -76,6 +75,7 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-pair", quoted_pair ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "quoted-string", quoted_string ),
     CPPSIP_PARSER_ITEM( qdtext ),
+    CPPSIP_PARSER_ITEM( qvalue ),
 
     CPPSIP_PARSER_ITEM( token ),
     CPPSIP_PARSER_ITEM( mark ),
@@ -146,9 +146,15 @@ const auto& get_parse_map()
     CPPSIP_PARSER_ITEM_WITH_NAME( "via-ttl", via_ttl),
     CPPSIP_PARSER_ITEM_WITH_NAME( "via-params", via_params),
     CPPSIP_PARSER_ITEM_WITH_NAME( "via-parm", via_param),
-
+    CPPSIP_PARSER_ITEM_WITH_NAME( "c-p-q", c_p_q ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "delta-seconds", delta_seconds),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "c-p-expires", c_p_expires),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "contact-extension", contact_extension ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "contact-params", contact_params ),
+    CPPSIP_PARSER_ITEM_WITH_NAME( "contact-param", contact_param ),
 
     CPPSIP_PARSER_ITEM_WITH_NAME( "Call-ID", Call_ID ),
+    CPPSIP_PARSER_ITEM( Contact ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Length", Content_Length ),
     CPPSIP_PARSER_ITEM_WITH_NAME( "Content-Type", Content_Type ),
     CPPSIP_PARSER_ITEM( CSeq ),
