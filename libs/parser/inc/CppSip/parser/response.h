@@ -38,7 +38,8 @@ inline bool is_valid_status_code( const std::uint16_t s )
 namespace bsx3 = boost::spirit::x3;
 
 // Reason-Phrase = *(reserved / unreserved / escaped / UTF8-NONASCII / UTF8-CONT / SP / HTAB) (!!!)
-inline const auto Reason_Phrase = bsx3::rule<struct _reason_phrase, std::string>{ "Reason_Phrase" } = *( reserved | unreserved | escaped | SP | HTAB );
+inline const auto Reason_Phrase = bsx3::rule<struct _reason_phrase, std::string>{ "Reason_Phrase" } =
+    *( reserved | unreserved | escaped | SP | HTAB );
 
 // Status-Code = Informational / Redirection / Success / Client-Error / Server-Error / Global-Failure / extension-code (!!!)
 inline const auto Status_Code =

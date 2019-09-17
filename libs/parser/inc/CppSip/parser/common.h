@@ -31,7 +31,7 @@ namespace bsx3 = boost::spirit::x3;
 inline const auto alphanum = ALPHA | DIGIT;
 
 // LWS  =  [*WSP CRLF] 1*WSP ; linear whitespace
-inline const auto LWS = -( *WSP >> CRLF ) >> +WSP;
+inline const auto LWS = -( *WSP >> CRLF >> &WSP ) >> +WSP;
 
 // SWS  =  [LWS] ; sep whitespace
 inline const auto SWS = -LWS;
@@ -111,10 +111,12 @@ inline const auto callid = bsx3::rule<struct _callid, std::string>{ "callid" } =
 inline const auto hnv_unreserved = bsx3::char_( "[]/?:+$" );
 
 // hvalue          =  *( hnv-unreserved / unreserved / escaped )
-inline const auto hvalue = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Value>{ "hvalue" } = *( hnv_unreserved | unreserved | escaped );
+inline const auto hvalue = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Value>{ "hvalue" } =
+    *( hnv_unreserved | unreserved | escaped );
 
 // hname           =  1*( hnv-unreserved / unreserved / escaped )
-inline const auto hname = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Name>{ "hname" } = +( hnv_unreserved | unreserved | escaped );
+inline const auto hname = bsx3::rule<struct _hvalue, CppSip::Message::SipUriHeader::Name>{ "hname" } =
+    +( hnv_unreserved | unreserved | escaped );
 
 // header          =  hname "=" hvalue
 inline const auto header = bsx3::rule<struct _header, CppSip::Message::SipUriHeader>{ "header" } = hname > '=' > hvalue;
@@ -131,8 +133,8 @@ inline const auto toplabel = ALPHA > -( *( domainchar >> &domainchar ) >> alphan
 
 // hostname = *( domainlabel "." ) toplabel [ "." ]
 inline const auto hostname = bsx3::rule<struct _hostname, CppSip::Message::HostName>{ "hostname" } = *( domainlabel >> bsx3::char_( '.' ) >>
-                                                                                            &alphanum ) >>
-                                                                                         toplabel >> -bsx3::char_( '.' );
+                                                                                                        &alphanum ) >>
+                                                                                                     toplabel >> -bsx3::char_( '.' );
 
 // port = 1*DIGIT
 inline const auto port = bsx3::rule<struct _port, CppSip::Message::Port>{ "port" } = bsx3::uint16;
@@ -200,11 +202,13 @@ inline const auto user = +( unreserved | escaped | user_unreserved );
 inline const auto userinfo = bsx3::rule<struct _userinfo, CppSip::Message::UserInfo>{ "userinfo" } = user >> -( ':' >> password ) >> '@';
 
 // SIP-URI = "sip:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{ "SIP_URI"} = bsx3::no_case[ "sip:" ] > bsx3::attr( false ) >
-                                                                                     -userinfo > hostport > -headers;
+inline const auto SIP_URI = bsx3::rule<struct _sip_uri, CppSip::Message::SipUri>{ "SIP_URI" } = bsx3::no_case[ "sip:" ] >
+                                                                                                bsx3::attr( false ) > -userinfo > hostport >
+                                                                                                -headers;
 // SIPS-URI = "sips:" [ userinfo ] hostport uri-parameters [ headers ] (!!!)
-inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{ "SIPS_URI" } = bsx3::no_case[ "sips:" ] > bsx3::attr( true ) >
-                                                                                       -userinfo > hostport > -headers;
+inline const auto SIPS_URI = bsx3::rule<struct _sips_uri, CppSip::Message::SipUri>{ "SIPS_URI" } = bsx3::no_case[ "sips:" ] >
+                                                                                                   bsx3::attr( true ) > -userinfo > hostport
+                                                                                                   > -headers;
 
 }  // namespace Parsers
 }  // namespace CppSip
