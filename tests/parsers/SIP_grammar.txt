@@ -168,6 +168,7 @@ To             = ( "To" / "t" ) HCOLON ( name-addr / addr-spec ) *( SEMI to-para
 Via            = ( "Via" / "v" ) HCOLON via-parm *(COMMA via-parm)
 
 message-header = ( Call-ID /
+                   Contact /
                    Content-Length /
                    Content-Type /
                    CSeq /

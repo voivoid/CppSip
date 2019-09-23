@@ -2,6 +2,7 @@
 
 #include "CppSip/message/headers/addr.h"
 #include "CppSip/message/headers/callid.h"
+#include "CppSip/message/headers/contact.h"
 #include "CppSip/message/headers/content_length.h"
 #include "CppSip/message/headers/content_type.h"
 #include "CppSip/message/headers/cseq.h"
@@ -18,6 +19,7 @@ namespace Message
 {
 
 using Header = boost::variant<Headers::CallId,
+                              Headers::Contact,
                               Headers::ContentLength,
                               Headers::ContentType,
                               Headers::CSeq,

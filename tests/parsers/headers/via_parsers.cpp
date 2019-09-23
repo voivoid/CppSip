@@ -22,7 +22,7 @@ define_parser(via_branch, CppSipHdr::Via::Branch)
 define_parser(via_received, CppSipHdr::Via::Received)
 define_parser(via_maddr, CppSipHdr::Via::MAddr)
 define_parser(via_ttl, CppSipHdr::Via::TTL)
-define_parser(via_params, CppSipHdr::Via::Param::Type)
+define_parser(via_params, CppSipHdr::Via::Param::Value)
 define_parser(via_param, CppSipHdr::Via::Param)
 define_parser( Via, CppSipHdr::Via )
 // clang-format on

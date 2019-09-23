@@ -8,12 +8,12 @@
 #include "boost/fusion/include/adapt_struct.hpp"
 
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Protocol, name, version, transport )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::TTL, ttl )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::TTL, value )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::MAddr, host )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Received, address )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Branch, branch )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Extension, ext )
-BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Param, protocol, by, params )
+BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via::Param, protocol, by, values )
 BOOST_FUSION_ADAPT_STRUCT( CppSip::Message::Headers::Via, vias )
 
 namespace CppSip
@@ -65,7 +65,7 @@ inline const auto via_ttl = bsx3::rule<struct _via_branch, CppSip::Message::Head
     bsx3::no_case[ "ttl" ] > EQUAL > ttl;
 
 // via-params = via-ttl / via-maddr / via-received / via-branch / via-extension
-inline const auto via_params = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::Param::Type>{ "via-param" } =
+inline const auto via_params = bsx3::rule<struct _via_branch, CppSip::Message::Headers::Via::Param::Value>{ "via-param" } =
     via_ttl | via_maddr | via_received | via_branch | via_extension;
 
 // via-parm = sent-protocol LWS sent-by *( SEMI via-params )

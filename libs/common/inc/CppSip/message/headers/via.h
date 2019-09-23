@@ -29,7 +29,7 @@ struct Via
 
   struct TTL
   {
-    std::uint8_t ttl;
+    std::uint8_t value;
   };
 
   struct MAddr
@@ -57,8 +57,8 @@ struct Via
     Protocol protocol;
     HostPort by;
 
-    using Type = boost::variant<TTL, MAddr, Received, Branch, Extension>;
-    std::vector<Type> params;
+    using Value = boost::variant<TTL, MAddr, Received, Branch, Extension>;
+    std::vector<Value> values;
   };
 
   std::vector<Param> vias;
